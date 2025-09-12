@@ -1,13 +1,17 @@
 # SOEN 341 Project : Campus Events & Ticketing Web Application
 
+<h2>Objective</h2>
+This project lets us gain real experience with software development while following the Agile approach. We’ll use GitHub to manage our code, track tasks, handle bug reports, and work together as a team. The project is divided into four sprints over about 10 weeks. The first two weeks focus on training and setting up our development environment, and the following sprints will guide us through building the project step by step.
+
 <h2>Project Description</h2>
-Within this project, our team aims to develop a web application focused on managing on-campus events and associated tickets. This will include three different user portals: one for general users, one for event organizers, and one for administrators.
+<p>Within this project, our team aims to develop a web application focused on managing on-campus events and associated tickets. This will include three different user portals: one for general users, one for event organizers, and one for administrators.</p>
 
-Within the web app, general users have the ability to view events posted by event organizers. Within this list of events, they can apply filters in order to easily search for events that interest them. A user can also interact with these events, clicking on them to view the details associated with the event and book a ticket. Once they receive a ticket, it can be saved to their personal calendar, so that they can keep track of events they have signed up for. Additionally, when a user claims a ticket, they will receive a unique QR code to conveniently store their ticket.
+<p>Within the web app, general users have the ability to view events posted by event organizers. Within this list of events, they can apply filters in order to easily search for events that interest them. A user can also interact with these events, clicking on them to view the details associated with the event and book a ticket. Once they receive a ticket, they can save it to their personal calendar, so that they can keep track of events they have signed up for. Additionally, when a user claims a ticket, they will receive a unique QR code to conveniently store their ticket.</p>
 
-Event organizers are capable of creating events that will be visible to users. The event creation process is simple, a form were the organizer enters important details related to the event, such as: title, date/time, location, ticket capacity, and the ticket type (paid or free). Upon creating an event, the application will automatically create a dashboard for the organizer, allowing them to see useful metrics related to their event. Finally, our application provides built in tools for organizers, such as the ability to quickly export the attendees list to a CSV file and a built in QR code scanner, so that attendees can be checked in through the app.
+<p>Event organizers are capable of creating events that will be visible to users. The event creation process is simple, a form where the organizer enters important details related to the event, the following: title, date/time, location, ticket capacity, and the ticket type (paid or free). Upon creating an event, the application will automatically create a dashboard for the organizer, allowing them to see useful metrics related to their event. Finally, our application provides built in tools for organizers, such as the ability to quickly export the attendees list to a CSV file and a built-in QR code scanner, so that attendees can be checked in through the app.</p>
 
-The administrator portal allows admins to approve users to become event organizers and begin hosting their own events. Administrators can also monitor content and users to make sure that they comply with organizations policies. Additionally, admins have access to the analytics tab, allowing them to view global app metrics.
+<p>The administrator portal allows admins to approve users to become event organizers and begin hosting their own events. Administrators can also monitor content and users to make sure that they comply with organization's policies. Additionally, admins have access to the analytics tab, allowing them to view global app metrics.</p>
+
 
 <h2>🍀Meet the Lucky Charms Team🍀</h2>
 
@@ -71,13 +75,13 @@ Student ID: (Insert Student ID Here)
 GitHub Username: (Insert GitHub username here)
 
 <h3>Alexandre Nasseri</h3>
-(insert profile picture here)
+<img src="https://static.wikia.nocookie.net/phineasandferb/images/6/66/Profile_-_Perry_the_Platypus.PNG/revision/latest?cb=20200401182751" width="250">
 
 Role: TBA
 
-Student ID: (Insert Student ID Here)
+Student ID: 40281158
 
-GitHub Username: (Insert GitHub username here)
+GitHub Username: alexnasseri19
 
 <h3>Mateo Petrazzi</h3>
 (insert profile picture here)
@@ -88,9 +92,7 @@ Student ID: (Insert Student ID Here)
 
 GitHub Username: (Insert GitHub username here)
 
-<h2>🤖Technoligies and Techniques🤖</h2>
+<h2>🤖Technologies and Techniques🤖</h2>
 
-Framework: ASAP.NET
-Programming Languages: C#, Javascript
-Page Design and Styling: CSS, HTML
+Framework: ASAP.NET • Programming Languages: C#, Javascript • Page Design and Styling: CSS, HTML
 
