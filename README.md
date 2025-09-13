@@ -36,9 +36,9 @@ GitHub Username: (Insert GitHub username here)
 
 Role: TBA
 
-Student ID: (Insert Student ID Here)
+Student ID: (40235587)
 
-GitHub Username: (Insert GitHub username here)
+GitHub Username: (A-Eskaf)
 
 <h3>Sabine Heiss</h3>
 
