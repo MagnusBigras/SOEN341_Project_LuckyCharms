@@ -56,13 +56,13 @@ GitHub Username: (Insert GitHub username here)
 
 <h3>Joas Impallomeni</h3>
 
-(insert profile picture here)
+(image)
 
 Role: TBA
 
-Student ID: (Insert Student ID Here)
+Student ID: 40241262
 
-GitHub Username: (Insert GitHub username here)
+GitHub Username: J-Impallomeni
 
 <h3>Matei Moldovan</h3>
 
