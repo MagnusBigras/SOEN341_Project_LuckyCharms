@@ -46,7 +46,7 @@ GitHub Username: (Insert GitHub username here)
 
 <h3>Sabine Heiss</h3>
 
-<img src="https://wallpapers.com/images/hd/cute-dino-pictures-22x9mzik3ssfdch7.jpg"width="250">
+<img src="https://wallpapers.com/images/hd/cute-dino-pictures-22x9mzik3ssfdch7.jpg" width="250">
 
 Role: TBA
 
