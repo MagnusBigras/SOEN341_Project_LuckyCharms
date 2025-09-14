@@ -27,7 +27,7 @@ GitHub Username: MagnusBigras
 
 <h3>Fiacre Byiringiro</h3>
 
-(insert profile picture here)
+<img src="https://wallpapers.com/images/hd/minimal-spider-man-miles-morales-l3weddb4jvvyargo.jpg" width="250">
 
 Role: TBA
 
