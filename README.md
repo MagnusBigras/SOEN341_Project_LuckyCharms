@@ -46,13 +46,13 @@ GitHub Username: (Insert GitHub username here)
 
 <h3>Sabine Heiss</h3>
 
-(insert profile picture here)
+<img src="https://wallpapers.com/images/hd/cute-dino-pictures-22x9mzik3ssfdch7.jpg"width="250">
 
 Role: TBA
 
-Student ID: (Insert Student ID Here)
+Student ID: 40233571
 
-GitHub Username: (Insert GitHub username here)
+GitHub Username: SabineHleiss
 
 <h3>Joas Impallomeni</h3>
 
