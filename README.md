@@ -31,9 +31,9 @@ GitHub Username: MagnusBigras
 
 Role: TBA
 
-Student ID: (Insert Student ID Here)
+Student ID: 40297573
 
-GitHub Username: (Insert GitHub username here)
+GitHub Username: Shooter-06
 
 <h3>Ahmed Eskaf</h3>
 (insert profile picture here)
