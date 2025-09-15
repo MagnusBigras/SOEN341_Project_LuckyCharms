@@ -66,13 +66,13 @@ GitHub Username: (Insert GitHub username here)
 
 <h3>Matei Moldovan</h3>
 
-(insert profile picture here)
+<img src="https://static.wikia.nocookie.net/character-stats-and-profiles/images/b/bf/Kung-Fu-Panda-Render-copy.gif/revision/latest?cb=20201230122236" width="250">
 
 Role: TBA
 
-Student ID: (Insert Student ID Here)
+Student ID: 40277256
 
-GitHub Username: (Insert GitHub username here)
+GitHub Username: matei-mol
 
 <h3>Alexandre Nasseri</h3>
 <img src="https://static.wikia.nocookie.net/phineasandferb/images/6/66/Profile_-_Perry_the_Platypus.PNG/revision/latest?cb=20200401182751" width="250">
