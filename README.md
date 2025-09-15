@@ -27,13 +27,12 @@ GitHub Username: MagnusBigras
 
 <h3>Fiacre Byiringiro</h3>
 
-(insert profile picture here)
-
+<img src="https://wallpapers.com/images/hd/minimal-spider-man-miles-morales-l3weddb4jvvyargo.jpg" width="250">
 Role: TBA
 
-Student ID: (Insert Student ID Here)
+Student ID: 40297573
 
-GitHub Username: (Insert GitHub username here)
+GitHub Username: Shooter-06
 
 <h3>Ahmed Eskaf</h3>
 (insert profile picture here)
