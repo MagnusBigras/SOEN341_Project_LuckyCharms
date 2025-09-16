@@ -43,7 +43,7 @@ Student ID: (Insert Student ID Here)
 
 GitHub Username: (Insert GitHub username here)
 
-<h3>Sabine Heiss</h3>
+<h3>Sabine Hleiss</h3>
 
 <img src="https://wallpapers.com/images/hd/cute-dino-pictures-22x9mzik3ssfdch7.jpg" width="250">
 
