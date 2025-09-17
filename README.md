@@ -55,7 +55,7 @@ GitHub Username: SabineHleiss
 
 <h3>Joas Impallomeni</h3>
 
-<img src="https://https//wallpapers.com/picture/funny-kermit-pictures-qtyu0qqhg90pptrw.jpg" width="250">
+<img src="https://github.com/user-attachments/assets/05cac6e1-e18a-4960-9f9b-6c09b3cd3282" width="250">
 
 Role: TBA
 
