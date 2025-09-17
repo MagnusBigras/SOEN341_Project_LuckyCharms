@@ -55,13 +55,13 @@ GitHub Username: SabineHleiss
 
 <h3>Joas Impallomeni</h3>
 
-(insert profile picture here)
+<img src="https://wallpapers.com/wallpapers/green-pepe-the-frog-fg4lqx6qcab6sybv.html" width="250">
 
 Role: TBA
 
-Student ID: (Insert Student ID Here)
+Student ID: 40241262
 
-GitHub Username: (Insert GitHub username here)
+GitHub Username: J-Impallomeni
 
 <h3>Matei Moldovan</h3>
 
