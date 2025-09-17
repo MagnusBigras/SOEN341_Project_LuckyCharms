@@ -55,7 +55,7 @@ GitHub Username: SabineHleiss
 
 <h3>Joas Impallomeni</h3>
 
-<img src="https://wallpapers.com/wallpapers/green-pepe-the-frog-fg4lqx6qcab6sybv.html" width="250">
+<img src="https://https//wallpapers.com/picture/funny-kermit-pictures-qtyu0qqhg90pptrw.jpg" width="250">
 
 Role: TBA
 
