@@ -55,13 +55,13 @@ GitHub Username: SabineHleiss
 
 <h3>Joas Impallomeni</h3>
 
-(insert profile picture here)
+<img src="https://github.com/user-attachments/assets/05cac6e1-e18a-4960-9f9b-6c09b3cd3282" width="250">
 
 Role: TBA
 
-Student ID: (Insert Student ID Here)
+Student ID: 40241262
 
-GitHub Username: (Insert GitHub username here)
+GitHub Username: J-Impallomeni
 
 <h3>Matei Moldovan</h3>
 
