@@ -82,14 +82,14 @@ Student ID: 40281158
 
 GitHub Username: alexnasseri19
 
-<h3>Mateo Petrazzi</h3>
-(insert profile picture here)
+<h3>Mateo Petrazzuoli</h3>
+<img src="https://github.com/user-attachments/assets/69239b5b-17a5-423e-8c1d-60980704123f" width="250">
 
 Role: TBA
 
-Student ID: (Insert Student ID Here)
+Student ID: 40283111
 
-GitHub Username: (Insert GitHub username here)
+GitHub Username: mpetrazzuoli
 
 <h2>🤖Technologies and Techniques🤖</h2>
 
