@@ -35,13 +35,12 @@ Student ID: 40297573
 GitHub Username: Shooter-06
 
 <h3>Ahmed Eskaf</h3>
-(insert profile picture here)
 
-Role: TBA
+<img src="Images/image.png" width="250">
 
-Student ID: (Insert Student ID Here)
+Student ID: 40235587
 
-GitHub Username: (Insert GitHub username here)
+GitHub Username: A-Eskaf
 
 <h3>Sabine Hleiss</h3>
 
