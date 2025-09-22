@@ -90,6 +90,15 @@ Student ID: 40283111
 
 GitHub Username: mpetrazzuoli
 
+<h3>Derek Saint-Jean</h3>
+<img src="https://media.istockphoto.com/id/165505620/vector/polar-bear-hockey.jpg?s=612x612&w=0&k=20&c=N7hMecfSQ2Uv0HXh4oFoGipZlkpcfsxRIsp3lXkZs2g=" width="250">
+
+Role: TBA
+
+Student ID: 40286262
+
+GitHub Username: D-Rex30
+
 <h2>🤖Technologies and Techniques🤖</h2>
 
 Framework: ASAP.NET • Programming Languages: C#, Javascript • Page Design and Styling: CSS, HTML
