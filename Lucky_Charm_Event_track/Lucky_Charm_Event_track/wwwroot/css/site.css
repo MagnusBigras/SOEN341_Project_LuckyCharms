@@ -1,71 +1,226 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
-}
-
-/* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
-}
-
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  font-size: 14px;
-}
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  position: relative;
-  min-height: 100%;
-}
-
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+    font-family: "Segoe UI", sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    background-color: #E9D3D7;
 }
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+
+.sidebar-text,
+.extra-item {
+    font-family: "Arial", sans-serif !important; /* force Arial for sidebar text */
+}
+
+.sidebar-logo img {
+    width: 40px;
+    height: 40px;
+}
+
+.top-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    z-index: 1000; /* ensures navbar stays above sidebar */
+}
+
+.logo {
+    height: 42px;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+}
+
+.create-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: white;
+    color: #912338;
+    border: 2px solid #912338;
+    border-radius: 9999px;
+    padding: 0.5rem 1.3rem;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    height: 40px;
+    transition: all 0.25s ease-in-out;
+}
+
+.plus-sign {
+    font-size: 1.2rem;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.create-btn:hover {
+    background-color: #912338;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.account-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background-color: #f3f4f6;
+    color: #912338;
+    border: 2px solid #912338;
+    border-radius: 9999px;
+    padding: 0.5rem 1.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.25s ease-in-out;
+    height: 40px;
+}
+
+.account-name {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.create-btn:hover,
+.account-btn:hover {
+    background-color: #912338;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.bell-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+/* Simple "ring" animation when hovering or clicking the bell */
+.bell-icon:hover,
+.bell-icon:active {
+    animation: ring 0.5s ease;
+}
+
+@keyframes ring {
+    0% { transform: rotate(0); }
+    20% { transform: rotate(15deg); }
+    40% { transform: rotate(-10deg); }
+    60% { transform: rotate(5deg); }
+    80% { transform: rotate(-3deg); }
+    100% { transform: rotate(0); }
+}
+
+.account-img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.main-content {
+    margin-left: 80px; /* space for sidebar */
+    margin-top: 60px;  /* space for top navbar */
+    padding: 2rem;
+    width: calc(100% - 80px);
+}
+
+.sidebar {
+    width: 320px;
+    background-color: white;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 100px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 500;
+    box-shadow: 0 1px 0.5px rgba(0,0,0,0.1);
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 2.4rem;
+    flex-grow: 1;
+    color: #912338;
+    font-weight: 1000;
+    font-size: 1.1rem;
+}
+
+.sidebar-item {
+    position: relative; /* allows pseudo-element background */
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 2rem;
+    cursor: pointer;
+    border-radius: 0;
+    z-index: 1;
+}
+
+/* highlight effect when hovering a sidebar item */
+.sidebar-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20.8vw; /* this is viewport width, not sidebar width */
+    height: 100%;
+    background-color: #E9D3D7;
+    z-index: -1; /* put behind text */
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+.sidebar-item:hover::before {
+    opacity: 1;
+}
+
+.sidebar-icon {
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+/* thin separator bar in the sidebar */
+.sidebar-bar {
+    display: block;
+    width: 91%;
+    height: 1.5px;
+    background-color: #912338;
+    margin-top: 1rem;
+    margin-bottom: 1.1rem;
+    transform: translateX(12px); /* small horizontal shift */
+}
+
+.sidebar-contact {
+    margin-top: 5rem;
+    font-size: 1.2rem;
+
+}
+
+.sidebar-contact .sidebar-icon {
+    width: 30px;
+    height: 30px;
+}
+
+.sidebar-contact .sidebar-text {
+    margin-right: 15px;
 }
