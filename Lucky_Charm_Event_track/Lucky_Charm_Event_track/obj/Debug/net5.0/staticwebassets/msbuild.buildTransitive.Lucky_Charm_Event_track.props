@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\Lucky_Charm_Event_track.props" />
+</Project>

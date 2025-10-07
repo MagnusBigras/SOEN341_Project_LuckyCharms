@@ -1,6 +1,8 @@
+using Lucky_Charm_Event_track.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,11 +25,12 @@ namespace Lucky_Charm_Event_track
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
+                services.AddDbContext<WebAppDBContext>(options => options.UseSqlite("Data Source=eventtracker.db"));
+                services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WebAppDBContext db)
         {
             if (env.IsDevelopment())
             {
@@ -42,7 +45,7 @@ namespace Lucky_Charm_Event_track
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            db.Database.EnsureCreated();
             app.UseRouting();
 
             app.UseAuthorization();
