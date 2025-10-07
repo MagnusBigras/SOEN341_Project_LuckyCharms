@@ -6,11 +6,6 @@ body {
     background-color: #E9D3D7;
 }
 
-.sidebar-text,
-.extra-item {
-    font-family: "Arial", sans-serif !important; /* force Arial for sidebar text */
-}
-
 .sidebar-logo img {
     width: 40px;
     height: 40px;
@@ -27,7 +22,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 0 2rem;
-    z-index: 1000; /* ensures navbar stays above sidebar */
+    z-index: 500; /* ensures navbar stays above sidebar */
 }
 
 .logo {
@@ -47,7 +42,7 @@ body {
     background-color: white;
     color: #912338;
     border: 2px solid #912338;
-    border-radius: 9999px;
+    border-radius: 20px;
     padding: 0.5rem 1.3rem;
     cursor: pointer;
     font-weight: 600;
@@ -79,7 +74,7 @@ body {
     background-color: #f3f4f6;
     color: #912338;
     border: 2px solid #912338;
-    border-radius: 9999px;
+    border-radius: 20px;
     padding: 0.5rem 1.5rem;
     cursor: pointer;
     font-weight: 600;
