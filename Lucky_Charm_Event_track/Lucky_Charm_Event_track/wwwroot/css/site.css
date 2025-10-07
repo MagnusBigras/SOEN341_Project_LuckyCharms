@@ -22,7 +22,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 0 2rem;
-    z-index: 500; /* ensures navbar stays above sidebar */
+    z-index: 500; 
 }
 
 .logo {
@@ -101,7 +101,6 @@ body {
     transition: transform 0.2s ease;
 }
 
-/* Simple "ring" animation when hovering or clicking the bell */
 .bell-icon:hover,
 .bell-icon:active {
     animation: ring 0.5s ease;
@@ -124,10 +123,11 @@ body {
 }
 
 .main-content {
-    margin-left: 80px; /* space for sidebar */
-    margin-top: 60px;  /* space for top navbar */
+    margin-left: 320px; 
+    margin-top: 100px; 
     padding: 2rem;
-    width: calc(100% - 80px);
+    overflow: hidden; 
+
 }
 
 .sidebar {
@@ -157,7 +157,7 @@ body {
 }
 
 .sidebar-item {
-    position: relative; /* allows pseudo-element background */
+    position: relative; 
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -167,7 +167,6 @@ body {
     z-index: 1;
 }
 
-/* highlight effect when hovering a sidebar item */
 .sidebar-item::before {
     content: "";
     position: absolute;
@@ -194,7 +193,6 @@ body {
     transition: transform 0.2s ease;
 }
 
-/* thin separator bar in the sidebar */
 .sidebar-bar {
     display: block;
     width: 91%;
@@ -218,4 +216,193 @@ body {
 
 .sidebar-contact .sidebar-text {
     margin-right: 15px;
+}
+
+.main-content h1 {
+    font-size: 3rem; 
+    color: #912338;  
+    margin-bottom: 2rem;
+    font-family: arial, sans-serif;
+    margin-left : 2rem;
+    margin-top: -0.5rem;
+}
+
+
+.analytics-card {
+    background: #912338;
+    padding: 1rem;
+    border-radius: 10px;
+    height: 8rem;
+    width: 280px;
+    text-align: center;
+    margin-top: 0.5rem;
+    margin-left: 2rem;
+}
+
+.analytics-container {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+
+.analytics-card h2{
+    color: white;
+    font-size: 1.3em;
+    margin-bottom: -0.4rem;
+}
+
+.analytics-card h3{
+    color: white;
+   margin-bottom: -0.4rem;
+}
+
+.analytics-card p {
+    color: white;
+}
+
+.analytics-row {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.analytics-card.large {
+    width: 45%;
+    flex: 1;
+    height: 280px;
+    margin-top: 2rem;
+    background-color: white;
+}
+
+.analytics-card h4{
+    color: #912338;
+    font-size: 1.3rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.analytics-card:hover {
+    transform: scale(1.03);
+    transition: all 0.25s ease-in-out;
+}
+
+.analytics-card.large:hover {
+    transform: scale(1.03);
+    background-color: #f9f9f9;
+    transition: all 0.25s ease-in-out;
+}
+
+.analytics-card.large canvas {
+    width: 90%;
+    height: 150px;
+    margin-top: 1rem;
+}
+
+
+.main-content-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.main-content-header input[type="date"] {
+    background-color: white;
+    color: #912338;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    border: 2px solid #912338;
+    border-radius: 20px;
+    margin-bottom:1.6rem;
+}
+
+#searchInput {
+    padding: 7px 12px;
+    font-size: 0.9rem;
+    border: 2px solid #912338;
+    border-radius: 20px;
+    width: 50%;
+    max-width: 230px;
+    margin-right: 27rem;
+    transform: translateY(-50%);
+
+}
+
+
+.events-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-left: 2rem;
+}
+
+.event-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1rem;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.event-card:hover {
+    transform: translateY(-2px);
+}
+
+.event-info h2.event-name {
+    font-size: 1.2rem;
+    margin: 0 0 0.3rem 0;
+    color: #912338;
+}
+
+.event-info p {
+    margin: 0.2rem 0;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.event-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.8rem;
+}
+
+.event-actions button {
+    padding: 0.4rem 0.8rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.analytics-btn {
+    background-color: #912338;
+    color: white;
+}
+
+.analytics-btn:hover {
+    background-color: #a63a4d;
+    transform: translateY(-1px);
+}
+
+.tools-btn {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.tools-btn:hover {
+    background-color: #cfcfcf;
+    transform: translateY(-1px);
+}
+
+.sidebar-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
