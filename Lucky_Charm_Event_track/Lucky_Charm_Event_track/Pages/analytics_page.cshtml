@@ -1,29 +1,43 @@
+@page
+@model EventAnalyticsApp.Pages.AnalyticsPageModel
+@{
+    ViewData["Title"] = "Event Analytics";
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Analytics Layout</title>
-    <link rel="stylesheet" href="site.css">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css">
 </head>
 <body>
 
 <div class="sidebar">
     <div class="sidebar-menu">
+
         <div class="sidebar-item">
-            <img src="./800ce0988c52dc7bded443567346a77035fb8534.png" class="sidebar-icon" alt="Analytics">
-            <span class="sidebar-text">Analytics</span>
+                <a asp-page="/analytics_page" class="sidebar-link">
+                <img src="~/Images/800ce0988c52dc7bded443567346a77035fb8534.png" class="sidebar-icon" alt="Analytics">
+                <span class="sidebar-text">Analytics</span>
+            </a>
         </div>
+
         <div class="sidebar-item">
-            <img src="./86c1865905340afb06ee2948873e0be24974cff4.png" class="sidebar-icon" alt="Events">
-            <span class="sidebar-text">Events</span>
+                <a asp-page="/events" class="sidebar-link">
+                <img src="~/Images/86c1865905340afb06ee2948873e0be24974cff4.png" class="sidebar-icon" alt="Events">
+                <span class="sidebar-text">Events</span>
+            </a>
         </div>
+
         <div class="sidebar-item">
-            <img src="./2508862806f0dced98f9ab1e25e74ce54c4711b2.png" class="sidebar-icon" alt="Feedback">
+            <img src="~/Images/2508862806f0dced98f9ab1e25e74ce54c4711b2.png" class="sidebar-icon" alt="Feedback">
             <span class="sidebar-text">Feedback</span>
         </div>
+
         <div class="sidebar-item">
-            <img src="./758ad898c74a67305bc208032ee5f2ed40d10d8d.png" class="sidebar-icon" alt="Create Event">
+            <img src="~/Images/758ad898c74a67305bc208032ee5f2ed40d10d8d.png" class="sidebar-icon" alt="Create Event">
             <span class="sidebar-text">Create Event</span>
         </div>
 
@@ -31,18 +45,19 @@
 
         <div class="sidebar-extra">
             <div class="sidebar-item">
-                <img src="./7965593328e6cb27ffb10553f680443da25fad1a.png" class="sidebar-icon" alt="Organization Settings">
+                <img src="~/Images/7965593328e6cb27ffb10553f680443da25fad1a.png" class="sidebar-icon" alt="Organization Settings">
                 <span class="sidebar-text">Organization Settings</span>
             </div>
+
             <div class="sidebar-item">
-                <img src="./af7e2a95556abcf8c3cc0c41fedea581cd0f43af.png" class="sidebar-icon" alt="Sign out">
+                <img src="~/Images/af7e2a95556abcf8c3cc0c41fedea581cd0f43af.png" class="sidebar-icon" alt="Sign out">
                 <span class="sidebar-text">Sign out</span>
             </div>
         </div>
 
         <div class="sidebar-contact">
             <div class="sidebar-item">
-                <img src="./Untitled%20design.png" class="sidebar-icon" alt="Contact">
+                <img src="~/Images/Untitled%20design.png" class="sidebar-icon" alt="Contact">
                 <span class="sidebar-text">Contact</span>
             </div>
         </div>
@@ -52,13 +67,15 @@
 
 <div class="top-navbar">
     <div class="navbar-left">
-        <img src="./images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
+        <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
     </div>
+
     <div class="navbar-right">
         <button class="create-btn"><span class="plus-sign">+</span> Create</button>
         <img src="https://icons.veryicon.com/png/o/miscellaneous/250-thick-line-icon-of-website-and-app/6-bell.png"
              alt="Notifications"
              class="bell-icon">
+
         <button class="account-btn">
             <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
             <span class="account-name">Alex</span>
@@ -66,10 +83,50 @@
     </div>
 </div>
 
-
-
 <div class="main-content">
+    <div class="main-content-header">
+        <h1>Analytics • <span id="eventName"></span></h1>
+        <form action="/events" method="GET">
+            <input type="text" id="searchInput" name="search" placeholder="Search events...">
+        </form>
+        <input type="date" id="analyticsDate" value="2025-10-07">
+    </div>
+
+    <div class="analytics-container top-row">
+        <div class="analytics-card">
+            <h2>Total Revenue</h2>
+            <h3 id="totalRevenue"></h3>
+            <p id="revenueChange"></p>
+        </div>
+
+        <div class="analytics-card">
+            <h2>New Attendees</h2>
+            <h3 id="newAttendees"></h3>
+            <p id="attendeesChange"></p>
+        </div>
+
+        <div class="analytics-card">
+            <h2>Number of Events</h2>
+            <h3 id="numEvents"></h3>
+            <p id="eventsChange"></p>
+        </div>
+    </div>
+
+    <div class="analytics-container bottom-row">
+        <div class="analytics-card large">
+            <h4>Total Revenue</h4>
+            <canvas id="revenueChart"></canvas>
+        </div>
+
+        <div class="analytics-card large">
+            <h4>Event Attendance</h4>
+            <canvas id="attendanceChart"></canvas>
+        </div>
+    </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="~/js/site.js"></script>
 
 </body>
 </html>
