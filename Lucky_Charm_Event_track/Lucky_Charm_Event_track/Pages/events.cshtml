@@ -91,34 +91,5 @@
     </div>
 </div>
 
-<script>
-
-    const container = document.getElementById('eventsContainer');
-
-    events.forEach(event => {
-        const card = document.createElement('div');
-        card.classList.add('event-card');
-
-      card.innerHTML = `
-      <div class="event-info">
-        <h2 class="event-name">${event.name}</h2>
-        <p class="event-date">Date: ${event.date}</p>
-        <p class="event-time">Time: ${event.time}</p>
-        <p class="event-location">Location: ${event.location}</p>
-      </div>
-      <div class="event-actions">
-        <button class="analytics-btn">Analytics</button>
-        <button class="tools-btn">Tools</button>
-      </div>
-    `;
-
-        card.querySelector('.analytics-btn').addEventListener('click', () => {
-            window.location.href = `/analytics_page?eventId=${event.id}`;
-        });
-
-        container.appendChild(card);
-    });
-</script>
-
 </body>
 </html>
