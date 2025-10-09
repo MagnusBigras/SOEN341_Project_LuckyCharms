@@ -12,6 +12,7 @@ namespace Lucky_Charm_Event_track.Models
         public DbSet<PriceTier> PriceTiers { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<UserAccount> UserAccounts { get; set; }
+        public DbSet<Metric> Metrics { get; set; }
         public string DbPath { get; set; }
 
         public WebAppDBContext(DbContextOptions<WebAppDBContext> options): base(options)
@@ -59,7 +60,15 @@ namespace Lucky_Charm_Event_track.Models
                     .HasMany(u => u.Tickets)
                     .WithOne(t => t.Account)
                     .HasForeignKey(t => t.UserAccountId);
-            
+
+                modelBuilder.Entity<Event>()
+                .HasOne(e => e.Metric)
+                .WithOne(m => m.Event)
+                .HasForeignKey<Metric>(m => m.EventId);
+            modelBuilder.Entity<Metric>()
+            .Ignore(m => m.RevenueByMonth)
+            .Ignore(m => m.AttendanceByMonth);
+
         }
     }
 }
