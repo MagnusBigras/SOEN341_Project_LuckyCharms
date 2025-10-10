@@ -1,0 +1,68 @@
+﻿@page
+@model Lucky_Charm_Event_track.Pages.EventFormModel
+@{
+    ViewData["Title"] = "EventForm";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Event Form</title>
+    <link rel="stylesheet" href="~/css/EventForm.css">
+</head>
+
+<body>
+
+    <form action="/submit-event" method="post" class="event-form">
+        <h2>Create New Event</h2>
+
+        <div class="form-group">
+            <label for="eventName">Event Name:</label>
+            <input type="text" id="eventName" name="eventName" required>
+        </div>
+
+        <div class="form-group">
+            <label for="eventDate">Date:</label>
+            <input type="date" id="eventDate" name="eventDate" required>
+        </div>
+
+        <div class="form-group">
+            <label for="eventTime">Time:</label>
+            <input type="time" id="eventTime" name="eventTime" required>
+        </div>
+
+        <div class="form-group">
+            <label for="eventLocation">Location:</label>
+            <input type="text" id="eventLocation" name="eventLocation" required>
+        </div>
+
+        <div class="form-group">
+            <label for="eventDescription">Description:</label>
+            <textarea id="eventDescription" name="eventDescription" rows="5"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="eventType">Event Type:</label>
+            <select id="eventType" name="eventType">
+                <option value="meeting">Meeting</option>
+                <option value="workshop">Workshop</option>
+                <option value="conference">Conference</option>
+                <option value="social">Social Gathering</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        
+        <div class="button-container">
+            <button type="submit">Create Event</button>
+            <a href="/" class="cancel-btn">
+                <button type="button">Cancel Event</button>
+            </a>
+        </div>
+
+        
+    </form>
+
+</body>
+
+</html>
