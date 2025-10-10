@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "qck89vd8r6Y2kQyyFe1OWrLMPNYvb/eFFu03h9DxfsjDr7pta2xQD+d2Lz5/Z5riQN3XNxKlJ3TVwY7lTQXQXg==",
+  "dgSpecHash": "Qcw8O8dksf0Y1L5Ld1AYeO6I4lxgStjVU492dFkVy0XVdihod4Zwd3xxA0AIo0gJBqZHlaB0k4isJZ4L1p6IFA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj",
   "expectedPackageFiles": [
@@ -13,6 +13,7 @@
     "C:\\Users\\Magnus\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\7.0.0\\microsoft.entityframeworkcore.relational.7.0.0.nupkg.sha512",
     "C:\\Users\\Magnus\\.nuget\\packages\\microsoft.entityframeworkcore.sqlite\\7.0.0\\microsoft.entityframeworkcore.sqlite.7.0.0.nupkg.sha512",
     "C:\\Users\\Magnus\\.nuget\\packages\\microsoft.entityframeworkcore.sqlite.core\\7.0.0\\microsoft.entityframeworkcore.sqlite.core.7.0.0.nupkg.sha512",
+    "C:\\Users\\Magnus\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\9.0.9\\microsoft.entityframeworkcore.tools.9.0.9.nupkg.sha512",
     "C:\\Users\\Magnus\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\7.0.0\\microsoft.extensions.caching.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\Magnus\\.nuget\\packages\\microsoft.extensions.caching.memory\\7.0.0\\microsoft.extensions.caching.memory.7.0.0.nupkg.sha512",
     "C:\\Users\\Magnus\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\7.0.0\\microsoft.extensions.configuration.abstractions.7.0.0.nupkg.sha512",
