@@ -1,3 +1,11 @@
+C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\Lucky_Charm_Event_track.csproj.AssemblyReference.cache
+C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\Lucky_Charm_Event_track.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\Lucky_Charm_Event_track.AssemblyInfoInputs.cache
+C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\Lucky_Charm_Event_track.AssemblyInfo.cs
+C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\Lucky_Charm_Event_track.csproj.CoreCompileInputs.cache
+C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\Lucky_Charm_Event_track.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\Lucky_Charm_Event_track.RazorAssemblyInfo.cache
+C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\Lucky_Charm_Event_track.RazorAssemblyInfo.cs
 C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\bin\Debug\net7.0\appsettings.Development.json
 C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\bin\Debug\net7.0\appsettings.json
 C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\bin\Debug\net7.0\Lucky_Charm_Event_track.staticwebassets.runtime.json
@@ -41,14 +49,6 @@ C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_t
 C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\bin\Debug\net7.0\runtimes\win-arm64\native\e_sqlite3.dll
 C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\bin\Debug\net7.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\bin\Debug\net7.0\runtimes\win-x86\native\e_sqlite3.dll
-C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\Lucky_Charm_Event_track.csproj.AssemblyReference.cache
-C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\Lucky_Charm_Event_track.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\Lucky_Charm_Event_track.AssemblyInfoInputs.cache
-C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\Lucky_Charm_Event_track.AssemblyInfo.cs
-C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\Lucky_Charm_Event_track.csproj.CoreCompileInputs.cache
-C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\Lucky_Charm_Event_track.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\Lucky_Charm_Event_track.RazorAssemblyInfo.cache
-C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\Lucky_Charm_Event_track.RazorAssemblyInfo.cs
 C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\staticwebassets\msbuild.Lucky_Charm_Event_track.Microsoft.AspNetCore.StaticWebAssets.props
 C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\staticwebassets\msbuild.build.Lucky_Charm_Event_track.props
 C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\staticwebassets\msbuild.buildMultiTargeting.Lucky_Charm_Event_track.props
