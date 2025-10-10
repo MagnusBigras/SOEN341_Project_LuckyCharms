@@ -1,8 +1,15 @@
-body {
+html, body {
+    height: 100%;
     font-family: "Segoe UI", sans-serif;
     margin: 0;
     padding: 0;
     display: flex;
+/*    background-color: #E9D3D7;*/
+    background-color: #F2D0A4; /* Pale Red Background Color */
+    flex-direction: column;
+}
+body {
+    padding-top: 80px;
     background-color: #E9D3D7;
 }
 
@@ -126,8 +133,8 @@ body {
     margin-left: 320px; 
     margin-top: 100px; 
     padding: 2rem;
-    overflow: hidden; 
-
+    overflow: hidden;
+    flex: 1;
 }
 
 .sidebar {
@@ -204,7 +211,7 @@ body {
 }
 
 .sidebar-contact {
-    margin-top: 5rem;
+    margin-top: 102rem;
     font-size: 1.2rem;
 
 }
@@ -406,3 +413,12 @@ body {
     align-items: center;
     gap: 1rem;
 }
+
+
+
+footer {
+    margin-top: auto;
+    padding: 1rem 0; /* Optional: adds space inside footer */
+}
+
+

@@ -9,25 +9,30 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Lucky_Charm_Event_track</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
+        <div class="top-navbar">
+            <div class="navbar-left">
+                <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
             </div>
-        </nav>
+
+            <div class="navbar-right">
+                <!-- Modal Button (Existing Button) -->
+                @* <button class="create-btn" data-bs-toggle="modal" data-bs-target="#eventFormModal">
+                    <span class="plus-sign">+</span> Create
+                </button> *@
+
+                <!-- Add Event Button as Link -->
+                <a class="create-btn" asp-page="/EventForm"> Create </a>
+
+                <img src="https://icons.veryicon.com/png/o/miscellaneous/250-thick-line-icon-of-website-and-app/6-bell.png"
+                     alt="Notifications"
+                     class="bell-icon">
+
+                <button class="account-btn">
+                    <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
+                    <span class="account-name">User</span>
+                </button>
+            </div>
+        </div>
     </header>
     <div class="container">
         <main role="main" class="pb-3">

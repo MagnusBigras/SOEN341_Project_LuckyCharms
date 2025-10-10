@@ -1,0 +1,100 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f88987 /* Pale Red Background Color */
+    display: flex;
+    justify-content: flex-start; /* Align top of the screen */
+    align-items: flex-start;
+    min-height: 100vh;
+    margin: 0;
+    padding-top: 80px; /* Space for the navbar */
+    padding-bottom: 60px; /* Space for the footer */
+}
+
+.event-form {
+/*    background-color: #fff;*/
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    margin-top: 20px;
+    max-height: 80vh; /* Ensures the form does not exceed the visible height */
+    overflow-y: auto; /* Allows scrolling if form content overflows */
+}
+
+    .event-form h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #555;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="date"],
+    .form-group input[type="time"],
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box; /* Ensures padding doesn't increase width */
+    }
+
+    .form-group textarea {
+        resize: vertical; /* Allows vertical resizing of textarea */
+    }
+
+
+/* Style for the submit button */
+button[type="submit"],
+button[type="button"] {
+    background-color: #007bff; /* Blue background for Submit */
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%; /* Ensures both buttons are full-width */
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+    /* Submit button hover effect */
+    button[type="submit"]:hover {
+        background-color: #3eee48; /* Green hover color for submit button */
+    }
+
+    /* Cancel button hover effect */
+    button[type="button"]:hover {
+        background-color: #808080; /* Grey hover color for cancel button */
+    }
+
+/* Style for the cancel button */
+button[type="button"] {
+    background-color: #ff0000; /* Red background for cancel */
+}
+
+/* Container for the buttons (Submit and Cancel) */
+.button-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center; /* Centers the buttons */
+    margin-top: 20px; /* Adds space between form and buttons */
+}
+
+/* Style for the Cancel Event link */
+.cancel-btn {
+    display: inline-block; /* Makes the anchor tag behave like a block-level element */
+    width: 100%; /* Ensures the cancel link spans full width */
+}
