@@ -63,3 +63,9 @@ C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_t
 C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\Lucky_Charm_Event_track.pdb
 C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\Lucky_Charm_Event_track.genruntimeconfig.cache
 C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\obj\Debug\net7.0\ref\Lucky_Charm_Event_track.dll
+C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\bin\Debug\net7.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\bin\Debug\net7.0\QRCoder.dll
+C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\bin\Debug\net7.0\System.Drawing.Common.dll
+C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\bin\Debug\net7.0\zxing.dll
+C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\bin\Debug\net7.0\ZXing.Windows.Compatibility.dll
+C:\Users\Magnus\Documents\GitHub\SOEN341_Project_LuckyCharms\Lucky_Charm_Event_track\Lucky_Charm_Event_track\bin\Debug\net7.0\runtimes\win\lib\net7.0\Microsoft.Win32.SystemEvents.dll
