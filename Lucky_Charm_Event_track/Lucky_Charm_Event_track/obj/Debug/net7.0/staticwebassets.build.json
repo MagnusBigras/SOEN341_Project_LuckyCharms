@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "LaYdqKTVidnSu5zy4E3aggDiy+sv0Dc3OHxHO07kGOg=",
+  "Hash": "Xj1kgL6CqRWKNe6t2wfsybzBJ8nQo41nXUoI2SumjeQ=",
   "Source": "Lucky_Charm_Event_track",
   "BasePath": "_content/Lucky_Charm_Event_track",
   "Mode": "Default",
@@ -16,6 +16,23 @@
     }
   ],
   "Assets": [
+    {
+      "Identity": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\css\\EventForm.css",
+      "SourceId": "Lucky_Charm_Event_track",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\",
+      "BasePath": "_content/Lucky_Charm_Event_track",
+      "RelativePath": "css/EventForm.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\EventForm.css"
+    },
     {
       "Identity": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\css\\site.css",
       "SourceId": "Lucky_Charm_Event_track",
