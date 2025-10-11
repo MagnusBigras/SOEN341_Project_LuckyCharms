@@ -11,7 +11,10 @@
           "Microsoft.EntityFrameworkCore": "7.0.0",
           "Microsoft.EntityFrameworkCore.Design": "7.0.0",
           "Microsoft.EntityFrameworkCore.Sqlite": "7.0.0",
-          "Microsoft.EntityFrameworkCore.Tools": "9.0.9"
+          "Microsoft.EntityFrameworkCore.Tools": "9.0.9",
+          "QRCoder": "1.7.0",
+          "ZXing.Net": "0.16.10",
+          "ZXing.Net.Bindings.Windows.Compatibility": "0.16.13"
         },
         "runtime": {
           "Lucky_Charm_Event_track.dll": {}
@@ -159,6 +162,22 @@
         }
       },
       "Microsoft.Extensions.Primitives/7.0.0": {},
+      "Microsoft.Win32.SystemEvents/8.0.0": {
+        "runtime": {
+          "lib/net7.0/Microsoft.Win32.SystemEvents.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.53103"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net7.0/Microsoft.Win32.SystemEvents.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.53103"
+          }
+        }
+      },
       "Mono.TextTemplating/2.2.1": {
         "dependencies": {
           "System.CodeDom": "4.4.0"
@@ -167,6 +186,17 @@
           "lib/netstandard2.0/Mono.TextTemplating.dll": {
             "assemblyVersion": "2.2.0.0",
             "fileVersion": "2.2.1.1"
+          }
+        }
+      },
+      "QRCoder/1.7.0": {
+        "dependencies": {
+          "System.Drawing.Common": "8.0.12"
+        },
+        "runtime": {
+          "lib/net6.0/QRCoder.dll": {
+            "assemblyVersion": "1.7.0.0",
+            "fileVersion": "1.7.0.0"
           }
         }
       },
@@ -326,11 +356,42 @@
           }
         }
       },
+      "System.Drawing.Common/8.0.12": {
+        "dependencies": {
+          "Microsoft.Win32.SystemEvents": "8.0.0"
+        },
+        "runtime": {
+          "lib/net7.0/System.Drawing.Common.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.1224.60306"
+          }
+        }
+      },
       "System.Memory/4.5.3": {},
       "System.Text.Encodings.Web/7.0.0": {},
       "System.Text.Json/7.0.0": {
         "dependencies": {
           "System.Text.Encodings.Web": "7.0.0"
+        }
+      },
+      "ZXing.Net/0.16.10": {
+        "runtime": {
+          "lib/net7.0/zxing.dll": {
+            "assemblyVersion": "0.16.10.0",
+            "fileVersion": "0.16.10.0"
+          }
+        }
+      },
+      "ZXing.Net.Bindings.Windows.Compatibility/0.16.13": {
+        "dependencies": {
+          "System.Drawing.Common": "8.0.12",
+          "ZXing.Net": "0.16.10"
+        },
+        "runtime": {
+          "lib/net7.0/ZXing.Windows.Compatibility.dll": {
+            "assemblyVersion": "0.16.13.0",
+            "fileVersion": "0.16.13.0"
+          }
         }
       }
     }
@@ -481,12 +542,26 @@
       "path": "microsoft.extensions.primitives/7.0.0",
       "hashPath": "microsoft.extensions.primitives.7.0.0.nupkg.sha512"
     },
+    "Microsoft.Win32.SystemEvents/8.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-9opKRyOKMCi2xJ7Bj7kxtZ1r9vbzosMvRrdEhVhDz8j8MoBGgB+WmC94yH839NPH+BclAjtQ/pyagvi/8gDLkw==",
+      "path": "microsoft.win32.systemevents/8.0.0",
+      "hashPath": "microsoft.win32.systemevents.8.0.0.nupkg.sha512"
+    },
     "Mono.TextTemplating/2.2.1": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-KZYeKBET/2Z0gY1WlTAK7+RHTl7GSbtvTLDXEZZojUdAPqpQNDL6tHv7VUpqfX5VEOh+uRGKaZXkuD253nEOBQ==",
       "path": "mono.texttemplating/2.2.1",
       "hashPath": "mono.texttemplating.2.2.1.nupkg.sha512"
+    },
+    "QRCoder/1.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6R3hQkayihGIDjp3F1nLRDBWG+nqahGyOY2+fH4Rll16Vad67oaUUfHkOiMWKiJFnGh+PIGDfUos+0R9m54O1g==",
+      "path": "qrcoder/1.7.0",
+      "hashPath": "qrcoder.1.7.0.nupkg.sha512"
     },
     "SQLitePCLRaw.bundle_e_sqlite3/2.1.2": {
       "type": "package",
@@ -523,6 +598,13 @@
       "path": "system.codedom/4.4.0",
       "hashPath": "system.codedom.4.4.0.nupkg.sha512"
     },
+    "System.Drawing.Common/8.0.12": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-mZrI0KKFAZO8gWaARhdaJblMUNEeHMlPsFa/nRS4j4EenYP/+f8F2bzu4yb0Co7WYuJ/w/D8d/zW4KGCdYJCyQ==",
+      "path": "system.drawing.common/8.0.12",
+      "hashPath": "system.drawing.common.8.0.12.nupkg.sha512"
+    },
     "System.Memory/4.5.3": {
       "type": "package",
       "serviceable": true,
@@ -543,6 +625,20 @@
       "sha512": "sha512-DaGSsVqKsn/ia6RG8frjwmJonfos0srquhw09TlT8KRw5I43E+4gs+/bZj4K0vShJ5H9imCuXupb4RmS+dBy3w==",
       "path": "system.text.json/7.0.0",
       "hashPath": "system.text.json.7.0.0.nupkg.sha512"
+    },
+    "ZXing.Net/0.16.10": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-9avtcn21T7Ndcl8PQ1LHR7/wEoCruX1QKKHvO6zBPTsDW9IdvR5vKOmd618AY+DtDWZz8NaFDTkpbZdgaF4l4w==",
+      "path": "zxing.net/0.16.10",
+      "hashPath": "zxing.net.0.16.10.nupkg.sha512"
+    },
+    "ZXing.Net.Bindings.Windows.Compatibility/0.16.13": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-x6WwaokAqBXhvX/FTYmE+kdKRSYuxCKSN608VbWWlawUq/rXYW/KoDfRpEkpUeYW6qU5hE3eFzWMuG20doLR9A==",
+      "path": "zxing.net.bindings.windows.compatibility/0.16.13",
+      "hashPath": "zxing.net.bindings.windows.compatibility.0.16.13.nupkg.sha512"
     }
   }
 }
