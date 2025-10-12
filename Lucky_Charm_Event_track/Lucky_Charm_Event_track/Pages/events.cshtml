@@ -31,9 +31,11 @@
             </div>
 
             <!-- Create Event section -->
-            <div class="sidebar-item" id="sidebarCreate">
+            <div class="sidebar-item">
+                <a asp-page="/EventForm" class="sidebar-link">
                 <img src="~/Images/758ad898c74a67305bc208032ee5f2ed40d10d8d.png" class="sidebar-icon" alt="Create Event">
                 <span class="sidebar-text">Create Event</span>
+                </a>
             </div>
 
             <!-- Divider bar -->
@@ -67,7 +69,7 @@
             <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
         </div>
         <div class="navbar-right">
-            <button class="create-btn" id="navbarCreate"><span class="plus-sign">+</span> Create</button>
+            <a class="create-btn" asp-page="/EventForm"> + Create </a>
             <img src="https://icons.veryicon.com/png/o/miscellaneous/250-thick-line-icon-of-website-and-app/6-bell.png"
                  alt="Notifications"
                  class="bell-icon">
