@@ -63,6 +63,7 @@ body {
     background-color: #912338;
     color: white;
     transform: translateY(-1px);
+    text-decoration: none;
 }
 
 .account-btn {
