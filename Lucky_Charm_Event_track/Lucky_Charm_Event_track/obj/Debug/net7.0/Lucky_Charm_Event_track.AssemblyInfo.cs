@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Lucky_Charm_Event_track")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+333a332be136e3d8dd0aacca7b78303f99200c2d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+289610ffabb5e9fd8b1507bd265390f0da3fc2d6")]
 [assembly: System.Reflection.AssemblyProductAttribute("Lucky_Charm_Event_track")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Lucky_Charm_Event_track")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
