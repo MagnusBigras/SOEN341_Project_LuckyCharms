@@ -27,51 +27,72 @@ if (document.getElementById('eventsContainer')) {
     });
 }
 
-if (document.getElementById('totalRevenue')) {
-    const totalRevenue = 12345;
-    const lastMonthRevenue = 11738;
-    const revenueChange = totalRevenue - lastMonthRevenue;
-    const revenuePercent = ((revenueChange / lastMonthRevenue) * 100).toFixed(1);
 
-    document.getElementById('totalRevenue').textContent = `$${totalRevenue}`;
-    const revenueChangeElement = document.getElementById('revenueChange');
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
 
-    if (revenueChange >= 0) {
-        revenueChangeElement.textContent = `▲ ${revenuePercent}% from last month`;
-    }
-    else {
-        revenueChangeElement.textContent = `▼ ${Math.abs(revenuePercent)}% from last month`;
-    }
 
-    const newAttendees = 250;
-    const lastMonthAttendees = 230;
-    const attendeesChange = newAttendees - lastMonthAttendees;
-    const attendeesPercent = ((attendeesChange / lastMonthAttendees) * 100).toFixed(1);
+// Dynamically fetch and update analytics values for a specific event using data attribute
 
-    document.getElementById('newAttendees').textContent = newAttendees;
-    const attendeesChangeElement = document.getElementById('attendeesChange');
+const eventId = document.body.getAttribute('data-event-id');
 
-    if (attendeesChange >= 0) {
-        attendeesChangeElement.textContent = `▲ ${attendeesPercent}% from last month`;
-    } 
-    else {
-        attendeesChangeElement.textContent = `▼ ${Math.abs(attendeesPercent)}% from last month`;
-    }
+if (document.getElementById('totalRevenue') && eventId && eventId !== '0') {
+    console.log('Fetching metrics for eventId:', eventId);
+    fetch(`/api/Event/${eventId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(event => {
+            console.log('API response:', event);
+            if (event && event.metric) {
+                // Current and last month revenue
+                const totalRevenue = event.metric.totalRevenue ?? 0;
+                const lastMonthRevenue = event.metric.lastMonthRevenue ?? 0;
+                const revenueChange = totalRevenue - lastMonthRevenue;
+                const revenuePercent = lastMonthRevenue !== 0 ? ((revenueChange / lastMonthRevenue) * 100).toFixed(1) : 0;
 
-    const numEvents = 15;
-    const lastMonthEvents = 12;
-    const eventsChange = numEvents - lastMonthEvents;
-    const eventsPercent = ((eventsChange / lastMonthEvents) * 100).toFixed(1);
+                document.getElementById('totalRevenue').textContent = `$${totalRevenue}`;
+                const revenueChangeElement = document.getElementById('revenueChange');
+                if (revenueChangeElement) {
+                    if (revenueChange >= 0) {
+                        revenueChangeElement.textContent = `▲ ${revenuePercent}% from last month`;
+                    } else {
+                        revenueChangeElement.textContent = `▼ ${Math.abs(revenuePercent)}% from last month`;
+                    }
+                }
 
-    document.getElementById('numEvents').textContent = numEvents;
-    const eventsChangeElement = document.getElementById('eventsChange');
+                // New and last month attendees
+                const newAttendees = event.metric.newAttendees ?? 0;
+                const lastMonthAttendees = event.metric.lastMonthAttendees ?? 0;
+                const attendeesChange = newAttendees - lastMonthAttendees;
+                const attendeesPercent = lastMonthAttendees !== 0 ? ((attendeesChange / lastMonthAttendees) * 100).toFixed(1) : 0;
 
-    if (eventsChange >= 0) {
-        eventsChangeElement.textContent = `▲ ${eventsPercent}% from last month`;
-    } 
-    else {
-        eventsChangeElement.textContent = `▼ ${Math.abs(eventsPercent)}% from last month`;
-    }
+                document.getElementById('newAttendees').textContent = newAttendees;
+                const attendeesChangeElement = document.getElementById('attendeesChange');
+                if (attendeesChangeElement) {
+                    if (attendeesChange >= 0) {
+                        attendeesChangeElement.textContent = `▲ ${attendeesPercent}% from last month`;
+                    } else {
+                        attendeesChangeElement.textContent = `▼ ${Math.abs(attendeesPercent)}% from last month`;
+                    }
+                }
+
+                // Remaining capacity (numEvents card)
+                const numEvents = event.metric.lastRemaining ?? 0;
+                document.getElementById('numEvents').textContent = numEvents;
+                // Optionally update eventsChange if you have lastMonthEvents
+            } else {
+                console.warn('No metric found in API response:', event);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching event metrics:', error);
+        });
 }
 
 
