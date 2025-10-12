@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "LaYdqKTVidnSu5zy4E3aggDiy+sv0Dc3OHxHO07kGOg=",
+  "Hash": "Kxn273SCQy0+yxRVD8AbwYaDwmtLB2MN3XSr6D6mdBA=",
   "Source": "Lucky_Charm_Event_track",
   "BasePath": "_content/Lucky_Charm_Event_track",
   "Mode": "Default",
@@ -16,6 +16,23 @@
     }
   ],
   "Assets": [
+    {
+      "Identity": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\css\\EventForm.css",
+      "SourceId": "Lucky_Charm_Event_track",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\",
+      "BasePath": "_content/Lucky_Charm_Event_track",
+      "RelativePath": "css/EventForm.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\EventForm.css"
+    },
     {
       "Identity": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\css\\site.css",
       "SourceId": "Lucky_Charm_Event_track",
@@ -151,6 +168,40 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\Images\\af7e2a95556abcf8c3cc0c41fedea581cd0f43af.png"
+    },
+    {
+      "Identity": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\Images\\banner_image.jpeg",
+      "SourceId": "Lucky_Charm_Event_track",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\",
+      "BasePath": "_content/Lucky_Charm_Event_track",
+      "RelativePath": "Images/banner_image.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Images\\banner_image.jpeg"
+    },
+    {
+      "Identity": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\Images\\event.jpg",
+      "SourceId": "Lucky_Charm_Event_track",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\",
+      "BasePath": "_content/Lucky_Charm_Event_track",
+      "RelativePath": "Images/event.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Images\\event.jpg"
     },
     {
       "Identity": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\Images\\Green Classic Four Leaf Clover Geometric Logo.png",

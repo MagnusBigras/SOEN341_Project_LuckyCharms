@@ -1,3 +1,4 @@
+using Lucky_Charm_Event_track.Enums;
 using Lucky_Charm_Event_track.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,9 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Lucky_Charm_Event_track
 {
@@ -27,6 +26,7 @@ namespace Lucky_Charm_Event_track
         {
                 services.AddDbContext<WebAppDBContext>(options => options.UseSqlite("Data Source=eventtracker.db"));
                 services.AddRazorPages();
+                services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,7 +53,44 @@ namespace Lucky_Charm_Event_track
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+                endpoints.MapControllers(); 
             });
+            seedDefaultUser(db);
+        }
+        public void seedDefaultUser(WebAppDBContext db) 
+        {
+
+            if (!db.UserAccounts.Any())
+            {
+                var user = new UserAccount
+                {
+                    FirstName = "Default",
+                    LastName = "User",
+                    UserName = "defaultuser",
+                    Email = "default@events.com",
+                    Password = "hashedpassword", // ideally hashed
+                    PasswordSalt = "salt",
+                    PhoneNumber = "1234567890",
+                    DateOfBirth = new DateTime(1990, 1, 1),
+                    AccountCreationDate = DateTime.UtcNow,
+                    AccountType = AccountTypes.EventOrganizer,
+                    LastLogin = DateTime.UtcNow,
+                    IsActive = true
+                };
+
+                db.UserAccounts.Add(user);
+                db.SaveChanges();
+
+                db.EventOrganizers.Add(new EventOrganizer
+                {
+                    UserAccountId = user.Id,
+                    Account = user,
+                    CreatedAt = DateTime.UtcNow,
+                    IsActive = true,
+                });
+
+                db.SaveChanges();
+            }
         }
     }
 }
