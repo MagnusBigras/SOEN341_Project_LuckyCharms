@@ -12,7 +12,7 @@
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/css/site.css">
 </head>
-<body>
+<body data-event-id="@Model.EventMetric?.EventId ?? 0">
 
     <!-- Sidebar navigation -->
     <div class="sidebar">
@@ -73,6 +73,14 @@
         </div>
     </div>
 
+<div class="main-content">
+    <div class="main-content-header">
+        <h1>Analytics • <span id="eventName">@Model.EventMetric?.Event?.EventName</span></h1>
+        <form action="/events" method="GET">
+            <input type="text" id="searchInput" name="search" placeholder="Search events...">
+        </form>
+        <input type="date" id="analyticsDate" value="2025-10-07">
+    </div>
     <!-- Main content -->
     <div class="main-content">
         <div class="main-content-header">
@@ -83,22 +91,23 @@
         <div class="analytics-container top-row">
             <div class="analytics-card">
                 <h2>Total Revenue</h2>
-                <h3 id="totalRevenue"></h3>
+                <h3 id="totalRevenue">@((Model.EventMetric?.TotalRevenue ?? 0).ToString())</h3>
                 <p id="revenueChange"></p>
             </div>
 
-            <div class="analytics-card">
-                <h2>New Attendees</h2>
-                <h3 id="newAttendees"></h3>
-                <p id="attendeesChange"></p>
-            </div>
-
-            <div class="analytics-card">
-                <h2>Remaining Capacity</h2>
-                <h3 id="remCapacity"></h3>
-                <p id="capacityChange"></p>
-            </div>
+        <div class="analytics-card">
+            <h2>New Attendees</h2>
+            <h3 id="newAttendees">@((Model.EventMetric?.NewAttendees ?? 0).ToString())</h3>
+            <p id="attendeesChange"></p>
         </div>
+
+
+        <div class="analytics-card">
+            <h2>Number of Events</h2>
+            <h3 id="remCapacity">@((Model.EventMetric?.LastRemaining ?? 0).ToString())</h3>
+            <p id="eventsChange"></p>
+        </div>
+    </div>
 
         <div class="analytics-container bottom-row">
             <div class="analytics-card large">

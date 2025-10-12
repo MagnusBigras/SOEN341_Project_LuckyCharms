@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Lucky_Charm_Event_track.Controllers;
 
 namespace Lucky_Charm_Event_track
 {
@@ -18,6 +19,7 @@ namespace Lucky_Charm_Event_track
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            
         }
 
         public IConfiguration Configuration { get; }
@@ -54,6 +56,8 @@ namespace Lucky_Charm_Event_track
             {
                 endpoints.MapRazorPages();
             });
+            EventController.SimulateCreateEvent(db); // FOR TESTING PURPOSES ONLY BY MATEI
         }
+
     }
 }
