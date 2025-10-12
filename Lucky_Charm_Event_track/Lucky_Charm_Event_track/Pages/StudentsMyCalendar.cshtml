@@ -1,7 +1,7 @@
 @page
 @model Lucky_Charm_Event_track.Pages.EventsModel
 @{
-    ViewData["Title"] = "Events";
+    ViewData["Title"] = "StudentsMyCalendar";
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -9,18 +9,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="~/css/studentportal.css">
 </head>
 <body>
 
-    <!-- Sidebar navigation -->
-    <div class="sidebar">
+<!-- Sidebar navigation -->
+<div class="sidebar">
         <div class="sidebar-menu">
-            <!-- Events link -->
+            <!-- Your Events link -->
             <div class="sidebar-item">
-                <a asp-page="/Events" class="sidebar-link">
+                <a asp-page="/StudentsMyEvents" class="sidebar-link">
                     <img src="~/Images/86c1865905340afb06ee2948873e0be24974cff4.png" class="sidebar-icon" alt="Events">
-                    <span class="sidebar-text">Events</span>
+                    <span class="sidebar-text">Your Events</span>
+                </a>
+            </div>
+
+            <div class="sidebar-item">
+                <a asp-page="/StudentsEventsOffered" class="sidebar-link">
+                    <img src="~/Images/Untitled design (1)-Photoroom.png" class="sidebar-icon" alt="EventsOffered">
+                    <span class="sidebar-text">Events Offered</span>
                 </a>
             </div>
 
@@ -30,11 +37,14 @@
                 <span class="sidebar-text">Feedback</span>
             </div>
 
-            <!-- Create Event section -->
+            <!-- Calendar -->
             <div class="sidebar-item" id="sidebarCreate">
-                <img src="~/Images/758ad898c74a67305bc208032ee5f2ed40d10d8d.png" class="sidebar-icon" alt="Create Event">
-                <span class="sidebar-text">Create Event</span>
+             <a asp-page="/StudentsMyCalendar" class="sidebar-link">
+                <img src="~/Images/Untitled design-Photoroom.png" class="sidebar-icon" alt="Calendar">
+                <span class="sidebar-text">Calendar</span>
+                </a>
             </div>
+
 
             <!-- Divider bar -->
             <div class="sidebar-bar"></div>
@@ -67,7 +77,9 @@
             <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
         </div>
         <div class="navbar-right">
-            <button class="create-btn" id="navbarCreate"><span class="plus-sign">+</span> Create</button>
+            <img src="https://icons.veryicon.com/png/o/miscellaneous/250-thick-line-icon-of-website-and-app/6-bell.png"
+                 alt="Notifications"
+                 class="bell-icon">
             <button class="account-btn">
                 <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
                 <span class="account-name">Alex</span>
@@ -78,16 +90,14 @@
     <!-- Main content area -->
     <div class="main-content">
         <div class="main-content-header">
-            <h1>Your Events <span id="eventName"></span></h1>
+            <h1>My Calendar </h1>
         </div>
 
-        <!-- Container where events will be dynamically rendered via JS -->
-        <div class="events-container" id="eventsContainer">
-            <!-- JS will render events here -->
-        </div>
     </div>
+    
 
     <!-- Scripts -->
-    <script src="~/js/site.js"></script>
+    <script src="~/js/studentportal.js"></script>
+    
 </body>
 </html>
