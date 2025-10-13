@@ -33,6 +33,10 @@
       "PackagePath": "staticwebassets\\Images\\af7e2a95556abcf8c3cc0c41fedea581cd0f43af.png"
     },
     {
+      "Id": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\css\\EventForm.css",
+      "PackagePath": "staticwebassets\\css\\EventForm.css"
+    },
+    {
       "Id": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
