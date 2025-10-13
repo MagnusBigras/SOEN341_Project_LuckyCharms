@@ -1,0 +1,244 @@
+
+/* -------------------- Body -------------------- */
+body {
+    padding-top: 80px;
+    background-color: #E9D3D7;
+    display: flex;
+    flex-direction: column;
+}
+
+/* -------------------- Top Navbar -------------------- */
+.top-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    z-index: 500;
+}
+
+.logo {
+    height: 42px;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+}
+
+.create-btn, .account-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 2px solid #912338;
+    border-radius: 20px;
+    padding: 0.5rem 1.3rem;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    height: 40px;
+    transition: all 0.25s ease-in-out;
+}
+
+.create-btn {
+    background-color: white;
+    color: #912338;
+}
+
+.create-btn:hover, 
+.account-btn:hover {
+    background-color: #912338;
+    color: white;
+    transform: translateY(-1px);
+    text-decoration: none;
+
+}
+
+.account-btn {
+    background-color: #f3f4f6;
+    color: #912338;
+    padding: 0.5rem 1.5rem;
+}
+
+.account-name {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.plus-sign {
+    font-size: 1.2rem;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.bell-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.bell-icon:hover,
+.bell-icon:active {
+    animation: ring 0.5s ease;
+}
+
+@keyframes ring {
+    0% { transform: rotate(0); }
+    20% { transform: rotate(15deg); }
+    40% { transform: rotate(-10deg); }
+    60% { transform: rotate(5deg); }
+    80% { transform: rotate(-3deg); }
+    100% { transform: rotate(0); }
+}
+
+.account-img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* -------------------- Sidebar -------------------- */
+.sidebar {
+    width: 320px;
+    background-color: white;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 100px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 500;
+    box-shadow: 0 1px 0.5px rgba(0,0,0,0.1);
+}
+
+.sidebar-logo img {
+    width: 40px;
+    height: 40px;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 2.4rem;
+    flex-grow: 1;
+    color: #912338;
+    font-weight: 1000;
+    font-size: 1.1rem;
+}
+
+.sidebar-item {
+    position: relative; 
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 2rem;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.sidebar-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 320px;
+    height: 100%;
+    background-color: #E9D3D7;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+.sidebar-item:hover::before {
+    opacity: 1;
+}
+
+.sidebar-icon {
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.sidebar-bar {
+    display: block;
+    width: 91%;
+    height: 1.5px;
+    background-color: #912338;
+    margin-top: 1rem;
+    margin-bottom: 1.1rem;
+    transform: translateX(12px);
+}
+
+.sidebar-contact {
+    margin-top: auto;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 2rem;
+}
+
+.sidebar-contact .sidebar-icon {
+    width: 30px;
+    height: 30px;
+}
+
+.sidebar-contact .sidebar-text {
+    margin-right: 15px;
+}
+
+/* -------------------- Main Content -------------------- */
+.main-content {
+    margin-left: 170px;
+    margin-top: 50px;
+    padding: 2rem;
+    min-width: 880px;
+    width: calc(100% - 40px);
+    flex: 1;
+    overflow: hidden;
+}
+
+.main-content h1 {
+    font-size: 2.5rem; 
+    font-weight: 700;
+    color: #912338;  
+    margin-bottom: 4rem;
+    font-family: arial, sans-serif;
+    margin-left: 2rem;
+    margin-top: -0.5rem;
+}
+
+
+/* -------------------- Links -------------------- */
+.sidebar-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.sidebar-link:hover,
+.sidebar-link:focus {
+    color: #912338;
+    text-decoration: none;
+    outline: none;
+}
+

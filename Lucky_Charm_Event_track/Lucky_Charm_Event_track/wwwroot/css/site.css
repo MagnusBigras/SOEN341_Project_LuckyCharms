@@ -4,7 +4,6 @@ html, body {
     font-family: "Segoe UI", sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #F2D0A4;
 }
 
 /* -------------------- Body -------------------- */
@@ -67,6 +66,7 @@ body {
     background-color: #912338;
     color: white;
     transform: translateY(-1px);
+    text-decoration: none;
 }
 
 .account-btn {
