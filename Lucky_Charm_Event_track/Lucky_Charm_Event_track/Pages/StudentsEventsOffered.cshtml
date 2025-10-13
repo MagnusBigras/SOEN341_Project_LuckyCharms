@@ -1,5 +1,5 @@
 @page
-@model Lucky_Charm_Event_track.Pages.EventsModel
+@model Lucky_Charm_Event_track.Pages.StudentsEventsOfferedModel
 @{
     ViewData["Title"] = "StudentsEventsOffered";
 }
@@ -88,14 +88,125 @@
     </div>
 
     <!-- Main content area -->
-    <div class="main-content">
-        <div class="main-content-header">
-            <h1>Events Offered</h1>
+  <div class="main-content">
+    <div class="main-content-header">
+        <h1>Events Offered</h1>
+    </div>
+
+    <!-- Search and Sort Bar -->
+    <form method="get" class="search-sort-bar">
+        <input type="text" name="SearchQuery" placeholder="Search events..." value="@Model.SearchQuery" />
+
+        <select name="SortByDate">
+            <option value="">Sort by Date</option>
+            <option value="asc" selected="@(Model.SortByDate=="asc" ? "selected" : null)">Earliest First</option>
+            <option value="desc" selected="@(Model.SortByDate=="desc" ? "selected" : null)">Latest First</option>
+        </select>
+
+        <select name="SortByPrice">
+            <option value="">Sort by Price</option>
+            <option value="asc" selected="@(Model.SortByPrice=="asc" ? "selected" : null)">Low to High</option>
+            <option value="desc" selected="@(Model.SortByPrice=="desc" ? "selected" : null)">High to Low</option>
+        </select>
+
+        <select name="SortByPopularity">
+            <option value="">Sort by Popularity</option>
+            <option value="asc" selected="@(Model.SortByPopularity=="asc" ? "selected" : null)">Least to Most</option>
+            <option value="desc" selected="@(Model.SortByPopularity=="desc" ? "selected" : null)">Most to Least</option>
+        </select>
+
+        <select name="SortByCategory">
+            <option value="">Sort by Category</option>
+            <option value="asc" selected="@(Model.SortByCategory=="asc" ? "selected" : null)">A to Z</option>
+            <option value="desc" selected="@(Model.SortByCategory=="desc" ? "selected" : null)">Z to A</option>
+        </select>
+
+        <select name="SortByOrganization">
+            <option value="">Sort by Organization</option>
+            <option value="asc" selected="@(Model.SortByOrganization=="asc" ? "selected" : null)">A to Z</option>
+            <option value="desc" selected="@(Model.SortByOrganization=="desc" ? "selected" : null)">Z to A</option>
+        </select>
+
+        <button type="submit">Apply</button>
+    </form>
+
+    <!-- Events Grid -->
+    @if (!Model.FilteredEvents.Any())
+    {
+        <p class="no-events">No events match your search or filter criteria.</p>
+    }
+    else
+    {
+        <div class="event-grid">
+            @foreach (var e in Model.FilteredEvents)
+            {
+                <div class="event-card">
+                    <h3>@e.Name</h3>
+                    <p><strong>Date:</strong> @e.Date</p>
+                    <p><strong>Location:</strong> @e.Location</p>
+                    <p><strong>Price:</strong> @(e.Price == 0 ? "Free" : "$" + e.Price)</p>
+
+                    <div class="event-card-buttons">
+                        <button class="details-btn"
+                            onclick="openEventsOfferedPopup('@e.Name', '@e.Date', '@e.startTime', '@e.endTime', '@e.Location', '@(e.Price == 0 ? "Free" : "$" + e.Price)', '@e.Description', '@e.TicketsLeft', '@e.Category', '@e.Organization')">
+                            View Details
+                        </button>
+
+                        <button class="purchase-btn" onclick="alert('Tickets claimed for @e.Name')">
+                            @(e.Price == 0 ? "Claim Ticket" : "Purchase Ticket")
+                        </button>
+                    </div>
+                </div>
+            }
         </div>
+    }
+</div>
 
+<!-- Events Offered Popup -->
+<div id="eventsOfferedPopup" class="events-offered-popup">
+    <div class="events-offered-popup-content">
+        <span class="events-offered-close-btn" onclick="closeEventsOfferedPopup()">&times;</span>
+        <h2 id="eventsOfferedName"></h2>
+        <p><strong>Date:</strong> <span id="eventsOfferedDate"></span></p>
+        <p><strong>Start:</strong> <span id="eventsOfferedStart"></span></p>
+        <p><strong>End:</strong> <span id="eventsOfferedEnd"></span></p>
+        <p><strong>Location:</strong> <span id="eventsOfferedLocation"></span></p>
+        <p><strong>Price:</strong> <span id="eventsOfferedPrice"></span></p>
+        <p><strong>Description:</strong> <span id="eventsOfferedDescription"></span></p>
+        <p><strong>Tickets Left:</strong> <span id="eventsOfferedTickets"></span></p>
+        <p><strong>Category:</strong> <span id="eventsOfferedCategory"></span></p>
+        <p><strong>Organization:</strong> <span id="eventsOfferedOrganization"></span></p>
+    </div>
+</div>
 
-    <!-- Scripts -->
-    <script src="~/js/studentportal.js"></script>
-    
+<!-- Scripts -->
+<script>
+    function openEventsOfferedPopup(name, date, start, end, location, price, description, tickets, category, organization) {
+        document.getElementById('eventsOfferedName').innerText = name;
+        document.getElementById('eventsOfferedDate').innerText = date;
+        document.getElementById('eventsOfferedStart').innerText = start || "N/A";
+        document.getElementById('eventsOfferedEnd').innerText = end || "N/A";
+        document.getElementById('eventsOfferedLocation').innerText = location;
+        document.getElementById('eventsOfferedPrice').innerText = price;
+        document.getElementById('eventsOfferedDescription').innerText = description;
+        document.getElementById('eventsOfferedTickets').innerText = tickets;
+        document.getElementById('eventsOfferedCategory').innerText = category;
+        document.getElementById('eventsOfferedOrganization').innerText = organization;
+
+        document.getElementById('eventsOfferedPopup').style.display = 'block';
+    }
+
+    function closeEventsOfferedPopup() {
+        document.getElementById('eventsOfferedPopup').style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        const popup = document.getElementById('eventsOfferedPopup');
+        if (event.target === popup) {
+            popup.style.display = 'none';
+        }
+    }
+</script>
+
 </body>
 </html>
