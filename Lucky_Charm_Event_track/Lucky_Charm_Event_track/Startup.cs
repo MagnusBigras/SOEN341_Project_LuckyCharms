@@ -27,8 +27,13 @@ namespace Lucky_Charm_Event_track
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-                services.AddDbContext<WebAppDBContext>(options => options.UseSqlite("Data Source=eventtracker.db"));
-                services.AddRazorPages();
+            services.AddDbContext<WebAppDBContext>(options => options.UseSqlite("Data Source=eventtracker.db"));
+            services.AddRazorPages();
+            services.AddControllers().AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+                });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,9 +56,9 @@ namespace Lucky_Charm_Event_track
             app.UseRouting();
 
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapRazorPages();
             });
             EventController.SimulateCreateEvent(db); // FOR TESTING PURPOSES ONLY BY MATEI

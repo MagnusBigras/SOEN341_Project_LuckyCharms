@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Rhhw+A2GsUk=",
+  "dgSpecHash": "rTwb+z42hDE=",
   "success": true,
-  "projectFilePath": "d:\\New folder\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj",
+  "projectFilePath": "D:\\New folder\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Matei\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\Matei\\.nuget\\packages\\microsoft.data.sqlite.core\\7.0.0\\microsoft.data.sqlite.core.7.0.0.nupkg.sha512",

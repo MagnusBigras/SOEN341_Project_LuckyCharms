@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "d:\\New folder\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj": {}
+    "D:\\New folder\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj": {}
   },
   "projects": {
-    "d:\\New folder\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj": {
+    "D:\\New folder\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\New folder\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj",
+        "projectUniqueName": "D:\\New folder\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj",
         "projectName": "Lucky_Charm_Event_track",
-        "projectPath": "d:\\New folder\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj",
+        "projectPath": "D:\\New folder\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj",
         "packagesPath": "C:\\Users\\Matei\\.nuget\\packages\\",
-        "outputPath": "d:\\New folder\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\obj\\",
+        "outputPath": "D:\\New folder\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -52,6 +52,10 @@
           "targetAlias": "net7.0",
           "dependencies": {
             "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Analyzers": {
               "target": "Package",
               "version": "[7.0.0, )"
             },

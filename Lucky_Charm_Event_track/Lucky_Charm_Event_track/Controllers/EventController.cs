@@ -129,8 +129,6 @@ namespace Lucky_Charm_Event_track.Controllers
 
         }
 
-
-
         // Utility method for seeding/testing: Simulate event creation without API call
         public static void SimulateCreateEvent(WebAppDBContext dbContext)
         {
@@ -185,7 +183,7 @@ namespace Lucky_Charm_Event_track.Controllers
             dbContext.SaveChanges();
             var newEvent2 = new Lucky_Charm_Event_track.Models.Event
             {
-                EventName = "Simulated Event 222",
+                EventName = "Simulated Event 2",
                 EventDescription = "SECOND EVENT FOR TEST.",
                 City = "quebec",
                 Capacity = 160,
@@ -193,7 +191,7 @@ namespace Lucky_Charm_Event_track.Controllers
                 isActive = true,
                 StartTime = System.DateTime.Now.AddDays(-29),
                 Address = "blv st laurier",
-                Region = "m,aisonneuve",
+                Region = "maisonneuve",
                 PostalCode = "H21A 2A2",
                 Country = "france",
                 TicketType = Lucky_Charm_Event_track.Enums.TicketTypes.GeneralAddmission,
