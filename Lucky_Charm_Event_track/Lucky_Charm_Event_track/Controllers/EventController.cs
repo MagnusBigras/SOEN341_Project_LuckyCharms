@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System;
+using Microsoft.Extensions.Logging;
 
 namespace Lucky_Charm_Event_track.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/events")]
     public class EventController : Controller
     {
         private readonly WebAppDBContext _dbContext;
@@ -54,15 +56,16 @@ namespace Lucky_Charm_Event_track.Controllers
             return active_events;
         }
         [HttpPost("create")]
-        public  ActionResult<Event> CreateEvent( Event newEvent)
+        public  ActionResult<Event> CreateEvent([FromBody] Event newEvent)
         {
-           if(newEvent == null) 
+            Console.WriteLine($"Received: {newEvent?.EventName}, {newEvent?.StartTime}");
+            if (newEvent == null) 
             {
                 return BadRequest();
             }   
            _dbContext.Events.Add(newEvent);
             _dbContext.SaveChanges();
-            return Ok();
+            return Ok(new { message = "Event created successfully", eventId = newEvent.Id });
         }
         [HttpPost("delete")]
         public ActionResult<Event> DeleteEvent(int id)
