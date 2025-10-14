@@ -1,20 +1,34 @@
 /* -------------------- Reset & Base -------------------- */
-html, body {
-    height: 100%;
+body {
     font-family: "Segoe UI", sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #E9D3D7;
+    overflow-x: hidden;
+    overflow-y: auto; 
 }
 
-/* -------------------- Body -------------------- */
-body {
-    padding-top: 80px;
-    background-color: #E9D3D7;
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
+/* -------------------- Main Content -------------------- */
+.main-content {
+    margin-left: 170px; 
+    margin-top: 100px;  
+    padding: 2rem;
+    min-width: 880px;
+    width: calc(100% - 40px);
+    flex: 1;
+
+    
+}
+
+
+.main-content h1 {
+    font-size: 2.5rem; 
+    font-weight: 700;
+    color: #912338;  
+    margin-bottom: 4rem;
+    font-family: arial, sans-serif;
+    margin-left: 2rem;
+    margin-top: -0.5rem;
 }
 
 /* -------------------- Top Navbar -------------------- */
@@ -80,14 +94,6 @@ body {
     font-weight: 600;
 }
 
-.plus-sign {
-    font-size: 1.2rem;
-    font-weight: 400;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-}
 
 .bell-icon {
     width: 24px;
@@ -211,27 +217,6 @@ body {
 
 .sidebar-contact .sidebar-text {
     margin-right: 15px;
-}
-
-/* -------------------- Main Content -------------------- */
-.main-content {
-    margin-left: 170px;
-    margin-top: 50px;
-    padding: 2rem;
-    min-width: 880px;
-    width: calc(100% - 40px);
-    flex: 1;
-    overflow: hidden;
-}
-
-.main-content h1 {
-    font-size: 2.5rem; 
-    font-weight: 700;
-    color: #912338;  
-    margin-bottom: 4rem;
-    font-family: arial, sans-serif;
-    margin-left: 2rem;
-    margin-top: -0.5rem;
 }
 
 /* -------------------- Analytics Cards -------------------- */
