@@ -1,5 +1,5 @@
 @page
-@model Lucky_Charm_Event_track.Pages.EventsModel
+@model Lucky_Charm_Event_track.Pages.StudentsMyCalendarModel
 @{
     ViewData["Title"] = "StudentsMyCalendar";
 }
@@ -9,14 +9,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"]</title>
+
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet" />
+
+    <!-- Portal CSS -->
     <link rel="stylesheet" href="~/css/studentportal.css">
 </head>
 <body>
 
-<!-- Sidebar navigation -->
-<div class="sidebar">
+    <!-- ================= Sidebar Navigation ================= -->
+    <div class="sidebar">
         <div class="sidebar-menu">
-            <!-- Your Events link -->
+
+            <!-- Your Events -->
             <div class="sidebar-item">
                 <a asp-page="/StudentsMyEvents" class="sidebar-link">
                     <img src="~/Images/86c1865905340afb06ee2948873e0be24974cff4.png" class="sidebar-icon" alt="Events">
@@ -24,6 +30,7 @@
                 </a>
             </div>
 
+            <!-- Events Offered -->
             <div class="sidebar-item">
                 <a asp-page="/StudentsEventsOffered" class="sidebar-link">
                     <img src="~/Images/Untitled design (1)-Photoroom.png" class="sidebar-icon" alt="EventsOffered">
@@ -31,7 +38,7 @@
                 </a>
             </div>
 
-            <!-- Feedback section -->
+            <!-- Feedback -->
             <div class="sidebar-item">
                 <img src="~/Images/2508862806f0dced98f9ab1e25e74ce54c4711b2.png" class="sidebar-icon" alt="Feedback">
                 <span class="sidebar-text">Feedback</span>
@@ -39,17 +46,15 @@
 
             <!-- Calendar -->
             <div class="sidebar-item" id="sidebarCreate">
-             <a asp-page="/StudentsMyCalendar" class="sidebar-link">
-                <img src="~/Images/Untitled design-Photoroom.png" class="sidebar-icon" alt="Calendar">
-                <span class="sidebar-text">Calendar</span>
+                <a asp-page="/StudentsMyCalendar" class="sidebar-link">
+                    <img src="~/Images/Untitled design-Photoroom.png" class="sidebar-icon" alt="Calendar">
+                    <span class="sidebar-text">Calendar</span>
                 </a>
             </div>
 
-
-            <!-- Divider bar -->
             <div class="sidebar-bar"></div>
 
-            <!-- Extra sidebar items like settings and sign out -->
+            <!-- Extra Sidebar Items -->
             <div class="sidebar-extra">
                 <div class="sidebar-item">
                     <img src="~/Images/7965593328e6cb27ffb10553f680443da25fad1a.png" class="sidebar-icon" alt="Organization Settings">
@@ -61,7 +66,7 @@
                 </div>
             </div>
 
-            <!-- Contact info in sidebar -->
+            <!-- Contact -->
             <div class="sidebar-contact">
                 <div class="sidebar-item">
                     <img src="~/Images/Untitled%20design.png" class="sidebar-icon" alt="Contact">
@@ -71,14 +76,14 @@
         </div>
     </div>
 
-    <!-- Top navigation bar -->
+    <!-- ================= Top Navigation Bar ================= -->
     <div class="top-navbar">
         <div class="navbar-left">
             <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
         </div>
         <div class="navbar-right">
-            <img src="https://icons.veryicon.com/png/o/miscellaneous/250-thick-line-icon-of-website-and-app/6-bell.png"
-                 alt="Notifications"
+            <img src="https://icons.veryicon.com/png/o/miscellaneous/250-thick-line-icon-of-website-and-app/6-bell.png" 
+                 alt="Notifications" 
                  class="bell-icon">
             <button class="account-btn">
                 <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
@@ -87,17 +92,95 @@
         </div>
     </div>
 
-    <!-- Main content area -->
+    <!-- ================= Main Content ================= -->
     <div class="main-content">
         <div class="main-content-header">
-            <h1>My Calendar </h1>
+            <h1>My Calendar</h1>
         </div>
 
+        <!-- Calendar container -->
+        <div id="calendar"></div>
+
+        <!-- Inline Popup under calendar -->
+        <div id="eventPopup">
+            <!-- Top-right Close button -->
+            <button class="popup-close-btn" onclick="closePopup()">×</button>
+
+            <h2 id="popupTitle"></h2>
+            <p><strong>Start:</strong> <span id="popupStart"></span></p>
+            <p><strong>End:</strong> <span id="popupEnd"></span></p>
+            <p><strong>Location:</strong> <span id="popupLocation"></span></p>
+            <p><strong>Description:</strong> <span id="popupDescription"></span></p>
+
+            <!-- Bottom Remove Event button -->
+            <button class="close-inline-btn" id="removeEventBtn">Remove Event</button>
+        </div>
     </div>
+
+    <!-- ================= Scripts ================= -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+    <script src="~/js/studentportal.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // ===== Calendar initialization =====
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            height: 'auto',
+            selectable: true,
+            editable: false,
+
+            // ===== Event click handler =====
+            eventClick: function(info) {
+                // Show inline popup
+                document.getElementById('popupTitle').innerText = info.event.title;
+                document.getElementById('popupStart').innerText = info.event.start ? info.event.start.toLocaleString() : 'N/A';
+                document.getElementById('popupEnd').innerText = info.event.end ? info.event.end.toLocaleString() : 'N/A';
+                document.getElementById('popupLocation').innerText = info.event.extendedProps.location || 'N/A';
+                document.getElementById('popupDescription').innerText = info.event.extendedProps.description || 'N/A';
+
+                var popup = document.getElementById('eventPopup');
+                popup.style.display = 'block';
+                popup.scrollIntoView({ behavior: 'smooth' });
+
+                // ===== Remove event button functionality =====
+                const removeBtn = document.getElementById('removeEventBtn');
+                removeBtn.onclick = function() {
+                    info.event.remove(); // Remove from calendar
+                    closePopup(); // Hide popup
+                };
+            }
+        });
+
+        // ===== Load events from backend =====
+        var eventIds = new Set();
+        var eventsFromBackend = @Html.Raw(Model.GetEventsJson());
+
+        eventsFromBackend.forEach(e => {
+            if (!eventIds.has(e.id) && e.status === "active") {
+                calendar.addEvent({
+                    id: e.id,
+                    title: e.title,
+                    start: e.start,
+                    end: e.end,
+                    description: e.description,
+                    location: e.location
+                });
+                eventIds.add(e.id);
+            }
+        });
+
+        // Render the calendar
+        calendar.render();
+    });
+
+    // ===== Close popup function =====
+    function closePopup() {
+        document.getElementById('eventPopup').style.display = 'none';
+    }
     
 
-    <!-- Scripts -->
-    <script src="~/js/studentportal.js"></script>
-    
+    </script>
 </body>
 </html>
