@@ -21,7 +21,11 @@
                 </button> *@
 
                 <!-- Add Event Button as Link -->
-                <a class="create-btn" asp-page="/EventForm"> + Create </a>
+                <a class="create-btn" asp-page="/EventForm"> Create </a>
+
+                <img src="https://icons.veryicon.com/png/o/miscellaneous/250-thick-line-icon-of-website-and-app/6-bell.png"
+                     alt="Notifications"
+                     class="bell-icon">
 
                 <button class="account-btn">
                     <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
@@ -36,7 +40,12 @@
         </main>
     </div>
 
- 
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - Lucky_Charm_Event_track - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

@@ -1,4 +1,5 @@
-if (document.getElementById('eventsContainer')) {
+
+/*if (document.getElementById('eventsContainer')) { //Keep commented for future reference (matei)
 
   const container = document.getElementById('eventsContainer');
 
@@ -26,52 +27,85 @@ if (document.getElementById('eventsContainer')) {
         container.appendChild(card);
     });
 }
+*/
+// Place this at the top level, before renderEvents
+function renderEventMetrics(event) {
+    if (!event.metric) return '';
+    return `
+        <div class="event-metrics">
+            <p>Total Revenue: $${event.metric.totalRevenue ?? 0}</p>
+            <p>New Attendees: ${event.metric.newAttendees ?? 0}</p>
+            <p>Last Month Revenue: $${event.metric.lastMonthRevenue ?? 0}</p>
+            <p>Last Month Attendees: ${event.metric.lastMonthAttendees ?? 0}</p>
+            <p>Remaining Capacity: ${event.metric.lastRemaining ?? 0}</p>
+        </div>
+    `;
+}
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
 
-if (document.getElementById('totalRevenue')) {
-    const totalRevenue = 12345;
-    const lastMonthRevenue = 11738;
-    const revenueChange = totalRevenue - lastMonthRevenue;
-    const revenuePercent = ((revenueChange / lastMonthRevenue) * 100).toFixed(1);
 
-    document.getElementById('totalRevenue').textContent = `$${totalRevenue}`;
-    const revenueChangeElement = document.getElementById('revenueChange');
+// Dynamically fetch and update analytics values for a specific event using data attribute
 
-    if (revenueChange >= 0) {
-        revenueChangeElement.textContent = `▲ ${revenuePercent}% from last month`;
-    }
-    else {
-        revenueChangeElement.textContent = `▼ ${Math.abs(revenuePercent)}% from last month`;
-    }
+const eventId = document.body.getAttribute('data-event-id');
 
-    const newAttendees = 250;
-    const lastMonthAttendees = 230;
-    const attendeesChange = newAttendees - lastMonthAttendees;
-    const attendeesPercent = ((attendeesChange / lastMonthAttendees) * 100).toFixed(1);
+if (document.getElementById('totalRevenue') && eventId && eventId !== '0') {
+    console.log('Fetching metrics for eventId:', eventId);
+    fetch(`/api/Event/${eventId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(event => {
+            console.log('API response:', event);
+            if (event && event.metric) {
+                // Current and last month revenue
+                const totalRevenue = event.metric.totalRevenue ?? 0;
+                const lastMonthRevenue = event.metric.lastMonthRevenue ?? 0;
+                const revenueChange = totalRevenue - lastMonthRevenue;
+                const revenuePercent = lastMonthRevenue !== 0 ? ((revenueChange / lastMonthRevenue) * 100).toFixed(1) : 0;
 
-    document.getElementById('newAttendees').textContent = newAttendees;
-    const attendeesChangeElement = document.getElementById('attendeesChange');
+                document.getElementById('totalRevenue').textContent = `$${totalRevenue}`;
+                const revenueChangeElement = document.getElementById('revenueChange');
+                if (revenueChangeElement) {
+                    if (revenueChange >= 0) {
+                        revenueChangeElement.textContent = `▲ ${revenuePercent}% from last month`;
+                    } else {
+                        revenueChangeElement.textContent = `▼ ${Math.abs(revenuePercent)}% from last month`;
+                    }
+                }
 
-    if (attendeesChange >= 0) {
-        attendeesChangeElement.textContent = `▲ ${attendeesPercent}% from last month`;
-    } 
-    else {
-        attendeesChangeElement.textContent = `▼ ${Math.abs(attendeesPercent)}% from last month`;
-    }
+                // New and last month attendees
+                const newAttendees = event.metric.newAttendees ?? 0;
+                const lastMonthAttendees = event.metric.lastMonthAttendees ?? 0;
+                const attendeesChange = newAttendees - lastMonthAttendees;
+                const attendeesPercent = lastMonthAttendees !== 0 ? ((attendeesChange / lastMonthAttendees) * 100).toFixed(1) : 0;
 
-    const numEvents = 15;
-    const lastMonthEvents = 12;
-    const eventsChange = numEvents - lastMonthEvents;
-    const eventsPercent = ((eventsChange / lastMonthEvents) * 100).toFixed(1);
+                document.getElementById('newAttendees').textContent = newAttendees;
+                const attendeesChangeElement = document.getElementById('attendeesChange');
+                if (attendeesChangeElement) {
+                    if (attendeesChange >= 0) {
+                        attendeesChangeElement.textContent = `▲ ${attendeesPercent}% from last month`;
+                    } else {
+                        attendeesChangeElement.textContent = `▼ ${Math.abs(attendeesPercent)}% from last month`;
+                    }
+                }
 
-    document.getElementById('numEvents').textContent = numEvents;
-    const eventsChangeElement = document.getElementById('eventsChange');
-
-    if (eventsChange >= 0) {
-        eventsChangeElement.textContent = `▲ ${eventsPercent}% from last month`;
-    } 
-    else {
-        eventsChangeElement.textContent = `▼ ${Math.abs(eventsPercent)}% from last month`;
-    }
+                // Remaining capacity (numEvents card)
+                const numEvents = event.metric.lastRemaining ?? 0;
+                document.getElementById('numEvents').textContent = numEvents;
+                // Optionally update eventsChange if you have lastMonthEvents
+            } else {
+                console.warn('No metric found in API response:', event);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching event metrics:', error);
+        });
 }
 
 
@@ -116,4 +150,117 @@ if (document.getElementById('attendanceChart')) {
         }
     });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('eventsContainer');
+    if (!container) return;
+
+    // Fetch all active events from backend
+    async function fetchEvents() {
+        try {
+            const res = await fetch('/api/event/active');
+            if (!res.ok) throw new Error('Network response was not ok');
+            const events = await res.json();
+            renderEvents(events);
+        } catch (err) {
+            console.error('Error fetching events:', err);
+            container.innerHTML = '<p>Unable to load events.</p>';
+        }
+    }
+
+    function renderEvents(events) {
+        container.innerHTML = '';
+        // Handle $values if present (from ReferenceHandler.Preserve)
+        if (events && events.$values) {
+            events = events.$values;
+        }
+        if (!events || events.length === 0) {
+            container.innerHTML = `<div class="no-events-message">
+                <p>There are no events currently.</p>
+            </div>`;
+            return;
+        }
+
+        events.forEach(event => {
+            const card = document.createElement('div');
+            card.classList.add('event-card');
+
+            const startDate = new Date(event.startTime);
+            const formattedDate = startDate.toLocaleDateString([], { year: 'numeric', month: 'long', day: 'numeric' });
+            const formattedTime = startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            card.innerHTML = `
+                <div class="event-header">
+                    <h2 class="event-name">${event.eventName}</h2>
+                    <button class="edit-btn" title="Edit Event">
+                        <img src="./Images/7965593328e6cb27ffb10553f680443da25fad1a.png" alt="Edit" class="edit-icon">
+                    </button>
+                </div>
+                <div class="event-info">
+                    <p class="event-date">Date: ${formattedDate}</p>
+                    <p class="event-time">Time: ${formattedTime}</p>
+                    <p class="event-location">Location: ${event.address || 'N/A'}</p>
+                    <p class="event-type">Type: ${event.eventType || 'N/A'}</p>
+                    <p class="event-description">Description: ${event.eventDescription || 'No description provided.'}</p>
+                </div>
+                ${renderEventMetrics(event)}
+                <div class="event-actions">
+                    <button class="analytics-btn">Analytics</button>
+                    <button class="tools-btn">Tools</button>
+                    <button class="visibility-btn">
+                        <span class="visibility-text">${event.isActive ? 'Visible' : 'Hidden'}</span>
+                    </button>
+                    <button class="cancel-event-btn">Cancel</button>
+                </div>
+            `;
+
+            // Edit button
+            card.querySelector('.edit-btn').addEventListener('click', () => {
+                window.location.href = `/EditEvent?eventId=${event.id}`;
+            });
+
+            // Cancel button
+            card.querySelector('.cancel-event-btn').addEventListener('click', async () => {
+                if (!confirm(`Are you sure you want to cancel "${event.eventName}"?`)) return;
+                try {
+                    await fetch('/api/event/delete', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(event.id)
+                    });
+                    fetchEvents(); // Refresh list after cancellation
+                } catch (err) {
+                    console.error('Error cancelling event:', err);
+                }
+            });
+
+            // Visibility toggle
+            const visibilityBtn = card.querySelector('.visibility-btn');
+            const visibilityText = visibilityBtn.querySelector('.visibility-text');
+            visibilityBtn.addEventListener('click', async () => {
+                event.isActive = !event.isActive;
+                visibilityText.textContent = event.isActive ? 'Visible' : 'Hidden';
+                try {
+                    await fetch('/api/event/update', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(event)
+                    });
+                } catch (err) {
+                    console.error('Error updating visibility:', err);
+                }
+            });
+
+            // Analytics button
+            card.querySelector('.analytics-btn').addEventListener('click', () => {
+                window.location.href = `/EventAnalytics?eventId=${event.id}&eventName=${encodeURIComponent(event.eventName)}`;
+            });
+
+            container.appendChild(card);
+        });
+    }
+
+    // Initial fetch from backend
+    fetchEvents();
+});
 

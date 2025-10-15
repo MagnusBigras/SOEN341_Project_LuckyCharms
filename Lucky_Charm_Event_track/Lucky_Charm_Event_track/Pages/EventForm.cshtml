@@ -14,7 +14,7 @@
 
 <body>
 
-    <form id="eventForm" class="event-form">
+    <form action="/submit-event" method="post" class="event-form">
         <h2>Create New Event</h2>
 
         <div class="form-group">
@@ -66,48 +66,3 @@
 </body>
 
 </html>
-<script>
-document.getElementById('eventForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    const form = e.target;
-
-    const payload = {
-            eventName: form.eventName.value,
-            eventDescription: form.eventDescription.value,
-            startTime: `${form.eventDate.value}T${form.eventTime.value}`, // ISO format
-            address: form.eventLocation.value,
-            city: "Montreal", // or add a field
-            region: "QC",
-            postalCode: "Postal Code",
-            country: "Canada",
-            capacity: 100,
-            eventOrganizerId: 1, // hardcoded or dynamic
-            ticketType: 3,
-            isActive: true,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-    };
-
-    try {
-        const response = await fetch('/api/events/create', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-
-        if (response.ok) {
-            const result = await response.json();
-            console.log("Event created:", result);
-            window.location.href = "/EventConfirmation";
-        } else {
-            const error = await response.text();
-            console.error("Failed to create event:", error);
-            alert("Error creating event.");
-        }
-    } catch (err) {
-        console.error("Network error:", err);
-        alert("Network error. Please try again.");
-    }
-});
-</script>
