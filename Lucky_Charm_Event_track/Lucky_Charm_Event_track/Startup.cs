@@ -1,4 +1,5 @@
 using Lucky_Charm_Event_track.Enums;
+using Lucky_Charm_Event_track.Controllers;
 using Lucky_Charm_Event_track.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Linq;
+using Lucky_Charm_Event_track.Controllers;
 
 namespace Lucky_Charm_Event_track
 {
@@ -26,7 +28,10 @@ namespace Lucky_Charm_Event_track
         {
                 services.AddDbContext<WebAppDBContext>(options => options.UseSqlite("Data Source=eventtracker.db"));
                 services.AddRazorPages();
-                services.AddControllers();
+                services.AddControllers().AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,6 +61,7 @@ namespace Lucky_Charm_Event_track
                 endpoints.MapControllers(); 
             });
             seedDefaultUser(db);
+            EventController.SimulateCreateEvent(db); // FOR TESTING PURPOSES ONLY BY MATEI
         }
         public void seedDefaultUser(WebAppDBContext db) 
         {
