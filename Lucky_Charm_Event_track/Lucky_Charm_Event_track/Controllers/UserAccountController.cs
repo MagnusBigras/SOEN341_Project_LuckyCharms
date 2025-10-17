@@ -1,3 +1,6 @@
+
+﻿using Lucky_Charm_Event_track.Enums;
+using Lucky_Charm_Event_track.Models;
 ﻿using Lucky_Charm_Event_track.Models;
 using Lucky_Charm_Event_track.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -10,17 +13,13 @@ using System.Threading.Tasks;
 namespace Lucky_Charm_Event_track.Controllers
 {
     [ApiController]
-    [Route("api/account")]
-    public class UserAccountController : Controller
+    [Route("api/accounts")]
+    public class UserAccountController : ControllerBase
     {
         private readonly WebAppDBContext _dbContext;
         public UserAccountController(WebAppDBContext context)
         {
             _dbContext = context;
-        }
-        public IActionResult Index()
-        {
-            return View();
         }
         [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<UserAccount>>> GetEvents()
@@ -44,19 +43,37 @@ namespace Lucky_Charm_Event_track.Controllers
             return active_accounts;
         }
         [HttpPost("create")]
-        public ActionResult<UserAccount> CreateUserAccount(UserAccount newAccount)
+        public ActionResult<UserAccount> CreateUserAccount([FromBody] UserAccount newAccount)
         {
-            if (newAccount == null)
+            try
             {
-                return BadRequest();
+
+                if (newAccount == null)
+                {
+                    return BadRequest("Payload was null");
+                }
+
+                Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(newAccount));
+
+                newAccount.LastLogin = DateTime.UtcNow;
+                newAccount.IsActive = true;
+                newAccount.Tickets = new List<Ticket>();
+
+                _dbContext.UserAccounts.Add(newAccount);
+                _dbContext.SaveChanges();
+
+                return Ok(new { message = "Account created successfully", accountID = newAccount.Id });
             }
-            _dbContext.UserAccounts.Add(newAccount);
-            _dbContext.SaveChanges();
-            return Ok();
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
         }
+
         [HttpPost("delete")]
         public ActionResult<UserAccount> DeleteAccount(int id)
         {
+
             var deleted_account = _dbContext.UserAccounts.Find(id);
             if (deleted_account == null)
             {
