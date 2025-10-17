@@ -1,6 +1,8 @@
 ﻿using Lucky_Charm_Event_track.Models;
+using Lucky_Charm_Event_track.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,7 +10,7 @@ using System.Threading.Tasks;
 namespace Lucky_Charm_Event_track.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/account")]
     public class UserAccountController : Controller
     {
         private readonly WebAppDBContext _dbContext;
@@ -76,6 +78,17 @@ namespace Lucky_Charm_Event_track.Controllers
             _dbContext.SaveChanges();
             return Ok(updated_account);
 
+        }
+        [HttpPost("login")]
+        public ActionResult<UserAccount> Login(string username, string password) 
+        {
+            var account = _dbContext.UserAccounts.Where(e => e.UserName == username && e.Password == password);
+            if (account == null)
+            {
+                return BadRequest();
+            }
+            Globals.Globals.SessionManager.InitializeSession((UserAccount)account, "login");
+            return Ok(account);
         }
     }
 }
