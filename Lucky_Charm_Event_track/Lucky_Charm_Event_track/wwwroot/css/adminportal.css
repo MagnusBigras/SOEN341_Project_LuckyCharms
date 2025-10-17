@@ -1,0 +1,29 @@
+.main-content-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.main-content-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #912338;
+    margin: 0;
+    margin-left: 2rem;
+    margin-bottom: 2rem;
+}
+
+.main-content-header input[type="month"] {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: 2px solid #912338;
+    border-radius: 20px;
+    background-color: white;
+    color: #912338;
+    cursor: pointer;
+    transition: all 0.25s ease-in-out;
+    margin-top: -3rem;
+}
+
+

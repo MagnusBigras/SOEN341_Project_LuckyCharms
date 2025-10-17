@@ -1,0 +1,164 @@
+@page
+@model Lucky_Charm_Event_track.Pages.AdminEventAnalyticsModel
+@{
+    ViewData["Title"] = "AdminAnalytics";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css">
+        <link rel="stylesheet" href="~/css/adminportal.css">
+
+</head>
+<body>
+
+    <!-- Sidebar navigation -->
+    <div class="sidebar">
+        <div class="sidebar-menu">
+
+            <a asp-page="/AdminPlatformOversight" class="sidebar-link sidebar-item">
+                <img src="~/Images/Your_paragraph_text-removebg-preview.png" class="sidebar-icon" alt="Platform Oversight">
+                <span class="sidebar-text">Platform Oversight</span>
+            </a>
+
+            <a asp-page="/AdminAnalytics" class="sidebar-link sidebar-item active">
+                <img src="~/Images/800ce0988c52dc7bded443567346a77035fb8534.png" class="sidebar-icon" alt="Analytics">
+                <span class="sidebar-text">Analytics</span>
+            </a>
+
+            <a asp-page="/AdminManagement" class="sidebar-link sidebar-item">
+                <img src="~/Images/Untitled_design__2_-removebg-preview.png" class="sidebar-icon" alt="Manage Organizations">
+                <span class="sidebar-text">Manage Organizations</span>
+            </a>
+
+            <div class="sidebar-bar"></div>
+
+            <div class="sidebar-extra">
+                <div class="sidebar-item">
+                    <img src="~/Images/7965593328e6cb27ffb10553f680443da25fad1a.png" class="sidebar-icon" alt="Organization Settings">
+                    <span class="sidebar-text">Organization Settings</span>
+                </div>
+                <div class="sidebar-item">
+                    <img src="~/Images/af7e2a95556abcf8c3cc0c41fedea581cd0f43af.png" class="sidebar-icon" alt="Sign out">
+                    <span class="sidebar-text">Sign out</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Top navigation bar -->
+    <div class="top-navbar">
+        <div class="navbar-left">
+            <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
+        </div>
+        <div class="navbar-right">
+            <a class="create-btn" asp-page="/OrganizationForm"> + Create </a>
+            <button class="account-btn">
+                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
+                <span class="account-name">Admin</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+
+        <!-- Header -->
+        <div class="main-content-header">
+            <h1>Analytics</h1>
+            <form method="get">
+                <input type="month" name="SelectedMonth" value="@Model.SelectedMonth.ToString("yyyy-MM")" onchange="this.form.submit()" />
+            </form>       
+        </div>
+
+        <!-- Analytics Cards -->
+        <div class="analytics-container top-row">
+            <div class="analytics-card">
+                <h2>Total Events</h2>
+                <h3>@Model.TotalEvents</h3>
+                <p>@Model.EventsPercentChange</p>
+            </div>
+            <div class="analytics-card">
+                <h2>Total Tickets Issued</h2>
+                <h3>@Model.TotalTicketsIssued</h3>
+                <p>@Model.TicketsIssuedPercentChange</p>
+            </div>
+            <div class="analytics-card">
+                <h2>Total Tickets Redeemed</h2>
+                <h3>@Model.TotalTicketsRedeemed</h3>
+                <p>@Model.TicketsRedeemedPercentChange</p>
+            </div>
+         </div>
+
+
+        <!-- Charts -->
+        <div class="analytics-container bottom-row">
+            <div class="analytics-card large">
+                <h4>Attendance Trend</h4>
+                <canvas id="attendanceTrendChart"></canvas>
+            </div>
+            <div class="analytics-card large">
+                <h4>Tickets Per Category</h4>
+                <canvas id="ticketsCategoryChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // --- Attendance Trend Chart ---
+    const ctxAttendance = document.getElementById('attendanceTrendChart').getContext('2d');
+    const attendanceChart = new Chart(ctxAttendance, {
+        type: 'line',
+        data: {
+            labels: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+            datasets: [{
+                
+                label: "Attendance",
+                data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.AttendancePerMonth)),
+                borderColor: "#912338",
+                backgroundColor: "rgba(145, 35, 56, 0.2)",
+                tension: 0.4, // makes the line curved
+                fill: true
+            }]
+        },
+
+
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } }
+        }
+    });
+
+    // --- Tickets Per Category Chart ---
+    const ctxCategory = document.getElementById('ticketsCategoryChart').getContext('2d');
+    const categoryChart = new Chart(ctxCategory, {
+        type: 'bar',
+        data: {
+
+            labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Categories)),
+            datasets: [{
+                label: "Tickets",
+                data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.TicketsPerCategory)),
+                backgroundColor: "#912338"
+
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+</script>
+
+
+</html>
