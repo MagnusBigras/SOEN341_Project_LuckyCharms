@@ -1,0 +1,126 @@
+@page
+@model Lucky_Charm_Event_track.Pages.OrganizerToolsModel
+@{
+    ViewData["Title"] = "Organizer Tools";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" asp-href-include="~/css/site.css" />
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-menu">
+            <div class="sidebar-item">
+                <a asp-page="/Events" class="sidebar-link">
+                    <img src="~/Images/86c1865905340afb06ee2948873e0be24974cff4.png" class="sidebar-icon" alt="Events">
+                    <span class="sidebar-text">Events</span>
+                </a>
+            </div>
+
+            <div class="sidebar-item">
+                <img src="~/Images/2508862806f0dced98f9ab1e25e74ce54c4711b2.png" class="sidebar-icon" alt="Feedback">
+                <span class="sidebar-text">Feedback</span>
+            </div>
+
+            <div class="sidebar-item" id="sidebarCreate">
+                <a asp-page="/EventForm" class="sidebar-link">
+                    <img src="~/Images/758ad898c74a67305bc208032ee5f2ed40d10d8d.png" class="sidebar-icon" alt="Create Event">
+                    <span class="sidebar-text">Create Event</span>
+                </a>
+            </div>
+
+            <div class="sidebar-bar"></div>
+
+            <div class="sidebar-extra">
+                <div class="sidebar-item">
+                    <img src="~/Images/7965593328e6cb27ffb10553f680443da25fad1a.png" class="sidebar-icon" alt="Organization Settings">
+                    <span class="sidebar-text">Organization Settings</span>
+                </div>
+
+                <div class="sidebar-item">
+                    <img src="~/Images/af7e2a95556abcf8c3cc0c41fedea581cd0f43af.png" class="sidebar-icon" alt="Sign out">
+                    <span class="sidebar-text">Sign out</span>
+                </div>
+            </div>
+
+            <div class="sidebar-contact">
+                <div class="sidebar-item">
+                    <img src="~/Images/Untitled%20design.png" class="sidebar-icon" alt="Contact">
+                    <span class="sidebar-text">Contact</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top navbar -->
+    <div class="top-navbar">
+        <div class="navbar-left">
+            <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
+        </div>
+        
+        <div class="navbar-right">
+            <a class="create-btn" asp-page="/EventForm"> + Create </a>
+            <button class="account-btn">
+                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
+                <span class="account-name">Alex</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+        <div class="main-content-header">
+            <h1>Tools for Event • @Model.EventName</h1>
+        </div>
+
+        <div class="tools-section">
+            <!-- QR Scanner -->
+            <h2>QR Code Scanner</h2>
+            <button id="startScannerBtn">Start QR Scanner</button>
+            <div id="my-qr-reader" style="display:none;"></div>
+            <div id="scan-result" class="scan-result"></div>
+
+            <!-- Export Attendee List -->
+            <div class="tool-card">
+                <h2>Export Attendee List</h2>
+                <form method="get">
+                    <input type="hidden" name="handler" value="ExportCsv" />
+                    <input type="hidden" name="eventId" value="@Model.EventId" />
+                    <button type="submit" class="export-btn">Export CSV</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let scannerStarted = false;
+        const startBtn = document.getElementById("startScannerBtn");
+        const qrReaderDiv = document.getElementById("my-qr-reader");
+        const resultDiv = document.getElementById("scan-result");
+
+        startBtn.addEventListener("click", function () {
+            if (scannerStarted) return;
+            qrReaderDiv.style.display = "block";
+
+            function onScanSuccess(decodedText, decodedResult) {
+                resultDiv.textContent = `Ticket Scanned: ${decodedText}`;
+            }
+
+            const htmlScanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbox: 250 });
+            htmlScanner.render(onScanSuccess);
+            scannerStarted = true;
+        });
+    });
+    </script>
+</body>
+</html>
