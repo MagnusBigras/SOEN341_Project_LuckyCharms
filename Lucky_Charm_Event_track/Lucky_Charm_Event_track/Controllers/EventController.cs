@@ -11,16 +11,12 @@ namespace Lucky_Charm_Event_track.Controllers
 {
     [ApiController]
     [Route("api/events")]
-    public class EventController : Controller
+    public class EventController : ControllerBase
     {
         private readonly WebAppDBContext _dbContext;
         public EventController(WebAppDBContext context)
         {
             _dbContext = context;
-        }
-        public IActionResult Index()
-        {
-            return View();
         }
         [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<Event>>> GetEvents()

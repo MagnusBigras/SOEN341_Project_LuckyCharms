@@ -25,6 +25,14 @@
       "PackagePath": "staticwebassets\\Images\\Green Classic Four Leaf Clover Geometric Logo.png"
     },
     {
+      "Id": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\Images\\Untitled design (1)-Photoroom.png",
+      "PackagePath": "staticwebassets\\Images\\Untitled design (1)-Photoroom.png"
+    },
+    {
+      "Id": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\Images\\Untitled design-Photoroom.png",
+      "PackagePath": "staticwebassets\\Images\\Untitled design-Photoroom.png"
+    },
+    {
       "Id": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\Images\\Untitled design.png",
       "PackagePath": "staticwebassets\\Images\\Untitled design.png"
     },
@@ -33,20 +41,44 @@
       "PackagePath": "staticwebassets\\Images\\af7e2a95556abcf8c3cc0c41fedea581cd0f43af.png"
     },
     {
+      "Id": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\Images\\banner_image.jpeg",
+      "PackagePath": "staticwebassets\\Images\\banner_image.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\Images\\event.jpg",
+      "PackagePath": "staticwebassets\\Images\\event.jpg"
+    },
+    {
       "Id": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\css\\EventForm.css",
       "PackagePath": "staticwebassets\\css\\EventForm.css"
+    },
+    {
+      "Id": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\css\\login_style.css",
+      "PackagePath": "staticwebassets\\css\\login_style.css"
     },
     {
       "Id": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
     {
+      "Id": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\css\\studentportal.css",
+      "PackagePath": "staticwebassets\\css\\studentportal.css"
+    },
+    {
       "Id": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\js\\login_script.js",
+      "PackagePath": "staticwebassets\\js\\login_script.js"
+    },
+    {
       "Id": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\js\\studentportal.js",
+      "PackagePath": "staticwebassets\\js\\studentportal.js"
     },
     {
       "Id": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\lib\\bootstrap\\LICENSE",
