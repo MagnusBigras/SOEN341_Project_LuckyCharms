@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LuckyCharmEventtrack.Migrations
 {
     [DbContext(typeof(WebAppDBContext))]
-    [Migration("20251007201840_InitialCreate")]
+    [Migration("20251017141524_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -98,6 +98,44 @@ namespace LuckyCharmEventtrack.Migrations
                     b.ToTable("EventOrganizers");
                 });
 
+            modelBuilder.Entity("Lucky_Charm_Event_track.Models.Metric", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("EventId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("LastMonthAttendees")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("LastMonthRevenue")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("LastRemaining")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("NewAttendees")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TotalCapacity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("TotalRevenue")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("UsedCapacity")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId")
+                        .IsUnique();
+
+                    b.ToTable("Metrics");
+                });
+
             modelBuilder.Entity("Lucky_Charm_Event_track.Models.PriceTier", b =>
                 {
                     b.Property<int>("Id")
@@ -135,6 +173,9 @@ namespace LuckyCharmEventtrack.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("CheckedIn")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("EventId")
                         .HasColumnType("INTEGER");
 
@@ -142,6 +183,9 @@ namespace LuckyCharmEventtrack.Migrations
                         .HasColumnType("REAL");
 
                     b.Property<DateTime>("PurchaseDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("QRCodeText")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("TicketType")
@@ -228,6 +272,17 @@ namespace LuckyCharmEventtrack.Migrations
                     b.Navigation("Account");
                 });
 
+            modelBuilder.Entity("Lucky_Charm_Event_track.Models.Metric", b =>
+                {
+                    b.HasOne("Lucky_Charm_Event_track.Models.Event", "Event")
+                        .WithOne("Metric")
+                        .HasForeignKey("Lucky_Charm_Event_track.Models.Metric", "EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+                });
+
             modelBuilder.Entity("Lucky_Charm_Event_track.Models.PriceTier", b =>
                 {
                     b.HasOne("Lucky_Charm_Event_track.Models.Event", "Event")
@@ -260,6 +315,8 @@ namespace LuckyCharmEventtrack.Migrations
 
             modelBuilder.Entity("Lucky_Charm_Event_track.Models.Event", b =>
                 {
+                    b.Navigation("Metric");
+
                     b.Navigation("Prices");
 
                     b.Navigation("Tickets");

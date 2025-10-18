@@ -45,9 +45,8 @@ namespace Lucky_Charm_Event_track
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            db.Database.EnsureCreated();
             app.UseRouting();
-
+            db.Database.Migrate();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

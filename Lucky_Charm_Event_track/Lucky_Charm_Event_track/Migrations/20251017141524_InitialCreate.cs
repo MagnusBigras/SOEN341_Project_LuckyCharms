@@ -89,6 +89,32 @@ namespace LuckyCharmEventtrack.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Metrics",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    TotalRevenue = table.Column<double>(type: "REAL", nullable: false),
+                    LastMonthRevenue = table.Column<double>(type: "REAL", nullable: false),
+                    NewAttendees = table.Column<int>(type: "INTEGER", nullable: false),
+                    LastMonthAttendees = table.Column<int>(type: "INTEGER", nullable: false),
+                    TotalCapacity = table.Column<int>(type: "INTEGER", nullable: false),
+                    UsedCapacity = table.Column<int>(type: "INTEGER", nullable: false),
+                    LastRemaining = table.Column<int>(type: "INTEGER", nullable: false),
+                    EventId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Metrics", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Metrics_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PriceTiers",
                 columns: table => new
                 {
@@ -122,7 +148,9 @@ namespace LuckyCharmEventtrack.Migrations
                     UserAccountId = table.Column<int>(type: "INTEGER", nullable: false),
                     TicketType = table.Column<int>(type: "INTEGER", nullable: false),
                     Price = table.Column<double>(type: "REAL", nullable: false),
-                    PurchaseDate = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    PurchaseDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    QRCodeText = table.Column<string>(type: "TEXT", nullable: true),
+                    CheckedIn = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -153,6 +181,12 @@ namespace LuckyCharmEventtrack.Migrations
                 column: "EventOrganizerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Metrics_EventId",
+                table: "Metrics",
+                column: "EventId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PriceTiers_EventId",
                 table: "PriceTiers",
                 column: "EventId");
@@ -171,6 +205,9 @@ namespace LuckyCharmEventtrack.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Metrics");
+
             migrationBuilder.DropTable(
                 name: "PriceTiers");
 
