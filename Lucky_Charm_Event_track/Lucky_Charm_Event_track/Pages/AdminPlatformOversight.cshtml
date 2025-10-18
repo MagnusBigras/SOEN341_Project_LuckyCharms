@@ -1,0 +1,73 @@
+@page
+@model Lucky_Charm_Event_track.Pages.AdminPlatformOversightModel
+@{
+    ViewData["Title"] = "AdminPlatformOversight";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css">
+</head>
+<body>
+
+    <!-- Sidebar navigation -->
+    <div class="sidebar">
+        <div class="sidebar-menu">
+
+            <a asp-page="/AdminPlatformOversight" class="sidebar-link sidebar-item">
+                <img src="~/Images/Your_paragraph_text-removebg-preview.png" class="sidebar-icon" alt="Platform Oversight">
+                <span class="sidebar-text">Platform Oversight</span>
+            </a>
+
+            <a asp-page="/AdminAnalytics" class="sidebar-link sidebar-item active">
+                <img src="~/Images/800ce0988c52dc7bded443567346a77035fb8534.png" class="sidebar-icon" alt="Analytics">
+                <span class="sidebar-text">Analytics</span>
+            </a>
+
+            <a asp-page="/AdminManagement" class="sidebar-link sidebar-item">
+                <img src="~/Images/Untitled_design__2_-removebg-preview.png" class="sidebar-icon" alt="Manage Organizations">
+                <span class="sidebar-text">Manage Organizations</span>
+            </a>
+
+            <div class="sidebar-bar"></div>
+
+            <div class="sidebar-extra">
+                <div class="sidebar-item">
+                    <img src="~/Images/7965593328e6cb27ffb10553f680443da25fad1a.png" class="sidebar-icon" alt="Organization Settings">
+                    <span class="sidebar-text">Organization Settings</span>
+                </div>
+                <div class="sidebar-item">
+                    <img src="~/Images/af7e2a95556abcf8c3cc0c41fedea581cd0f43af.png" class="sidebar-icon" alt="Sign out">
+                    <span class="sidebar-text">Sign out</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Top navigation bar -->
+    <div class="top-navbar">
+        <div class="navbar-left">
+            <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
+        </div>
+        <div class="navbar-right">
+            <a class="create-btn" asp-page="/OrganizationForm"> + Create </a>
+            <button class="account-btn">
+                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
+                <span class="account-name">Admin</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+
+
+      </div>
+
+</body>
+</html>
