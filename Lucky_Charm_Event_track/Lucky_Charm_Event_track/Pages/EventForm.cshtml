@@ -33,18 +33,51 @@
         </div>
 
         <div class="form-group">
-            <label for="eventLocation">Location:</label>
+            <label for="eventLocation">Street Address:</label>
             <input type="text" id="eventLocation" name="eventLocation" required>
         </div>
 
         <div class="form-group">
-            <label for="eventDescription">Description:</label>
-            <textarea id="eventDescription" name="eventDescription" rows="5"></textarea>
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" required>
+        </div>
+
+        <div class="form-group">
+            <label for="region">Province/State:</label>
+            <input type="text" id="region" name="region" required>
+        </div>
+
+        <div class="form-group">
+            <label for="postalCode">Postal Code:</label>
+            <input type="text" id="postalCode" name="postalCode" required>
+        </div>
+
+        <div class="form-group">
+            <label for="country">Country:</label>
+            <input type="text" id="country" name="country" required>
+        </div>
+
+        <div class="form-group">
+            <label for="capacity">Capacity:</label>
+            <input type="number" id="capacity" name="capacity" min="1" required>
         </div>
 
         <div class="form-group">
             <label for="eventType">Event Type:</label>
-            <select id="eventType" name="eventType">
+            <select id="eventType" name="eventType" required>
+                <option value="free">Free</option>
+                <option value="paid">Paid</option>
+            </select>
+        </div>
+
+        <div class="form-group" id="priceGroup" style="display:none;">
+            <label for="price">Price ($):</label>
+            <input type="number" id="price" name="price" min="0" step="0.01" placeholder="Enter price for paid event">
+        </div>
+
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <select id="category" name="category">
                 <option value="meeting">Meeting</option>
                 <option value="workshop">Workshop</option>
                 <option value="conference">Conference</option>
@@ -52,7 +85,12 @@
                 <option value="other">Other</option>
             </select>
         </div>
-        
+
+        <div class="form-group">
+            <label for="eventDescription">Description:</label>
+            <textarea id="eventDescription" name="eventDescription" rows="5"></textarea>
+        </div>
+
         <div class="button-container">
             <button type="submit">Create Event</button>
             <a href="/" class="cancel-btn">
@@ -60,33 +98,46 @@
             </a>
         </div>
 
-        
     </form>
 
 </body>
 
 </html>
+
 <script>
+
+// Show price input only if event type is paid
+const eventTypeSelect = document.getElementById("eventType");
+const priceGroup = document.getElementById("priceGroup");
+
+eventTypeSelect.addEventListener("change", function() {
+    priceGroup.style.display = this.value === "paid" ? "block" : "none";
+});
+
+// Form submit
 document.getElementById('eventForm').addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const form = e.target;
 
     const payload = {
-            eventName: form.eventName.value,
-            eventDescription: form.eventDescription.value,
-            startTime: `${form.eventDate.value}T${form.eventTime.value}`, // ISO format
-            address: form.eventLocation.value,
-            city: "Montreal", // or add a field
-            region: "QC",
-            postalCode: "Postal Code",
-            country: "Canada",
-            capacity: 100,
-            eventOrganizerId: 1, // hardcoded or dynamic
-            ticketType: 3,
-            isActive: true,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
+        eventName: form.eventName.value,
+        eventDescription: form.eventDescription.value,
+        startTime: `${form.eventDate.value}T${form.eventTime.value}`, // ISO format
+        address: form.eventLocation.value,
+        city: form.city.value,
+        region: form.region.value,
+        postalCode: form.postalCode.value,
+        country: form.country.value,
+        capacity: parseInt(form.capacity.value, 10),
+        eventType: form.eventType.value, // "paid" or "free"
+        price: form.eventType.value === "paid" ? parseFloat(form.price.value) : 0,
+        category: form.category.value,
+        eventOrganizerId: 1, 
+        ticketType: 3, 
+        isActive: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
     };
 
     try {
