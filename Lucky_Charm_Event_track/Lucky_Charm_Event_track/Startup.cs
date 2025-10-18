@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Linq;
 using Lucky_Charm_Event_track.Controllers;
+using Lucky_Charm_Event_track.Services;
 
 namespace Lucky_Charm_Event_track
 {
@@ -61,7 +62,8 @@ namespace Lucky_Charm_Event_track
                 endpoints.MapControllers(); 
             });
             seedDefaultUser(db);
-            EventController.SimulateCreateEvent(db); // FOR TESTING PURPOSES ONLY BY MATEI
+            DatabaseSeeder.Seed(db);
+
         }
         public void seedDefaultUser(WebAppDBContext db) 
         {
