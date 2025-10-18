@@ -26,7 +26,9 @@ namespace Lucky_Charm_Event_track.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Event>> GetEventById(int id)
         {
-            var temp_event = await _dbContext.Events.FindAsync(id);
+            var temp_event = await _dbContext.Events
+                .Include(e => e.Metric)
+                .FirstOrDefaultAsync(e => e.Id == id);
             if (temp_event == null)
             {
                 return NotFound();
@@ -61,8 +63,46 @@ namespace Lucky_Charm_Event_track.Controllers
             }   
            _dbContext.Events.Add(newEvent);
             _dbContext.SaveChanges();
+            // Initialize associated Metric
+            var metric = new Metric
+            {
+                EventId = newEvent.Id,
+                TotalRevenue = 0,
+                LastMonthRevenue = 0,
+                NewAttendees = 0,
+                LastMonthAttendees = 0,
+                TotalCapacity = newEvent.Capacity,
+                UsedCapacity = 0,
+                LastRemaining = newEvent.Capacity,
+                RevenueByMonth = new System.Collections.Generic.List<double>(),
+                AttendanceByMonth = new System.Collections.Generic.List<int>()
+            };
+            _dbContext.Metrics.Add(metric);
+            _dbContext.SaveChanges();
+
             return Ok(new { message = "Event created successfully", eventId = newEvent.Id });
         }
+
+         [HttpGet("organizer/{organizerId}/metrics")]
+        public IActionResult GetMetricsForOrganizer(int organizerId)
+        {
+            var organizer = _dbContext.EventOrganizers.FirstOrDefault(o => o.Id == organizerId);
+            if (organizer == null)
+            {
+                return NotFound(new { error = "Organizer not found." });
+            }
+            var events = _dbContext.Events.Where(e => e.EventOrganizerId == organizerId).ToList();
+            if (events == null || events.Count == 0)
+            {
+                return NotFound(new { error = "No events found for this organizer." });
+            }
+            var metrics = _dbContext.Metrics
+                .Where(m => events.Select(ev => ev.Id).Contains(m.EventId))
+                .ToList();
+            return Ok(metrics);
+        }
+
+
         [HttpPost("delete")]
         public ActionResult<Event> DeleteEvent(int id)
         {
