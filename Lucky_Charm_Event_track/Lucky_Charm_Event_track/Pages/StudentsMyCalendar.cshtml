@@ -90,21 +90,20 @@
             <h1>My Calendar</h1>
         </div>
 
-        <!-- Calendar container -->
         <div id="calendar"></div>
 
-        <!-- Inline Popup under calendar -->
         <div id="eventPopup">
-            <!-- Top-right Close button -->
             <button class="popup-close-btn" onclick="closePopup()">×</button>
 
             <h2 id="popupTitle"></h2>
+            <p><strong>Status:</strong> <span id="popupStatus"></span></p>
             <p><strong>Start:</strong> <span id="popupStart"></span></p>
             <p><strong>End:</strong> <span id="popupEnd"></span></p>
             <p><strong>Location:</strong> <span id="popupLocation"></span></p>
             <p><strong>Description:</strong> <span id="popupDescription"></span></p>
+            <p><strong>Organizer:</strong> <span id="popupOrganizer"></span></p>
+            <p><strong>Category:</strong> <span id="popupCategory"></span></p>
 
-            <!-- Bottom Remove Event button -->
             <button class="close-inline-btn" id="removeEventBtn">Remove Event</button>
         </div>
     </div>
@@ -115,7 +114,6 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // ===== Calendar initialization =====
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
@@ -123,56 +121,81 @@
             selectable: true,
             editable: false,
 
-            // ===== Event click handler =====
             eventClick: function(info) {
-                // Show inline popup
+                const now = new Date();
+                let eventStatus = "Active";
+
+                // Check event status
+                if (info.event.extendedProps.status === "cancelled") {
+                    eventStatus = "Cancelled";
+                } else {
+                    const eventEnd = info.event.end ? new Date(info.event.end) : new Date(info.event.start);
+                    if (eventEnd < now) {
+                        eventStatus = "Finished";
+                    }
+                }
+
+                // Populate popup
                 document.getElementById('popupTitle').innerText = info.event.title;
+                document.getElementById('popupStatus').innerText = eventStatus;
                 document.getElementById('popupStart').innerText = info.event.start ? info.event.start.toLocaleString() : 'N/A';
                 document.getElementById('popupEnd').innerText = info.event.end ? info.event.end.toLocaleString() : 'N/A';
                 document.getElementById('popupLocation').innerText = info.event.extendedProps.location || 'N/A';
                 document.getElementById('popupDescription').innerText = info.event.extendedProps.description || 'N/A';
+                document.getElementById('popupOrganizer').innerText = info.event.extendedProps.organizer || 'N/A';
+                document.getElementById('popupCategory').innerText = info.event.extendedProps.category || 'N/A';
 
+                // Show popup
                 var popup = document.getElementById('eventPopup');
                 popup.style.display = 'block';
                 popup.scrollIntoView({ behavior: 'smooth' });
 
-                // ===== Remove event button functionality =====
+                // Remove event button
                 const removeBtn = document.getElementById('removeEventBtn');
                 removeBtn.onclick = function() {
-                    info.event.remove(); // Remove from calendar
-                    closePopup(); // Hide popup
+                    info.event.remove();
+                    closePopup();
                 };
             }
         });
 
-        // ===== Load events from backend =====
         var eventIds = new Set();
         var eventsFromBackend = @Html.Raw(Model.GetEventsJson());
 
         eventsFromBackend.forEach(e => {
-            if (!eventIds.has(e.id) && e.status === "active") {
+            if (!eventIds.has(e.id)) {
+                const now = new Date();
+                const eventEnd = e.end ? new Date(e.end) : new Date(e.start);
+                let color = "";
+
+                if (e.status === "cancelled") {
+                    color = "#d3d3d3"; // grey
+                } else if (eventEnd < now) {
+                    color = "#c2f0c2"; // light green for finished
+                }
+
                 calendar.addEvent({
                     id: e.id,
                     title: e.title,
                     start: e.start,
                     end: e.end,
                     description: e.description,
-                    location: e.location
+                    location: e.location,
+                    organizer: e.organizer,
+                    category: e.category,
+                    status: e.status,
+                    color: color
                 });
                 eventIds.add(e.id);
             }
         });
 
-        // Render the calendar
         calendar.render();
     });
 
-    // ===== Close popup function =====
     function closePopup() {
         document.getElementById('eventPopup').style.display = 'none';
     }
-    
-
     </script>
 </body>
 </html>
