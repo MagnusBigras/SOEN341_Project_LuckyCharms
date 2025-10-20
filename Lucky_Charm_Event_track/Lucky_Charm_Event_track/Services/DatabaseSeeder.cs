@@ -65,7 +65,7 @@ namespace Lucky_Charm_Event_track.Services
                 EventName = "Simulated Event 2",
                 EventDescription = "SECOND EVENT FOR TEST.",
                 City = "quebec",
-                Capacity = 160,
+                Capacity = 1600,
                 EventOrganizerId = organizer.Id,
                 isActive = true,
                 StartTime = DateTime.Now.AddDays(-29),
@@ -108,7 +108,7 @@ namespace Lucky_Charm_Event_track.Services
                 LastMonthAttendees = 44,
                 TotalCapacity = newEvent.Capacity,
                 UsedCapacity = 54,
-                LastRemaining = newEvent.Capacity,
+                LastRemaining = newEvent.Capacity-54,
                 RevenueByMonth = new System.Collections.Generic.List<double>(),
                 AttendanceByMonth = new System.Collections.Generic.List<int>()
             };
@@ -124,7 +124,7 @@ namespace Lucky_Charm_Event_track.Services
                 LastMonthAttendees = 440,
                 TotalCapacity = newEvent2.Capacity,
                 UsedCapacity = 504,
-                LastRemaining = newEvent2.Capacity,
+                LastRemaining = newEvent2.Capacity-504,
                 RevenueByMonth = new System.Collections.Generic.List<double>(),
                 AttendanceByMonth = new System.Collections.Generic.List<int>()
             };
@@ -139,8 +139,8 @@ namespace Lucky_Charm_Event_track.Services
                 NewAttendees = 400,
                 LastMonthAttendees = 500,
                 TotalCapacity = newEvent3.Capacity,
-                UsedCapacity = 604,
-                LastRemaining = newEvent3.Capacity,
+                UsedCapacity = 60,
+                LastRemaining = newEvent3.Capacity-60,
                 RevenueByMonth = new System.Collections.Generic.List<double>(),
                 AttendanceByMonth = new System.Collections.Generic.List<int>()
             };

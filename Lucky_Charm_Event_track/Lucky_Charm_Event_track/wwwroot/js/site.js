@@ -1,13 +1,20 @@
 // Place this at the top level, before renderEvents
 function renderEventMetrics(event) {
     if (!event.metric) return '';
+    // Calculate analytics
+    const totalCapacity = event.metric.totalCapacity ?? 0;
+    const usedCapacity = event.metric.usedCapacity ?? 0;
+    const attendanceRate = totalCapacity > 0 ? ((usedCapacity / totalCapacity) * 100).toFixed(1) : 0;
+    const ticketsIssued = usedCapacity;
+    const remainingCapacity = totalCapacity - usedCapacity;
+    const newAttendees = event.metric.newAttendees ?? 0;
     return `
         <div class="event-metrics">
             <p>Total Revenue: $${event.metric.totalRevenue ?? 0}</p>
-            <p>New Attendees: ${event.metric.newAttendees ?? 0}</p>
-            <p>Last Month Revenue: $${event.metric.lastMonthRevenue ?? 0}</p>
-            <p>Last Month Attendees: ${event.metric.lastMonthAttendees ?? 0}</p>
-            <p>Remaining Capacity: ${event.metric.lastRemaining ?? 0}</p>
+            <p>New Attendees: ${newAttendees}</p>
+            <p>Tickets Issued: ${ticketsIssued}</p>
+            <p>Remaining Capacity: ${remainingCapacity}</p>
+            <p>Attendance Rate: <span class="attendance-rate-label" style="font-size:0.9em;color:#666;">${attendanceRate}%</span></p>
         </div>
     `;
 }
@@ -22,7 +29,7 @@ function getQueryParam(param) {
 
 // Dynamically fetch and update analytics values for a specific event using data attribute
 
-//const eventId = document.body.getAttribute('data-event-id');
+const eventId = document.body.getAttribute('data-event-id');
 
 if (document.getElementById('totalRevenue') && eventId && eventId !== '0') {
     console.log('Fetching metrics for eventId:', eventId);
@@ -69,9 +76,17 @@ if (document.getElementById('totalRevenue') && eventId && eventId !== '0') {
                 }
 
                 // Remaining capacity (numEvents card)
-                const numEvents = event.metric.lastRemaining ?? 0;
+                const numEvents = event.metric.currentCapacity ?? 0;
                 document.getElementById('numEvents').textContent = numEvents;
-                // Optionally update eventsChange if you have lastMonthEvents
+
+                // Attendance rate for analytics card (under big rem capacity)
+                const totalCapacity = event.metric.totalCapacity ?? 0;
+                const usedCapacity = event.metric.usedCapacity ?? 0;
+                const attendanceRate = totalCapacity > 0 ? ((usedCapacity / totalCapacity) * 100).toFixed(1) : 0;
+                const attendanceElem = document.getElementById('attendance');
+                if (attendanceElem) {
+                    attendanceElem.textContent = `Attendance Rate: ${attendanceRate}%`;
+                }
             } else {
                 console.warn('No metric found in API response:', event);
             }
@@ -87,7 +102,7 @@ if (document.getElementById('totalRevenue') && eventId && eventId !== '0') {
 
 
 
-
+/*
 if (document.getElementById('revenueChart')) {
     const revenueChart = new Chart(document.getElementById('revenueChart').getContext('2d'), {
         type: 'bar',
@@ -128,7 +143,7 @@ if (document.getElementById('attendanceChart')) {
             }
         }
     });
-}
+}*/// CHARTS COMMENTED OUT FOR THE MOMENT
 
 
 document.addEventListener('DOMContentLoaded', () => {
