@@ -3,6 +3,7 @@ using Lucky_Charm_Event_track.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
+using System.Linq;
 
 namespace Lucky_Charm_Event_track.Controllers
 {
@@ -71,6 +72,41 @@ namespace Lucky_Charm_Event_track.Controllers
                 // If exception occurs (e.g., DB null ref), return 500 so client knows
                 return StatusCode(500, new { success = false, error = "Error validating QR", detail = ex.Message });
             }
+        }
+
+        // POST: api/tools/validate-payload
+        // Accepts JSON body: { "payload": "decodedQrText" }
+        // This is for single-page apps or client-side scanners that decode the QR and send the text.
+        [HttpPost("validate-payload")]
+        public IActionResult ValidatePayload([FromBody] PayloadDto dto)
+        {
+            if (dto == null || string.IsNullOrWhiteSpace(dto.Payload))
+                return BadRequest(new { success = false, error = "payload is required in the request body." });
+
+            try
+            {
+                var ticket = _dbContext.Tickets.FirstOrDefault(t => t.QRCodeText == dto.Payload);
+                if (ticket == null)
+                    return NotFound(new { success = false, error = "Ticket not found." });
+
+                if (ticket.CheckedIn)
+                    return BadRequest(new { success = false, error = "Ticket has already been checked in." });
+
+                ticket.CheckedIn = true;
+                _dbContext.Tickets.Update(ticket);
+                _dbContext.SaveChanges();
+
+                return Ok(new { success = true, message = "Ticket validated successfully." });
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, new { success = false, error = "Error validating payload", detail = ex.Message });
+            }
+        }
+
+        public class PayloadDto
+        {
+            public string Payload { get; set; }
         }
 
         // Optional: generate QR image PNG from payload
