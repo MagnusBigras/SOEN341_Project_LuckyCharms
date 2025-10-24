@@ -1,0 +1,241 @@
+@page
+@model Lucky_Charm_Event_track.Pages.EventFormModel
+@{
+    ViewData["Title"] = "EditEvent";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/EventForm.css">
+</head>
+<body>
+    <div class="main-content">
+        <form id="eventForm" class="event-form">
+            <h2>Edit Event</h2>
+
+            <div class="form-group">
+                <label for="eventName">Event Name:</label>
+                <input type="text" id="eventName" name="eventName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="eventDate">Date:</label>
+                <input type="date" id="eventDate" name="eventDate" required>
+            </div>
+
+            <div class="form-group">
+                <label for="eventTime">Time:</label>
+                <input type="time" id="eventTime" name="eventTime" required>
+            </div>
+
+            <div class="form-group">
+                <label for="eventLocation">Street Address:</label>
+                <input type="text" id="eventLocation" name="eventLocation" required>
+            </div>
+
+            <div class="form-group">
+                <label for="city">City:</label>
+                <input type="text" id="city" name="city" required>
+            </div>
+
+            <div class="form-group">
+                <label for="region">Province/State:</label>
+                <input type="text" id="region" name="region" required>
+            </div>
+
+            <div class="form-group">
+                <label for="postalCode">Postal Code:</label>
+                <input type="text" id="postalCode" name="postalCode" required>
+            </div>
+
+            <div class="form-group">
+                <label for="country">Country:</label>
+                <input type="text" id="country" name="country" required>
+            </div>
+
+            <div class="form-group">
+                <label for="capacity">Capacity:</label>
+                <input type="number" id="capacity" name="capacity" min="1" required>
+            </div>
+
+            <div class="form-group">
+                <label for="eventType">Event Type:</label>
+                <select id="eventType" name="eventType" required>
+                    <option value="free">Free</option>
+                    <option value="paid">Paid</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="priceGroup" style="display:none;">
+                <label for="price">Price ($):</label>
+                <input type="number" id="price" name="price" min="0" step="0.01">
+            </div>
+
+            <div class="form-group">
+                <label for="category">Category:</label>
+                <select id="category" name="category">
+                    <option value="meeting">Meeting</option>
+                    <option value="workshop">Workshop</option>
+                    <option value="conference">Conference</option>
+                    <option value="social">Social Gathering</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="eventDescription">Description:</label>
+                <textarea id="eventDescription" name="eventDescription" rows="5"></textarea>
+            </div>
+
+            <div class="button-container">
+                <button type="submit">Save Changes</button>
+                <a href="/Events" class="cancel-btn">
+                    <button type="button">Cancel</button>
+                </a>
+            </div>
+        </form>
+    </div>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const eventId = urlParams.get('eventId');
+
+const eventTypeSelect = document.getElementById('eventType');
+const priceGroup = document.getElementById('priceGroup');
+const priceInput = document.getElementById('price');
+
+eventTypeSelect.addEventListener('change', () => {
+    const isPaid = eventTypeSelect.value === 'paid';
+    priceGroup.style.display = isPaid ? 'block' : 'none';
+    if (!isPaid) priceInput.value = ''; 
+});
+
+let loadedEvent = null;
+
+async function loadEvent() {
+    const res = await fetch(`/api/events/${eventId}`);
+    if (!res.ok) return alert('Failed to load event data');
+    const event = await res.json();
+
+    loadedEvent = event;
+
+    document.getElementById('eventName').value = event.eventName || '';
+    const dt = new Date(event.startTime);
+    document.getElementById('eventDate').value = dt.toISOString().slice(0,10);
+    document.getElementById('eventTime').value = dt.toISOString().slice(11,16);
+    document.getElementById('eventLocation').value = event.address || '';
+    document.getElementById('city').value = event.city || '';
+    document.getElementById('region').value = event.region || '';
+    document.getElementById('postalCode').value = event.postalCode || '';
+    document.getElementById('country').value = event.country || '';
+    document.getElementById('capacity').value = event.capacity || 1;
+    document.getElementById('category').value = event.category || 'other';
+    document.getElementById('eventDescription').value = event.eventDescription || '';
+
+    const isPaid = Number(event.ticketType) === 0; 
+    eventTypeSelect.value = isPaid ? 'paid' : 'free';
+    priceGroup.style.display = isPaid ? 'block' : 'none';
+
+    if (event.prices && event.prices.$values && event.prices.$values.length > 0) {
+        loadedEvent.prices = event.prices.$values.map(p => ({
+            price: p.price,
+            ticketType: p.ticketType,
+            label: p.label,
+            maxQuantity: p.maxQuantity,
+            isAvailable: p.isAvailable
+        }));
+        priceInput.value = loadedEvent.prices[0].price;
+    } else if (isPaid) {
+        loadedEvent.prices = [{
+            price: 0,
+            ticketType: 0, 
+            label: "Default",
+            maxQuantity: 100,
+            isAvailable: true
+        }];
+        priceInput.value = 0;
+    } else {
+        loadedEvent.prices = [];
+        priceInput.value = '';
+    }
+}
+
+document.getElementById('eventForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+
+    let prices = form.eventType.value === 'paid'
+        ? [{
+            price: parseFloat(form.price.value) || 0,
+            ticketType: 0, 
+            label: "Default",
+            maxQuantity: parseInt(form.capacity.value, 10),
+            isAvailable: true
+        }]
+        : [{
+            price: 0,
+            ticketType: 3, 
+            label: "Free",
+            maxQuantity: parseInt(form.capacity.value, 10),
+            isAvailable: true
+        }];
+
+    const updatedEvent = {
+        id: eventId,
+        eventName: form.eventName.value,
+        eventDescription: form.eventDescription.value,
+        startTime: `${form.eventDate.value}T${form.eventTime.value}`,
+        address: form.eventLocation.value,
+        city: form.city.value,
+        region: form.region.value,
+        postalCode: form.postalCode.value,
+        country: form.country.value,
+        capacity: parseInt(form.capacity.value, 10),
+        category: form.category.value,
+        ticketType: form.eventType.value === 'paid' ? 0 : 3, 
+        isActive: loadedEvent ? loadedEvent.isActive : true,
+        updatedAt: new Date().toISOString(),
+        prices: prices 
+    };
+
+    try {
+        const res = await fetch('/api/events/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedEvent)
+        });
+
+        if (!res.ok) {
+            const errText = await res.text();
+            throw new Error(errText || 'Failed to update event');
+        }
+
+        window.location.href = '/EditConfirmation';
+    } catch (err) {
+        console.error(err);
+        alert('Error updating event. Check console for details.');
+    }
+});
+
+loadEvent();
+</script>
+
+<style>
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.event-form {
+    max-width: 600px; 
+    width: 100%;
+    margin-right: 22rem;
+}
+</style>
+
+</body>
+</html>
