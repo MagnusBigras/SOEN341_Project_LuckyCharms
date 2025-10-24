@@ -1,36 +1,72 @@
-using System.Collections.Generic;
-using System.Text.Json;
+using Lucky_Charm_Event_track.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Lucky_Charm_Event_track.Pages
 {
     public class StudentsMyCalendarModel : PageModel
     {
+        private readonly WebAppDBContext _dbContext;
+
         public List<CalendarEvent> Events { get; set; } = new();
 
-        public void OnGet()
+        public StudentsMyCalendarModel(WebAppDBContext context)
         {
-            // Hardcoded sample events with unique IDs
-            Events = new List<CalendarEvent>
+            _dbContext = context;
+        }
+
+        public async Task OnGetAsync()
+        {
+            // Get the currently logged-in user's ID from the claims 
+            var currentUserIdString = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            if (!int.TryParse(currentUserIdString, out int currentUserId))
             {
-                new CalendarEvent { id = 1, title = "Hackathon", start = "2025-10-17T09:00:00", end = "2025-10-17T17:00:00", status = "active", description = "24-hour coding challenge", location = "Main Hall" },
-                new CalendarEvent { id = 2, title = "Club Meeting", start = "2025-11-21T14:00:00", status = "active", description = "Monthly student club meeting", location = "Room 101" },
-                new CalendarEvent { id = 3, title = "Midterm Study Session", start = "2025-10-24T18:00:00", status = "active", description = "Study session for midterms", location = "Library" }
-            };
+                Events = new List<CalendarEvent>();
+                return;
+            }
+
+            // Fetch tickets that belong to this user, include Event details
+            var userTickets = await _dbContext.Tickets
+                .Where(t => t.UserAccountId == currentUserId)
+                .Include(t => t.Event)
+                .ThenInclude(e => e.Organizer)
+                .ThenInclude(o => o.Account)
+                .ToListAsync();
+
+            // Map to calendar events
+            Events = userTickets.Select(t => new CalendarEvent
+            {
+                id = t.Event.Id,
+                title = t.Event.EventName,
+                start = t.Event.StartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+                end = null,
+                status = t.Event.isActive ? "active" : "cancelled",
+                description = t.Event.EventDescription,
+                location = $"{t.Event.Address}, {t.Event.City}",
+                organizer = t.Event.Organizer != null && t.Event.Organizer.Account != null
+                    ? $"{t.Event.Organizer.Account.FirstName} {t.Event.Organizer.Account.LastName}"
+                    : "Unknown",
+                category = t.Event.TicketType.ToString()
+            }).ToList();
         }
 
         public string GetEventsJson() => JsonSerializer.Serialize(Events);
     }
 
-public class CalendarEvent
-{
-    public int id { get; set; }             // Unique identifier
-    public string title { get; set; }       // Event title
-    public string start { get; set; }       // Start date/time
-    public string end { get; set; }         // Optional end date/time
-    public string status { get; set; }      // "active" or "cancelled"
-    public string description { get; set; } // Event details
-    public string location { get; set; }    // Event location
-}
-
+    public class CalendarEvent
+    {
+        public int id { get; set; }
+        public string title { get; set; }
+        public string start { get; set; }
+        public string end { get; set; }
+        public string status { get; set; }
+        public string description { get; set; }
+        public string location { get; set; }
+        public string organizer { get; set; }
+        public string category { get; set; }
+    }
 }

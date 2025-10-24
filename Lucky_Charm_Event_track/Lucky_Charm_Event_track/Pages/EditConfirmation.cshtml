@@ -1,0 +1,52 @@
+@page
+@model Lucky_Charm_Event_track.Pages.EventConfirmationModel
+@{
+    ViewData["Title"] = "EditEventConfirmation";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" asp-href-include="~/css/EventForm.css" />
+        <link rel="stylesheet" asp-href-include="~/css/site.css" />
+
+   
+</head>
+<body>
+
+    <div class="main-content">
+        <div class="event-form">
+            <h2>Your Event Has Been Updated!</h2>
+            <p>Your changes have been saved successfully and are now visible on your dashboard.</p>
+
+            <div class="button-container">
+                <a asp-page="/Events" class="dashboard-btn">Go to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+<style>
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.event-form {
+    max-width: 600px;
+    width: 100%;
+    background-color: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    text-align: center; 
+    margin-left: 3rem;
+}
+
+
+
+</style>
+
+</html>
