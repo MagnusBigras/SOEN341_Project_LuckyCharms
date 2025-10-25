@@ -1,4 +1,4 @@
-const loginContainer = document.querySelector(".login-container");
+﻿const loginContainer = document.querySelector(".login-container");
 const registerContainer = document.querySelector(".register-container");
 const forgotContainer = document.querySelector(".forgot-container");
 
@@ -78,3 +78,38 @@ document.getElementById('registerForm').addEventListener('submit', async functio
         alert("Something went wrong. Please try again.");
     }
 });
+document.getElementById('loginForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    console.log("✅ Login form intercepted");
+    const form = e.target;
+    const payload = {
+        UserName: form.querySelector('#UserNameLogin')?.value || '',
+        Password: form.querySelector('#PasswordLogin')?.value || ''
+    };
+
+    console.log("Sending payload:", payload);
+
+    try {
+        const response = await fetch('/api/accounts/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            console.log("✅ Login successful:", result);
+            alert("Login successful!");
+            window.location.href = "/Events"; // Redirect to Events.cshtml
+        } else {
+            const error = await response.text();
+            console.error("❌ Login failed:", error);
+            alert("Error logging in: " + error);
+        }
+    } catch (error) {
+        console.error("❌ Network or server error:", error);
+        alert("Something went wrong. Please try again.");
+    }
+});
+
+    

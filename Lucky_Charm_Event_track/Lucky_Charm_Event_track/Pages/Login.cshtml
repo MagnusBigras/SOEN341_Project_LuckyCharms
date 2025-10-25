@@ -17,8 +17,8 @@
 
         <h2>Sign in</h2>
         <form id="loginForm">
-            <input type="text" placeholder="Username" required>
-            <input type="password" placeholder="Password" required>
+            <input type="text" placeholder="Username" id="UserNameLogin" name="UserName" required>
+            <input type="password" placeholder="Password" id="PasswordLogin" name="Password" required>
             <button type="submit">SIGN IN</button>
 
             <div class="links">
@@ -63,6 +63,7 @@
         </form>
     </div>
 </body>
-
-<script src="/js/login_script.js"></script>
+@section Scripts {
+    <script src="/js/login_script.js"></script>
+}
 
