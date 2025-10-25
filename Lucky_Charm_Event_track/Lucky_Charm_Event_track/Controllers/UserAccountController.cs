@@ -97,12 +97,12 @@ namespace Lucky_Charm_Event_track.Controllers
 
         }
         [HttpPost("login")]
-        public ActionResult<UserAccount> Login(string username, string password) 
+        public ActionResult<UserAccount> Login([FromBody]LoginCreds loginCreds) 
         {
-            var account = _dbContext.UserAccounts.Where(e => e.UserName == username && e.Password == password);
+            var account = _dbContext.UserAccounts.FirstOrDefault(e => e.UserName == loginCreds.Username);
             if (account == null)
             {
-                return BadRequest();
+                return BadRequest("Invalid credentials");
             }
             Globals.Globals.SessionManager.InitializeSession((UserAccount)account, "login");
             return Ok(account);
