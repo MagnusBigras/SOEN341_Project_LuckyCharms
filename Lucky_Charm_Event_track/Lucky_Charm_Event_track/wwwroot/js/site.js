@@ -1,5 +1,5 @@
 // Place this at the top level, before renderEvents
-function renderEventMetrics(event) {
+/*function renderEventMetrics(event) {
     if (!event.metric) return '';
     // Calculate analytics
     const totalCapacity = event.metric.totalCapacity ?? 0;
@@ -22,12 +22,18 @@ function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);
 }
-
+*/
 
 
 
 
 // Dynamically fetch and update analytics values for a specific event using data attribute
+// Prevent the file from executing twice (avoid redeclaration errors when site.js is included more than once)
+if (window.__siteJsLoaded) {
+    console.debug('site.js already initialized; skipping duplicate execution');
+} else {
+    window.__siteJsLoaded = true;
+
 
 const eventId = document.body.getAttribute('data-event-id');
 
@@ -49,7 +55,8 @@ if (document.getElementById('totalRevenue') && eventId && eventId !== '0') {
                 const revenueChange = totalRevenue - lastMonthRevenue;
                 const revenuePercent = lastMonthRevenue !== 0 ? ((revenueChange / lastMonthRevenue) * 100).toFixed(1) : 0;
 
-                document.getElementById('totalRevenue').textContent = `$${totalRevenue}`;
+                const totalRevenueElem = document.getElementById('totalRevenue');
+                if (totalRevenueElem) totalRevenueElem.textContent = `$${totalRevenue}`;
                 const revenueChangeElement = document.getElementById('revenueChange');
                 if (revenueChangeElement) {
                     if (revenueChange >= 0) {
@@ -65,7 +72,8 @@ if (document.getElementById('totalRevenue') && eventId && eventId !== '0') {
                 const attendeesChange = newAttendees - lastMonthAttendees;
                 const attendeesPercent = lastMonthAttendees !== 0 ? ((attendeesChange / lastMonthAttendees) * 100).toFixed(1) : 0;
 
-                document.getElementById('newAttendees').textContent = newAttendees;
+                const newAttendeesElem = document.getElementById('newAttendees');
+                if (newAttendeesElem) newAttendeesElem.textContent = newAttendees;
                 const attendeesChangeElement = document.getElementById('attendeesChange');
                 if (attendeesChangeElement) {
                     if (attendeesChange >= 0) {
@@ -77,16 +85,10 @@ if (document.getElementById('totalRevenue') && eventId && eventId !== '0') {
 
                 // Remaining capacity (numEvents card)
                 const numEvents = event.metric.currentCapacity ?? 0;
-                document.getElementById('numEvents').textContent = numEvents;
+                const numEventsElem = document.getElementById('numEvents');
+                if (numEventsElem) numEventsElem.textContent = numEvents;
 
-                // Attendance rate for analytics card (under big rem capacity)
-                const totalCapacity = event.metric.totalCapacity ?? 0;
-                const usedCapacity = event.metric.usedCapacity ?? 0;
-                const attendanceRate = totalCapacity > 0 ? ((usedCapacity / totalCapacity) * 100).toFixed(1) : 0;
-                const attendanceElem = document.getElementById('attendance');
-                if (attendanceElem) {
-                    attendanceElem.textContent = `Attendance Rate: ${attendanceRate}%`;
-                }
+                
             } else {
                 console.warn('No metric found in API response:', event);
             }
@@ -256,6 +258,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Initial fetch from backend
-    fetchEvents();
-});
+        fetchEvents();
+    });
+
+    } // end guard: only initialize site.js once
 
