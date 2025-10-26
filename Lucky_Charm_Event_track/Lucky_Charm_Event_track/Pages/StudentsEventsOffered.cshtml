@@ -169,6 +169,8 @@
             <option value="asc" selected="@(Model.SortByPopularity=="asc" ? "selected" : null)">Least to Most</option>
             <option value="desc" selected="@(Model.SortByPopularity=="desc" ? "selected" : null)">Most to Least</option>
         </select>
+
+        <!-- Filter by Category -->
         <select id="category" name="Category">
             <option value="">All Categories</option>
             <option value="meeting" selected="@(Model.Category=="meeting" ? "selected" : null)">Meeting</option>
