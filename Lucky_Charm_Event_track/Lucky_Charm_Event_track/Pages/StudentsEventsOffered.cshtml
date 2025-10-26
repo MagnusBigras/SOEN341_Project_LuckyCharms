@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model Lucky_Charm_Event_track.Pages.StudentsEventsOfferedModel
 @{
     ViewData["Title"] = "StudentsEventsOffered";
@@ -164,7 +164,7 @@
                             View Details
                         </button>
 
-                        <button class="purchase-btn" onclick="alert('Tickets claimed for @e.Name')">
+                        <button class="purchase-btn" onclick="claimTicket(@e.Id)">
                             @(e.Price == 0 ? "Claim Ticket" : "Purchase Ticket")
                         </button>
                     </div>
@@ -218,6 +218,24 @@
             popup.style.display = 'none';
         }
     }
+    async function claimTicket(eventId) {
+            try {
+                const response = await fetch(`/api/tickets/claim?eventid=${eventId}`, {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    const ticket = await response.json();
+                    alert(`Ticket claimed for event ID ${eventId}`);
+                } else {
+                    const error = await response.text();
+                    alert(`Failed to claim ticket: ${error}`);
+                }
+            } catch (err) {
+                console.error("Network error:", err);
+                alert("Something went wrong. Please try again.");
+            }
+        }
 </script>
 
 </body>

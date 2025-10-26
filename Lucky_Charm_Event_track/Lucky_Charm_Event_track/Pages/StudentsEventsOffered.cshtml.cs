@@ -44,10 +44,10 @@ namespace Lucky_Charm_Event_track.Pages
         {
             // Sample events
             AllEvents = new List<EventItem> {
-                new EventItem { Name = "Tech Expo 2025", Date = "2025-10-20", Location = "Main Hall", Price = 10, Description = "Tech showcase.", startTime = "09:00", endTime = "17:00", TicketsLeft = 50, Category = "workshop", Organization = "TechOrg", Popularity = 80, isActive = true },
-                new EventItem { Name = "Career Fair", Date = "2025-10-22", Location = "Conference Room A", Price = 0, Description = "Meet top employers.", startTime = "10:00", endTime = "16:00", TicketsLeft = 100, Category = "conference", Organization = "CareerCenter", Popularity = 120, isActive = true },
-                new EventItem { Name = "AI Workshop", Date = "2025-10-25", Location = "Lab 3", Price = 25, Description = "Learn AI hands-on.", startTime = "13:00", endTime = "16:00", TicketsLeft = 20, Category = "workshop", Organization = "AI Club", Popularity = 60, isActive = true },
-                new EventItem { Name = "Music Night", Date = "2025-11-01", Location = "Auditorium", Price = 15, Description = "Live performances.", startTime = "19:00", endTime = "22:00", TicketsLeft = 200, Category = "social", Organization = "MusicSociety", Popularity = 200, isActive = true }
+                new EventItem { Id = 7, Name = "Tech Expo 2025", Date = "2025-10-20", Location = "Main Hall", Price = 10, Description = "Tech showcase.", startTime = "09:00", endTime = "17:00", TicketsLeft = 50, Category = "workshop", Organization = "TechOrg", Popularity = 80, isActive = true },
+                new EventItem { Id = 7,  Name = "Career Fair", Date = "2025-10-22", Location = "Conference Room A", Price = 0, Description = "Meet top employers.", startTime = "10:00", endTime = "16:00", TicketsLeft = 100, Category = "conference", Organization = "CareerCenter", Popularity = 120, isActive = true },
+                new EventItem { Id = 7, Name = "AI Workshop", Date = "2025-10-25", Location = "Lab 3", Price = 25, Description = "Learn AI hands-on.", startTime = "13:00", endTime = "16:00", TicketsLeft = 20, Category = "workshop", Organization = "AI Club", Popularity = 60, isActive = true },
+                new EventItem { Id = 7, Name = "Music Night", Date = "2025-11-01", Location = "Auditorium", Price = 15, Description = "Live performances.", startTime = "19:00", endTime = "22:00", TicketsLeft = 200, Category = "social", Organization = "MusicSociety", Popularity = 200, isActive = true }
             };
 
             // Get all unique organizations and locations
@@ -98,6 +98,7 @@ namespace Lucky_Charm_Event_track.Pages
 
         public class EventItem
         {
+            public int Id { get; set; }
             public string Name { get; set; }
             public string Date { get; set; }
             public string Location { get; set; }

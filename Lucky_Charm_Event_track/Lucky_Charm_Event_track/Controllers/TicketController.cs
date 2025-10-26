@@ -1,4 +1,6 @@
-﻿using Lucky_Charm_Event_track.Models;
+﻿using Lucky_Charm_Event_track.Helpers;
+using Lucky_Charm_Event_track.Models;
+using Lucky_Charm_Event_track.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -71,6 +73,32 @@ namespace Lucky_Charm_Event_track.Controllers
             return Ok(updated_ticket);
 
         }
+        [HttpPost("claim")]
+        public ActionResult<Ticket> UpdateEvent(int eventid)
+        {
+            var selectedevent = _dbContext.Events.Find(eventid);
+            string qr_payload = "test";
+            if (selectedevent == null || Globals.Globals.SessionManager.CurrentLoggedInUser == null) 
+            {
+                return BadRequest();
+            }
+            Ticket ticket = new Ticket
+            {
+                EventId = eventid,
+                UserAccountId = Globals.Globals.SessionManager.CurrentLoggedInUser.Id,
+                TicketType = Enums.TicketTypes.Free,
+                QRCodeText = qr_payload,
+                QRCode = QRCodeGeneratorHelper.GenerateQRCode(qr_payload),
+                CheckedIn = false,
+                Price = 0,
+                PurchaseDate = System.DateTime.Now
 
+            };
+            _dbContext.Tickets.Add(ticket);
+            _dbContext.SaveChanges();
+            selectedevent.Tickets.Add(ticket);
+            return Ok(ticket);
+
+        }
     }
 }
