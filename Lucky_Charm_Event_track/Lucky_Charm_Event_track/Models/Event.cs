@@ -9,6 +9,9 @@ namespace Lucky_Charm_Event_track.Models
         public int Id { get; set; }
         public string EventName { get; set; }
         public string EventDescription { get; set; }
+
+        public string Category { get; set; }
+
         public DateTime StartTime { get; set; }
         public string Address { get; set; }
         public string City { get; set; }
@@ -25,6 +28,7 @@ namespace Lucky_Charm_Event_track.Models
         public DateTime UpdatedAt { get; set;}
         public List<Ticket> Tickets { get; set; }
         public Metric Metric { get; set; }
+        
 
     }
 }

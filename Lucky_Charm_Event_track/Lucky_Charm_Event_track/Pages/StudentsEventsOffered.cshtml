@@ -10,116 +10,153 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/css/studentportal.css">
+
+    <style>
+        .alert {
+            padding: 10px 16px;
+            border-radius: 6px;
+            margin: 10px 0 20px 0;
+            font-weight: 500;
+            display: none;
+        }
+
+        .alert.success {
+            display: block;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert.error {
+            display: block;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
 </head>
 <body>
 
 <!-- Sidebar navigation -->
 <div class="sidebar">
-        <div class="sidebar-menu">
+    <div class="sidebar-menu">
+        <div class="sidebar-item">
+            <a asp-page="/StudentsEventsOffered" class="sidebar-link">
+                <img src="~/Images/Untitled design (1)-Photoroom.png" class="sidebar-icon" alt="EventsOffered">
+                <span class="sidebar-text">Events Offered</span>
+            </a>
+        </div>
 
+                    <!-- Tickets -->
             <div class="sidebar-item">
-                <a asp-page="/StudentsEventsOffered" class="sidebar-link">
-                    <img src="~/Images/Untitled design (1)-Photoroom.png" class="sidebar-icon" alt="EventsOffered">
-                    <span class="sidebar-text">Events Offered</span>
+                <a asp-page="/StudentsMyTickets" class="sidebar-link active">
+                    <img src="~/Images/86c1865905340afb06ee2948873e0be24974cff4.png" class="sidebar-icon" alt="Events">
+                    <span class="sidebar-text">Tickets</span>
                 </a>
             </div>
 
-            <!-- Feedback section -->
-            <div class="sidebar-item">
-                <img src="~/Images/2508862806f0dced98f9ab1e25e74ce54c4711b2.png" class="sidebar-icon" alt="Feedback">
-                <span class="sidebar-text">Feedback</span>
-            </div>
-
-            <!-- Calendar -->
-            <div class="sidebar-item" id="sidebarCreate">
-             <a asp-page="/StudentsMyCalendar" class="sidebar-link">
+        <div class="sidebar-item">
+            <img src="~/Images/2508862806f0dced98f9ab1e25e74ce54c4711b2.png" class="sidebar-icon" alt="Feedback">
+            <span class="sidebar-text">Feedback</span>
+        </div>
+        <div class="sidebar-item" id="sidebarCreate">
+            <a asp-page="/StudentsMyCalendar" class="sidebar-link">
                 <img src="~/Images/Untitled design-Photoroom.png" class="sidebar-icon" alt="Calendar">
                 <span class="sidebar-text">Calendar</span>
-                </a>
+            </a>
+        </div>
+        <div class="sidebar-bar"></div>
+        <div class="sidebar-extra">
+            <div class="sidebar-item">
+                <img src="~/Images/7965593328e6cb27ffb10553f680443da25fad1a.png" class="sidebar-icon" alt="Organization Settings">
+                <span class="sidebar-text">Organization Settings</span>
             </div>
-
-
-            <!-- Divider bar -->
-            <div class="sidebar-bar"></div>
-
-            <!-- Extra sidebar items like settings and sign out -->
-            <div class="sidebar-extra">
-                <div class="sidebar-item">
-                    <img src="~/Images/7965593328e6cb27ffb10553f680443da25fad1a.png" class="sidebar-icon" alt="Organization Settings">
-                    <span class="sidebar-text">Organization Settings</span>
-                </div>
-                <div class="sidebar-item">
-                    <img src="~/Images/af7e2a95556abcf8c3cc0c41fedea581cd0f43af.png" class="sidebar-icon" alt="Sign out">
-                    <span class="sidebar-text">Sign out</span>
-                </div>
+            <div class="sidebar-item">
+                <img src="~/Images/af7e2a95556abcf8c3cc0c41fedea581cd0f43af.png" class="sidebar-icon" alt="Sign out">
+                <span class="sidebar-text">Sign out</span>
             </div>
-
-            <!-- Contact info in sidebar -->
-            <div class="sidebar-contact">
-                <div class="sidebar-item">
-                    <img src="~/Images/Untitled%20design.png" class="sidebar-icon" alt="Contact">
-                    <span class="sidebar-text">Contact</span>
-                </div>
+        </div>
+        <div class="sidebar-contact">
+            <div class="sidebar-item">
+                <img src="~/Images/Untitled%20design.png" class="sidebar-icon" alt="Contact">
+                <span class="sidebar-text">Contact</span>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Top navigation bar -->
-    <div class="top-navbar">
-        <div class="navbar-left">
-            <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
-        </div>
-        <div class="navbar-right">
-            <img src="https://icons.veryicon.com/png/o/miscellaneous/250-thick-line-icon-of-website-and-app/6-bell.png"
-                 alt="Notifications"
-                 class="bell-icon">
-            <button class="account-btn">
-                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
-                <span class="account-name">Alex</span>
-            </button>
-        </div>
+<!-- Top navigation bar -->
+<div class="top-navbar">
+    <div class="navbar-left">
+        <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
     </div>
+    <div class="navbar-right">
+        <img src="https://icons.veryicon.com/png/o/miscellaneous/250-thick-line-icon-of-website-and-app/6-bell.png" alt="Notifications" class="bell-icon">
+        <button class="account-btn">
+            <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
+            <span class="account-name">Alex</span>
+        </button>
+    </div>
+</div>
 
-    <!-- Main content area -->
-  <div class="main-content">
+<!-- Main content area -->
+<div class="main-content">
     <div class="main-content-header">
         <h1>Events Offered</h1>
     </div>
 
+    <!-- Alert messages -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert success" id="alertMessage">@TempData["SuccessMessage"]</div>
+    }
+    else if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert error" id="alertMessage">@TempData["ErrorMessage"]</div>
+    }
+
     <!-- Search and Sort Bar -->
     <form method="get" class="search-sort-bar">
         <input type="text" name="SearchQuery" placeholder="Search events..." value="@Model.SearchQuery" />
-
         <select name="SortByDate">
             <option value="">Sort by Date</option>
             <option value="asc" selected="@(Model.SortByDate=="asc" ? "selected" : null)">Earliest First</option>
             <option value="desc" selected="@(Model.SortByDate=="desc" ? "selected" : null)">Latest First</option>
         </select>
-
         <select name="SortByPrice">
             <option value="">Sort by Price</option>
             <option value="asc" selected="@(Model.SortByPrice=="asc" ? "selected" : null)">Low to High</option>
             <option value="desc" selected="@(Model.SortByPrice=="desc" ? "selected" : null)">High to Low</option>
         </select>
-
         <select name="SortByPopularity">
             <option value="">Sort by Popularity</option>
             <option value="asc" selected="@(Model.SortByPopularity=="asc" ? "selected" : null)">Least to Most</option>
             <option value="desc" selected="@(Model.SortByPopularity=="desc" ? "selected" : null)">Most to Least</option>
         </select>
-
-        <select name="SortByCategory">
-            <option value="">Sort by Category</option>
-            <option value="asc" selected="@(Model.SortByCategory=="asc" ? "selected" : null)">A to Z</option>
-            <option value="desc" selected="@(Model.SortByCategory=="desc" ? "selected" : null)">Z to A</option>
+        <select id="category" name="Category">
+            <option value="">All Categories</option>
+            <option value="meeting" selected="@(Model.Category=="meeting" ? "selected" : null)">Meeting</option>
+            <option value="workshop" selected="@(Model.Category=="workshop" ? "selected" : null)">Workshop</option>
+            <option value="conference" selected="@(Model.Category=="conference" ? "selected" : null)">Conference</option>
+            <option value="social" selected="@(Model.Category=="social" ? "selected" : null)">Social Gathering</option>
+            <option value="other" selected="@(Model.Category=="other" ? "selected" : null)">Other</option>
         </select>
-
-        <select name="SortByOrganization">
-            <option value="">Sort by Organization</option>
-            <option value="asc" selected="@(Model.SortByOrganization=="asc" ? "selected" : null)">A to Z</option>
-            <option value="desc" selected="@(Model.SortByOrganization=="desc" ? "selected" : null)">Z to A</option>
+        <select name="Organization">
+            <option value="">All Organizations</option>
+            @foreach (var org in Model.AllOrganizations)
+            {
+                <option value="@org" selected="@(Model.Organization==org ? "selected" : null)">@org</option>
+            }
         </select>
-
+        <select name="Location">
+            <option value="">All Locations</option>
+            @foreach (var loc in Model.AllLocations)
+            {
+                <option value="@loc" selected="@(Model.Location==loc ? "selected" : null)">@loc</option>
+            }
+        </select>
+        <input type="number" name="MinPrice" placeholder="Min Price" value="@(Model.MinPrice?.ToString() ?? "")" min="0" />
+        <input type="number" name="MaxPrice" placeholder="Max Price" value="@(Model.MaxPrice?.ToString() ?? "")" min="0" />
         <button type="submit">Apply</button>
     </form>
 
@@ -139,16 +176,20 @@
                     <p><strong>Location:</strong> @e.Location</p>
                     <p><strong>Price:</strong> @(e.Price == 0 ? "Free" : "$" + e.Price)</p>
 
-                    <div class="event-card-buttons">
-                        <button class="details-btn"
-                            onclick="openEventsOfferedPopup('@e.Name', '@e.Date', '@e.startTime', '@e.endTime', '@e.Location', '@(e.Price == 0 ? "Free" : "$" + e.Price)', '@e.Description', '@e.TicketsLeft', '@e.Category', '@e.Organization')">
-                            View Details
-                        </button>
+                <div class="event-card-buttons" style="display: flex; gap: 10px; justify-content: center; margin-top: 1rem;">
+                    <button class="details-btn">
+                        View Details
+                    </button>
 
-                        <button class="purchase-btn" onclick="alert('Tickets claimed for @e.Name')">
+                    <form method="post" style="flex: 1; margin: 0;">
+                        <input type="hidden" name="eventId" value="@e.Id" />
+                        <button type="submit" formaction="?handler=PurchaseTicket" class="purchase-btn" style="width: 100%;">
                             @(e.Price == 0 ? "Claim Ticket" : "Purchase Ticket")
                         </button>
-                    </div>
+                    </form>
+                </div>
+
+
                 </div>
             }
         </div>
@@ -172,7 +213,6 @@
     </div>
 </div>
 
-<!-- Scripts -->
 <script>
     function openEventsOfferedPopup(name, date, start, end, location, price, description, tickets, category, organization) {
         document.getElementById('eventsOfferedName').innerText = name;
@@ -198,6 +238,16 @@
         if (event.target === popup) {
             popup.style.display = 'none';
         }
+    }
+
+    // Auto-hide alerts
+    const alertBox = document.getElementById("alertMessage");
+    if (alertBox) {
+        setTimeout(() => {
+            alertBox.style.transition = "opacity 0.4s";
+            alertBox.style.opacity = "0";
+            setTimeout(() => alertBox.remove(), 400);
+        }, 4000);
     }
 </script>
 
