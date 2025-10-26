@@ -65,7 +65,7 @@ namespace Lucky_Charm_Event_track.Pages
                     Price = e.Prices.Any() ? e.Prices.Min(p => p.Price) : 0,
                     Description = e.EventDescription,
                     startTime = e.StartTime.ToString("HH:mm"),
-                    endTime = "", // Can add EndTime if exists
+                    endTime = "", 
                     TicketsLeft = e.Tickets?.Count(t => t.UserAccountId == null) ?? 0,
                     Category = e.Category,
                     Organization = e.Organizer != null && e.Organizer.Account != null
