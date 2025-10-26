@@ -177,7 +177,8 @@
                     <p><strong>Price:</strong> @(e.Price == 0 ? "Free" : "$" + e.Price)</p>
 
                 <div class="event-card-buttons" style="display: flex; gap: 10px; justify-content: center; margin-top: 1rem;">
-                    <button class="details-btn">
+                    <button class="details-btn"
+                        onclick="openEventsOfferedPopup('@e.Name', '@e.Date', '@e.startTime', '@e.endTime', '@e.Location', '@(e.Price == 0 ? "Free" : "$" + e.Price)', '@e.Description', '@e.TicketsLeft', '@e.Category', '@e.Organization')">
                         View Details
                     </button>
 
