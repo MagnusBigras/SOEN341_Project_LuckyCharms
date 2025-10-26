@@ -10,7 +10,7 @@ namespace Lucky_Charm_Event_track.Pages
 {
     public class StudentsEventsOfferedModel : PageModel
     {
-        private readonly WebAppDBContext _context; 
+        private readonly WebAppDBContext _context;
 
         public StudentsEventsOfferedModel(WebAppDBContext context)
         {
@@ -50,7 +50,6 @@ namespace Lucky_Charm_Event_track.Pages
 
         public void OnGet()
         {
-            // Fetch events from database and include related data
             var events = _context.Events
                 .Include(e => e.Prices)
                 .Include(e => e.Tickets)
@@ -66,22 +65,20 @@ namespace Lucky_Charm_Event_track.Pages
                     Price = e.Prices.Any() ? e.Prices.Min(p => p.Price) : 0,
                     Description = e.EventDescription,
                     startTime = e.StartTime.ToString("HH:mm"),
-                    endTime = "",
+                    endTime = "", // Can add EndTime if exists
                     TicketsLeft = e.Tickets?.Count(t => t.UserAccountId == null) ?? 0,
                     Category = e.Category,
                     Organization = e.Organizer != null && e.Organizer.Account != null
                         ? $"{e.Organizer.Account.FirstName} {e.Organizer.Account.LastName}"
                         : "Unknown",
                     Popularity = e.Tickets?.Count ?? 0,
-                    isActive = e.isActive
-                })
-                .ToList();
+                    isActive = e.isActive,
+                    IsMockPaid = e.Tickets?.Any(t => t.UserAccountId == 1) ?? false // mock user 1
+                }).ToList();
 
-            // Get all unique organizations and locations
             AllOrganizations = events.Select(e => e.Organization).Distinct().ToList();
             AllLocations = events.Select(e => e.Location).Distinct().ToList();
 
-            // Apply search and filters
             var filtered = events.AsQueryable();
 
             if (!string.IsNullOrEmpty(SearchQuery))
@@ -102,31 +99,25 @@ namespace Lucky_Charm_Event_track.Pages
             if (MaxPrice.HasValue)
                 filtered = filtered.Where(e => e.Price <= MaxPrice.Value);
 
-            // Remove duplicates
-            FilteredEvents = filtered
-                .GroupBy(e => e.Name + e.Date)
-                .Select(g => g.First())
-                .ToList();
-
             // Apply sorting
             if (!string.IsNullOrEmpty(SortByDate))
-                FilteredEvents = SortByDate == "asc" ? FilteredEvents.OrderBy(e => e.Date).ToList() : FilteredEvents.OrderByDescending(e => e.Date).ToList();
+                filtered = SortByDate == "asc" ? filtered.OrderBy(e => e.Date) : filtered.OrderByDescending(e => e.Date);
 
             if (!string.IsNullOrEmpty(SortByPrice))
-                FilteredEvents = SortByPrice == "asc" ? FilteredEvents.OrderBy(e => e.Price).ToList() : FilteredEvents.OrderByDescending(e => e.Price).ToList();
+                filtered = SortByPrice == "asc" ? filtered.OrderBy(e => e.Price) : filtered.OrderByDescending(e => e.Price);
 
             if (!string.IsNullOrEmpty(SortByPopularity))
-                FilteredEvents = SortByPopularity == "asc" ? FilteredEvents.OrderBy(e => e.Popularity).ToList() : FilteredEvents.OrderByDescending(e => e.Popularity).ToList();
+                filtered = SortByPopularity == "asc" ? filtered.OrderBy(e => e.Popularity) : filtered.OrderByDescending(e => e.Popularity);
+
+            FilteredEvents = filtered.ToList();
         }
 
-        //  POST: Purchase Ticket
+        // Purchase free ticket
         public IActionResult OnPostPurchaseTicket(int eventId)
         {
-            int userId = 1; // temporary test value
+            int userId = 1; // mock user
 
-            // Find available ticket for event
-            var ticket = _context.Tickets
-                .FirstOrDefault(t => t.EventId == eventId && t.UserAccountId == null);
+            var ticket = _context.Tickets.FirstOrDefault(t => t.EventId == eventId && t.UserAccountId == null);
 
             if (ticket == null)
             {
@@ -134,13 +125,34 @@ namespace Lucky_Charm_Event_track.Pages
                 return RedirectToPage();
             }
 
-            // Assign ticket to user
             ticket.UserAccountId = userId;
             ticket.PurchaseDate = DateTime.Now;
             ticket.QRCodeText = Guid.NewGuid().ToString();
             _context.SaveChanges();
 
-            TempData["SuccessMessage"] = "Ticket successfully claimed!";
+            TempData["SuccessMessage"] = "Ticket claimed successfully!";
+            return RedirectToPage();
+        }
+
+        // Mock payment for paid tickets
+        public IActionResult OnPostMockPay(int eventId)
+        {
+            int userId = 1; // mock user
+
+            var ticket = _context.Tickets.FirstOrDefault(t => t.EventId == eventId && t.UserAccountId == null);
+
+            if (ticket == null)
+            {
+                TempData["ErrorMessage"] = "No tickets available for this event.";
+                return RedirectToPage();
+            }
+
+            ticket.UserAccountId = userId;
+            ticket.PurchaseDate = DateTime.Now;
+            ticket.QRCodeText = Guid.NewGuid().ToString();
+            _context.SaveChanges();
+
+            TempData["SuccessMessage"] = "Mock payment successful!";
             return RedirectToPage();
         }
 
@@ -159,6 +171,7 @@ namespace Lucky_Charm_Event_track.Pages
             public string Organization { get; set; }
             public int Popularity { get; set; }
             public bool isActive { get; set; }
+            public bool IsMockPaid { get; set; }
         }
     }
 }
