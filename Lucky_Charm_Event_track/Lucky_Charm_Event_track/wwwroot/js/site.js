@@ -1,13 +1,20 @@
 // Place this at the top level, before renderEvents
-function renderEventMetrics(event) {
+/*function renderEventMetrics(event) {
     if (!event.metric) return '';
+    // Calculate analytics
+    const totalCapacity = event.metric.totalCapacity ?? 0;
+    const usedCapacity = event.metric.usedCapacity ?? 0;
+    const attendanceRate = totalCapacity > 0 ? ((usedCapacity / totalCapacity) * 100).toFixed(1) : 0;
+    const ticketsIssued = usedCapacity;
+    const remainingCapacity = totalCapacity - usedCapacity;
+    const newAttendees = event.metric.newAttendees ?? 0;
     return `
         <div class="event-metrics">
             <p>Total Revenue: $${event.metric.totalRevenue ?? 0}</p>
-            <p>New Attendees: ${event.metric.newAttendees ?? 0}</p>
-            <p>Last Month Revenue: $${event.metric.lastMonthRevenue ?? 0}</p>
-            <p>Last Month Attendees: ${event.metric.lastMonthAttendees ?? 0}</p>
-            <p>Remaining Capacity: ${event.metric.lastRemaining ?? 0}</p>
+            <p>New Attendees: ${newAttendees}</p>
+            <p>Tickets Issued: ${ticketsIssued}</p>
+            <p>Remaining Capacity: ${remainingCapacity}</p>
+            <p>Attendance Rate: <span class="attendance-rate-label" style="font-size:0.9em;color:#666;">${attendanceRate}%</span></p>
         </div>
     `;
 }
@@ -15,12 +22,20 @@ function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);
 }
-
+*/
 
 
 
 
 // Dynamically fetch and update analytics values for a specific event using data attribute
+// Prevent the file from executing twice (avoid redeclaration errors when site.js is included more than once)
+if (window.__siteJsLoaded) {
+    console.debug('site.js already initialized; skipping duplicate execution');
+} else {
+    window.__siteJsLoaded = true;
+
+
+const eventId = document.body.getAttribute('data-event-id');
 
 if (document.getElementById('totalRevenue') && eventId && eventId !== '0') {
     console.log('Fetching metrics for eventId:', eventId);
@@ -40,7 +55,8 @@ if (document.getElementById('totalRevenue') && eventId && eventId !== '0') {
                 const revenueChange = totalRevenue - lastMonthRevenue;
                 const revenuePercent = lastMonthRevenue !== 0 ? ((revenueChange / lastMonthRevenue) * 100).toFixed(1) : 0;
 
-                document.getElementById('totalRevenue').textContent = `$${totalRevenue}`;
+                const totalRevenueElem = document.getElementById('totalRevenue');
+                if (totalRevenueElem) totalRevenueElem.textContent = `$${totalRevenue}`;
                 const revenueChangeElement = document.getElementById('revenueChange');
                 if (revenueChangeElement) {
                     if (revenueChange >= 0) {
@@ -56,7 +72,8 @@ if (document.getElementById('totalRevenue') && eventId && eventId !== '0') {
                 const attendeesChange = newAttendees - lastMonthAttendees;
                 const attendeesPercent = lastMonthAttendees !== 0 ? ((attendeesChange / lastMonthAttendees) * 100).toFixed(1) : 0;
 
-                document.getElementById('newAttendees').textContent = newAttendees;
+                const newAttendeesElem = document.getElementById('newAttendees');
+                if (newAttendeesElem) newAttendeesElem.textContent = newAttendees;
                 const attendeesChangeElement = document.getElementById('attendeesChange');
                 if (attendeesChangeElement) {
                     if (attendeesChange >= 0) {
@@ -67,9 +84,11 @@ if (document.getElementById('totalRevenue') && eventId && eventId !== '0') {
                 }
 
                 // Remaining capacity (numEvents card)
-                const numEvents = event.metric.lastRemaining ?? 0;
-                document.getElementById('numEvents').textContent = numEvents;
-                // Optionally update eventsChange if you have lastMonthEvents
+                const numEvents = event.metric.currentCapacity ?? 0;
+                const numEventsElem = document.getElementById('numEvents');
+                if (numEventsElem) numEventsElem.textContent = numEvents;
+
+                
             } else {
                 console.warn('No metric found in API response:', event);
             }
@@ -79,6 +98,13 @@ if (document.getElementById('totalRevenue') && eventId && eventId !== '0') {
         });
 }
 
+
+
+
+
+
+
+/*
 if (document.getElementById('revenueChart')) {
     const revenueChart = new Chart(document.getElementById('revenueChart').getContext('2d'), {
         type: 'bar',
@@ -119,7 +145,7 @@ if (document.getElementById('attendanceChart')) {
             }
         }
     });
-}
+}*/// CHARTS COMMENTED OUT FOR THE MOMENT
 
 
 
@@ -299,6 +325,9 @@ function getEventPriceAndType(event) {
         }
     }
 
-    // Initial fetch call
-    fetchEvents();
-});
+    // Initial fetch from backend
+        fetchEvents();
+    });
+
+    } // end guard: only initialize site.js once
+
