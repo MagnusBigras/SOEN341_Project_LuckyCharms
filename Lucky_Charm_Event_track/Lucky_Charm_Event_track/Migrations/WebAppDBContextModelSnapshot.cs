@@ -188,7 +188,7 @@ namespace LuckyCharmEventtrack.Migrations
                     b.Property<int>("TicketType")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("UserAccountId")
+                    b.Property<int?>("UserAccountId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -301,9 +301,7 @@ namespace LuckyCharmEventtrack.Migrations
 
                     b.HasOne("Lucky_Charm_Event_track.Models.UserAccount", "Account")
                         .WithMany("Tickets")
-                        .HasForeignKey("UserAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserAccountId");
 
                     b.Navigation("Account");
 

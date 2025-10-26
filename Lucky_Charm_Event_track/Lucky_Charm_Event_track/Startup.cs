@@ -51,9 +51,8 @@ namespace Lucky_Charm_Event_track
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            db.Database.EnsureCreated();
             app.UseRouting();
-
+            db.Database.Migrate();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -76,7 +75,7 @@ namespace Lucky_Charm_Event_track
                     LastName = "User",
                     UserName = "defaultuser",
                     Email = "default@events.com",
-                    Password = "hashedpassword", // ideally hashed
+                    Password = "hashedpassword",
                     PasswordSalt = "salt",
                     PhoneNumber = "1234567890",
                     DateOfBirth = new DateTime(1990, 1, 1),
@@ -89,14 +88,47 @@ namespace Lucky_Charm_Event_track
                 db.UserAccounts.Add(user);
                 db.SaveChanges();
 
-                db.EventOrganizers.Add(new EventOrganizer
+                var eventorg = new EventOrganizer
                 {
                     UserAccountId = user.Id,
                     Account = user,
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                });
+                };
+                db.EventOrganizers.Add(eventorg);
 
+                db.SaveChanges();
+                var testevent = new Event
+                {
+                    EventName = "test",
+                    EventDescription = "test",
+                    StartTime = DateTime.UtcNow,
+                    Address = "test_address",
+                    City = "test",
+                    Region = "test",
+                    PostalCode = "test",
+                    Country = "test",
+                    Capacity = 15,
+                    EventOrganizerId = eventorg.Id,
+                    CreatedAt = DateTime.Now,
+                    isActive = true,
+                    UpdatedAt = DateTime.Now
+                };
+
+                db.Events.Add(testevent); 
+                db.SaveChanges();
+                db.Tickets.Add(new Ticket
+                {
+                    EventId = testevent.Id,
+                    Event = testevent,
+                    UserAccountId = user.Id,
+                    Account = user,
+                    TicketType = TicketTypes.Free,
+                    Price = 10,
+                    PurchaseDate = DateTime.UtcNow,
+                    QRCodeText = "test",
+                    CheckedIn = false
+                });
                 db.SaveChanges();
             }
         }

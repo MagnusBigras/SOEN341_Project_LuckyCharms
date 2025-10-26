@@ -461,6 +461,8 @@ body {
     font-weight: bold;
     border-radius: 4px;
 }
+
+
 .description-section {
     padding: 4rem 2rem;
     background-color: #ffffff;
@@ -531,3 +533,67 @@ body {
         transform: translateY(-2px);
 }
   
+
+/* -------------------- Tools Section -------------------- */
+.tools-section {
+    background-color: #ffffff;
+    padding: 3rem 2rem;
+    border-radius: 10px;
+    max-width: 700px;
+    margin-left: 2.5rem
+}
+
+.tools-section h2 {
+    color: #912338;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    font-family: "Segoe UI", sans-serif;
+}
+
+#my-qr-reader {
+    margin-bottom: 1.5rem;
+    border: 2px solid #912338;
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.scan-result {
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    color: #4CAF50; /* green for success */
+    font-size: 1rem;
+}
+
+#startScannerBtn, .export-btn {
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    border: none;
+    background-color: #912338;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+}
+
+#startScannerBtn:hover, .export-btn:hover {
+    background-color: #a63a4d;
+    transform: translateY(-2px);
+}
+
+/* -------------------- Tool Card (Export Attendee List) -------------------- */
+.tool-card {
+    background-color: #f9f9f9;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-top: 2rem;
+}
+
+.tool-card h2 {
+    font-size: 1.5rem;
+    color: #912338;
+    margin-bottom: 1rem;
+}

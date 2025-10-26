@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Lucky_Charm_Event_track.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/tickets")]
     public class TicketController : Controller
     {
         private readonly WebAppDBContext _dbContext;
