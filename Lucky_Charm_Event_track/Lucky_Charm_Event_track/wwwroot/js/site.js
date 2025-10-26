@@ -290,6 +290,11 @@ function getEventPriceAndType(event) {
                 window.location.href = `/OrganizerTools?eventId=${fullEvent.id}&eventName=${encodeURIComponent(fullEvent.eventName)}`;
             });
 
+            card.querySelector('.tools-btn').addEventListener('click', () => {
+                window.location.href = `/OrganizerTools?eventId=${event.id}&eventName=${encodeURIComponent(event.eventName)}`;
+            });
+
+
             container.appendChild(card);
         }
     }

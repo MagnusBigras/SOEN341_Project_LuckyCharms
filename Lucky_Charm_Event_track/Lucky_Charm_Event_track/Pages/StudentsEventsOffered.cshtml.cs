@@ -101,6 +101,24 @@ namespace Lucky_Charm_Event_track.Pages
             if (MaxPrice.HasValue)
                 filtered = filtered.Where(e => e.Price <= MaxPrice.Value);
 
+            // Filter by Category
+            if (!string.IsNullOrEmpty(Category))
+                events = events.Where(e => e.Category == Category);
+
+            // Filter by Organization
+            if (!string.IsNullOrEmpty(Organization))
+                events = events.Where(e => e.Organization == Organization);
+
+            // Filter by Location
+            if (!string.IsNullOrEmpty(Location))
+                events = events.Where(e => e.Location == Location);
+
+            // Filter by Price Range
+            if (MinPrice.HasValue)
+                events = events.Where(e => e.Price >= MinPrice.Value);
+            if (MaxPrice.HasValue)
+                events = events.Where(e => e.Price <= MaxPrice.Value);
+
             // Remove duplicates
             FilteredEvents = filtered
                 .GroupBy(e => e.Name + e.Date)
