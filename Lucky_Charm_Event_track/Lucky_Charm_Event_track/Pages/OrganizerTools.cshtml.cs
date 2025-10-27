@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Lucky_Charm_Event_track.Models;
+using Lucky_Charm_Event_track.Enums;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using System.Linq;
@@ -19,7 +20,6 @@ namespace Lucky_Charm_Event_track.Pages
         [BindProperty(SupportsGet = true)]
         public int EventId { get; set; }
 
-        // <-- Make sure SupportsGet is true
         [BindProperty(SupportsGet = true)]
         public string EventName { get; set; } = "";
 
@@ -27,7 +27,7 @@ namespace Lucky_Charm_Event_track.Pages
         public IActionResult OnGetExportCsv(int eventId)
         {
             var tickets = _dbContext.Tickets
-                .Include(t => t.Account) 
+                .Include(t => t.Account)
                 .Where(t => t.EventId == eventId)
                 .ToList();
 

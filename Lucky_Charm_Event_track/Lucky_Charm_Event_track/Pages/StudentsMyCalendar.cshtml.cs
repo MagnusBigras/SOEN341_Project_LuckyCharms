@@ -19,47 +19,47 @@ namespace Lucky_Charm_Event_track.Pages
             _dbContext = context;
         }
 
-        public async Task OnGetAsync()
-        {
-            // Get the currently logged-in user's ID from the claims 
-            var currentUserIdString = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-            if (!int.TryParse(currentUserIdString, out int currentUserId))
-            {
-                Events = new List<CalendarEvent>();
-                return;
-            }
+public async Task OnGetAsync()
+{
+    int currentUserId = 1;
 
-            // Fetch tickets that belong to this user, include Event details
-            var userTickets = await _dbContext.Tickets
-                .Where(t => t.UserAccountId == currentUserId)
-                .Include(t => t.Event)
-                .ThenInclude(e => e.Organizer)
-                .ThenInclude(o => o.Account)
-                .ToListAsync();
+    // Fetch tickets for this user where the event is not hidden
+    var userTickets = await _dbContext.Tickets
+        .Where(t => t.UserAccountId == currentUserId && !t.IsHiddenInCalendar)
+        .Include(t => t.Event)
+        .ThenInclude(e => e.Organizer)
+        .ThenInclude(o => o.Account)
+        .ToListAsync();
 
-            // Map to calendar events
-            Events = userTickets.Select(t => new CalendarEvent
-            {
-                id = t.Event.Id,
-                title = t.Event.EventName,
-                start = t.Event.StartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
-                end = null,
-                status = t.Event.isActive ? "active" : "cancelled",
-                description = t.Event.EventDescription,
-                location = $"{t.Event.Address}, {t.Event.City}",
-                organizer = t.Event.Organizer != null && t.Event.Organizer.Account != null
-                    ? $"{t.Event.Organizer.Account.FirstName} {t.Event.Organizer.Account.LastName}"
-                    : "Unknown",
-                category = t.Event.TicketType.ToString()
-            }).ToList();
-        }
+    // Group by EventId so we only display one event per event
+    var uniqueEvents = userTickets
+        .GroupBy(t => t.EventId)
+        .Select(g => g.First()) 
+        .ToList();
+
+    Events = uniqueEvents.Select(t => new CalendarEvent
+    {
+        id = t.Id,
+        title = t.Event.EventName,
+        start = t.Event.StartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+        end = null,
+        status = t.Event.isActive ? "active" : "cancelled",
+        description = t.Event.EventDescription,
+        location = $"{t.Event.Address}, {t.Event.City}",
+        organizer = t.Event.Organizer != null && t.Event.Organizer.Account != null
+            ? $"{t.Event.Organizer.Account.FirstName} {t.Event.Organizer.Account.LastName}"
+            : "Unknown",
+        category = t.Event.Category,
+        eventId = t.Event.Id
+    }).ToList();
+}
 
         public string GetEventsJson() => JsonSerializer.Serialize(Events);
     }
 
     public class CalendarEvent
     {
-        public int id { get; set; }
+        public int id { get; set; }       
         public string title { get; set; }
         public string start { get; set; }
         public string end { get; set; }
@@ -68,5 +68,6 @@ namespace Lucky_Charm_Event_track.Pages
         public string location { get; set; }
         public string organizer { get; set; }
         public string category { get; set; }
+        public int eventId { get; set; }  // used for hiding all tickets of an event
     }
 }

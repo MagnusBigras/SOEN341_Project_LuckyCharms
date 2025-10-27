@@ -162,6 +162,8 @@ namespace Lucky_Charm_Event_track.Controllers
             existingEvent.TicketType = updatedEvent.TicketType;
             existingEvent.isActive = updatedEvent.isActive;
             existingEvent.UpdatedAt = updatedEvent.UpdatedAt;
+            existingEvent.Category = updatedEvent.Category;
+
 
             // Replace price tiers
             existingEvent.Prices.Clear();

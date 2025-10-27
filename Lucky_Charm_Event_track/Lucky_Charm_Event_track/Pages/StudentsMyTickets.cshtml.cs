@@ -1,0 +1,53 @@
+using Lucky_Charm_Event_track.Models;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Lucky_Charm_Event_track.Pages
+{
+    public class StudentsMyTicketsModel : PageModel
+    {
+        private readonly WebAppDBContext _dbContext;
+
+        public List<TicketView> Tickets { get; set; } = new();
+
+        public int UserId { get; set; } = 1; // temporary hard-code
+
+        public StudentsMyTicketsModel(WebAppDBContext context)
+        {
+            _dbContext = context;
+        }
+
+        public async Task OnGetAsync()
+        {
+            var tickets = await _dbContext.Tickets
+                .Where(t => t.UserAccountId == UserId)
+                .Include(t => t.Event)
+                .ToListAsync();
+
+            Tickets = tickets.Select(t => new TicketView
+            {
+                TicketId = t.Id,
+                EventName = t.Event.EventName,
+                EventDate = t.Event.StartTime,
+                Location = $"{t.Event.Address}, {t.Event.City}",
+                QRCodeText = t.QRCodeText,
+                IsHiddenInCalendar = t.IsHiddenInCalendar,
+                EventId = t.EventId
+            }).ToList();
+        }
+    }
+
+    public class TicketView
+    {
+        public int TicketId { get; set; }
+        public string EventName { get; set; }
+        public System.DateTime EventDate { get; set; }
+        public string Location { get; set; }
+        public string QRCodeText { get; set; }
+        public bool IsHiddenInCalendar { get; set; }
+        public int EventId { get; set; }
+    }
+}

@@ -1,0 +1,243 @@
+@page
+@model Lucky_Charm_Event_track.Pages.StudentsMyTicketsModel
+@{
+    ViewData["Title"] = "StudentsMyTickets";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+
+    <link rel="stylesheet" href="~/css/studentportal.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        .event-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .event-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .event-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .event-card h3 {
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 1.2rem;
+        }
+
+        .event-info {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .event-date {
+            font-weight: bold;
+            color: #444;
+        }
+
+        .event-time {
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+
+        .qr-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 12px 0;
+        }
+
+        .ticket-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+            align-items: center;
+        }
+
+        .details-btn, .unhide-btn {
+            padding: 8px 14px;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .details-btn {
+            background-color: #912338;
+            color: white;
+        }
+
+        .details-btn:hover {
+            background-color: #a63a4d;
+        }
+
+        .unhide-btn {
+            background-color: #3c9d3c;
+            color: white;
+        }
+
+        .unhide-btn:hover {
+            background-color: #5cb85c;
+        }
+
+        .no-events {
+            margin-top: 2rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-menu">
+            <div class="sidebar-item">
+                <a asp-page="/StudentsEventsOffered" class="sidebar-link">
+                    <img src="~/Images/Untitled design (1)-Photoroom.png" class="sidebar-icon" alt="EventsOffered">
+                    <span class="sidebar-text">Events Offered</span>
+                </a>
+            </div>
+            <div class="sidebar-item">
+                <a asp-page="/StudentsMyTickets" class="sidebar-link active">
+                    <img src="~/Images/86c1865905340afb06ee2948873e0be24974cff4.png" class="sidebar-icon" alt="Events">
+                    <span class="sidebar-text">Tickets</span>
+                </a>
+            </div>
+            <div class="sidebar-item">
+                <img src="~/Images/2508862806f0dced98f9ab1e25e74ce54c4711b2.png" class="sidebar-icon" alt="Feedback">
+                <span class="sidebar-text">Feedback</span>
+            </div>
+            <div class="sidebar-item" id="sidebarCreate">
+                <a asp-page="/StudentsMyCalendar" class="sidebar-link">
+                    <img src="~/Images/Untitled design-Photoroom.png" class="sidebar-icon" alt="Calendar">
+                    <span class="sidebar-text">Calendar</span>
+                </a>
+            </div>
+            <div class="sidebar-bar"></div>
+            <div class="sidebar-extra">
+                <div class="sidebar-item">
+                    <img src="~/Images/7965593328e6cb27ffb10553f680443da25fad1a.png" class="sidebar-icon" alt="Organization Settings">
+                    <span class="sidebar-text">Organization Settings</span>
+                </div>
+                <div class="sidebar-item">
+                    <img src="~/Images/af7e2a95556abcf8c3cc0c41fedea581cd0f43af.png" class="sidebar-icon" alt="Sign out">
+                    <span class="sidebar-text">Sign out</span>
+                </div>
+            </div>
+            <div class="sidebar-contact">
+                <div class="sidebar-item">
+                    <img src="~/Images/Untitled%20design.png" class="sidebar-icon" alt="Contact">
+                    <span class="sidebar-text">Contact</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Navbar -->
+    <div class="top-navbar">
+        <div class="navbar-left">
+            <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
+        </div>
+        <div class="navbar-right">
+            <img src="https://icons.veryicon.com/png/o/miscellaneous/250-thick-line-icon-of-website-and-app/6-bell.png" 
+                 alt="Notifications" 
+                 class="bell-icon">
+            <button class="account-btn">
+                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
+                <span class="account-name">Alex</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="main-content-header">
+            <h1>My Tickets</h1>
+        </div>
+
+        @if (!Model.Tickets.Any())
+        {
+            <p class="no-events">You have not purchased any tickets yet.</p>
+        }
+        else
+        {
+            <div class="event-grid">
+                @foreach (var ticket in Model.Tickets)
+                {
+                    <div class="event-card">
+                        <h3>@ticket.EventName</h3>
+                        <p class="event-info event-date">@ticket.EventDate.ToString("dddd, MMM dd yyyy")</p>
+                        <p class="event-info event-time">@ticket.EventDate.ToString("hh:mm tt")</p>
+                        <p class="event-info"><strong>Location:</strong> @ticket.Location</p>
+
+                        <div id="qrcode-@ticket.TicketId" class="qr-container"></div>
+
+                        <div class="ticket-buttons">
+                            <button class="details-btn" onclick="downloadQRCode('@ticket.TicketId', '@ticket.EventName')">
+                                Download QR Code
+                            </button>
+
+                            @if (ticket.IsHiddenInCalendar)
+                            {
+                                <button class="unhide-btn" onclick="unhideEvent(@ticket.EventId)">
+                                    Add To Calendar
+                                </button>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    <!-- QR Code Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            @foreach (var ticket in Model.Tickets)
+            {
+                <text>
+                    new QRCode(document.getElementById("qrcode-@ticket.TicketId"), {
+                        text: "@ticket.QRCodeText",
+                        width: 100,
+                        height: 100
+                    });
+                </text>
+            }
+        });
+
+        function downloadQRCode(ticketId, eventName) {
+            const canvas = document.querySelector(`#qrcode-${ticketId} canvas`);
+            if (!canvas) return;
+            const link = document.createElement("a");
+            link.download = eventName + "_QR.png";
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        }
+
+        async function unhideEvent(eventId) {
+            const response = await fetch(`/api/tickets/unhide-by-event?eventId=${eventId}&userId=@Model.UserId`, { method: "POST" });
+            if (response.ok) location.reload();
+            else alert("Error unhiding event.");
+        }
+    </script>
+
+</body>
+</html>

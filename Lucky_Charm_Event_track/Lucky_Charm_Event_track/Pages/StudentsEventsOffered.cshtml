@@ -10,38 +10,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/css/studentportal.css">
+        <link rel="stylesheet" href="~/css/site.css">
+
+
+    <style>
+        .alert {
+            padding: 10px 16px;
+            border-radius: 6px;
+            margin: 10px 0 20px 0;
+            font-weight: 500;
+            display: none;
+        }
+
+        .alert.success {
+            display: block;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert.error {
+            display: block;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .event-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .event-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 1.2rem;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .event-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .event-card-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .details-btn,
+        .purchase-btn {
+            flex: 1;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+    </style>
 </head>
 <body>
 
-<!-- Sidebar navigation -->
+<!-- Sidebar -->
 <div class="sidebar">
     <div class="sidebar-menu">
-
         <div class="sidebar-item">
-            <a asp-page="/StudentsEventsOffered" class="sidebar-link">
+            <a asp-page="/StudentsEventsOffered" class="sidebar-link active">
                 <img src="~/Images/Untitled design (1)-Photoroom.png" class="sidebar-icon" alt="EventsOffered">
                 <span class="sidebar-text">Events Offered</span>
             </a>
         </div>
-
-        <!-- Feedback section -->
+        <div class="sidebar-item">
+            <a asp-page="/StudentsMyTickets" class="sidebar-link">
+                <img src="~/Images/86c1865905340afb06ee2948873e0be24974cff4.png" class="sidebar-icon" alt="Events">
+                <span class="sidebar-text">Tickets</span>
+            </a>
+        </div>
         <div class="sidebar-item">
             <img src="~/Images/2508862806f0dced98f9ab1e25e74ce54c4711b2.png" class="sidebar-icon" alt="Feedback">
             <span class="sidebar-text">Feedback</span>
         </div>
-
-        <!-- Calendar -->
         <div class="sidebar-item" id="sidebarCreate">
-         <a asp-page="/StudentsMyCalendar" class="sidebar-link">
-            <img src="~/Images/Untitled design-Photoroom.png" class="sidebar-icon" alt="Calendar">
-            <span class="sidebar-text">Calendar</span>
+            <a asp-page="/StudentsMyCalendar" class="sidebar-link">
+                <img src="~/Images/Untitled design-Photoroom.png" class="sidebar-icon" alt="Calendar">
+                <span class="sidebar-text">Calendar</span>
             </a>
         </div>
-
-        <!-- Divider bar -->
         <div class="sidebar-bar"></div>
-
-        <!-- Extra sidebar items like settings and sign out -->
         <div class="sidebar-extra">
             <div class="sidebar-item">
                 <img src="~/Images/7965593328e6cb27ffb10553f680443da25fad1a.png" class="sidebar-icon" alt="Organization Settings">
@@ -52,8 +113,6 @@
                 <span class="sidebar-text">Sign out</span>
             </div>
         </div>
-
-        <!-- Contact info in sidebar -->
         <div class="sidebar-contact">
             <div class="sidebar-item">
                 <img src="~/Images/Untitled%20design.png" class="sidebar-icon" alt="Contact">
@@ -63,15 +122,13 @@
     </div>
 </div>
 
-<!-- Top navigation bar -->
+<!-- Top Navbar -->
 <div class="top-navbar">
     <div class="navbar-left">
         <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
     </div>
     <div class="navbar-right">
-        <img src="https://icons.veryicon.com/png/o/miscellaneous/250-thick-line-icon-of-website-and-app/6-bell.png"
-             alt="Notifications"
-             class="bell-icon">
+        <img src="https://icons.veryicon.com/png/o/miscellaneous/250-thick-line-icon-of-website-and-app/6-bell.png" alt="Notifications" class="bell-icon">
         <button class="account-btn">
             <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
             <span class="account-name">Alex</span>
@@ -79,28 +136,34 @@
     </div>
 </div>
 
-<!-- Main content area -->
+<!-- Main Content -->
 <div class="main-content">
     <div class="main-content-header">
         <h1>Events Offered</h1>
     </div>
 
-    <!-- Search and Sort Bar -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert success" id="alertMessage">@TempData["SuccessMessage"]</div>
+    }
+    else if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert error" id="alertMessage">@TempData["ErrorMessage"]</div>
+    }
+
+    <!-- Filters -->
     <form method="get" class="search-sort-bar">
         <input type="text" name="SearchQuery" placeholder="Search events..." value="@Model.SearchQuery" />
-
         <select name="SortByDate">
             <option value="">Sort by Date</option>
             <option value="asc" selected="@(Model.SortByDate=="asc" ? "selected" : null)">Earliest First</option>
             <option value="desc" selected="@(Model.SortByDate=="desc" ? "selected" : null)">Latest First</option>
         </select>
-
         <select name="SortByPrice">
             <option value="">Sort by Price</option>
             <option value="asc" selected="@(Model.SortByPrice=="asc" ? "selected" : null)">Low to High</option>
             <option value="desc" selected="@(Model.SortByPrice=="desc" ? "selected" : null)">High to Low</option>
         </select>
-
         <select name="SortByPopularity">
             <option value="">Sort by Popularity</option>
             <option value="asc" selected="@(Model.SortByPopularity=="asc" ? "selected" : null)">Least to Most</option>
@@ -116,8 +179,6 @@
             <option value="social" selected="@(Model.Category=="social" ? "selected" : null)">Social Gathering</option>
             <option value="other" selected="@(Model.Category=="other" ? "selected" : null)">Other</option>
         </select>
-
-        <!-- Filter by Organization -->
         <select name="Organization">
             <option value="">All Organizations</option>
             @foreach (var org in Model.AllOrganizations)
@@ -125,8 +186,6 @@
                 <option value="@org" selected="@(Model.Organization==org ? "selected" : null)">@org</option>
             }
         </select>
-
-        <!-- Filter by Location -->
         <select name="Location">
             <option value="">All Locations</option>
             @foreach (var loc in Model.AllLocations)
@@ -134,11 +193,8 @@
                 <option value="@loc" selected="@(Model.Location==loc ? "selected" : null)">@loc</option>
             }
         </select>
-
-        <!-- Filter by Price Range -->
         <input type="number" name="MinPrice" placeholder="Min Price" value="@(Model.MinPrice?.ToString() ?? "")" min="0" />
         <input type="number" name="MaxPrice" placeholder="Max Price" value="@(Model.MaxPrice?.ToString() ?? "")" min="0" />
-
         <button type="submit">Apply</button>
     </form>
 
@@ -164,9 +220,24 @@
                             View Details
                         </button>
 
-                        <button class="purchase-btn" onclick="alert('Tickets claimed for @e.Name')">
-                            @(e.Price == 0 ? "Claim Ticket" : "Purchase Ticket")
-                        </button>
+                        @if (e.Price == 0)
+                        {
+                            <form method="post">
+                                <input type="hidden" name="eventId" value="@e.Id" />
+                                <button type="submit" formaction="?handler=PurchaseTicket" class="purchase-btn">
+                                    Claim Ticket
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form method="post">
+                                <input type="hidden" name="eventId" value="@e.Id" />
+                                <button type="submit" formaction="?handler=MockPay" class="purchase-btn">
+                                    Pay Ticket
+                                </button>
+                            </form>
+                        }
                     </div>
                 </div>
             }
@@ -174,7 +245,7 @@
     }
 </div>
 
-<!-- Events Offered Popup -->
+<!-- Event Details Popup -->
 <div id="eventsOfferedPopup" class="events-offered-popup">
     <div class="events-offered-popup-content">
         <span class="events-offered-close-btn" onclick="closeEventsOfferedPopup()">&times;</span>
@@ -191,7 +262,6 @@
     </div>
 </div>
 
-<!-- Scripts -->
 <script>
     function openEventsOfferedPopup(name, date, start, end, location, price, description, tickets, category, organization) {
         document.getElementById('eventsOfferedName').innerText = name;
@@ -217,6 +287,15 @@
         if (event.target === popup) {
             popup.style.display = 'none';
         }
+    }
+
+    const alertBox = document.getElementById("alertMessage");
+    if (alertBox) {
+        setTimeout(() => {
+            alertBox.style.transition = "opacity 0.4s";
+            alertBox.style.opacity = "0";
+            setTimeout(() => alertBox.remove(), 400);
+        }, 4000);
     }
 </script>
 

@@ -16,5 +16,10 @@ namespace Lucky_Charm_Event_track.Models
         public string QRCodeText { get; set; }
         public bool CheckedIn { get; set; }
 
+        public bool IsHiddenInCalendar { get; set; } = false;
+        public bool Paid { get; set; } = false; 
+
+
+
     }
 }

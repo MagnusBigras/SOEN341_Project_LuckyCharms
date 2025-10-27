@@ -3,6 +3,7 @@ using System;
 using Lucky_Charm_Event_track.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LuckyCharmEventtrack.Migrations
 {
     [DbContext(typeof(WebAppDBContext))]
-    partial class WebAppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20251024181947_AddCategoryToEvent")]
+    partial class AddCategoryToEvent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -177,12 +180,6 @@ namespace LuckyCharmEventtrack.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("EventId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("IsHiddenInCalendar")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("Paid")
                         .HasColumnType("INTEGER");
 
                     b.Property<double>("Price")
