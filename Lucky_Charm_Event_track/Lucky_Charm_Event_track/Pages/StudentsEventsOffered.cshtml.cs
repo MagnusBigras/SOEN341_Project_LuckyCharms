@@ -50,35 +50,44 @@ namespace Lucky_Charm_Event_track.Pages
 
         public void OnGet()
         {
+            // Fetch all active events with related data
             var events = _context.Events
                 .Include(e => e.Prices)
                 .Include(e => e.Tickets)
                 .Include(e => e.Organizer)
+                .Include(e => e.Metric)
                 .Where(e => e.isActive)
                 .AsEnumerable()
-                .Select(e => new EventItem
+                .Select(e =>
                 {
-                    Id = e.Id,
-                    Name = e.EventName,
-                    Date = e.StartTime.ToString("yyyy-MM-dd"),
-                    Location = e.Address + ", " + e.City,
-                    Price = e.Prices.Any() ? e.Prices.Min(p => p.Price) : 0,
-                    Description = e.EventDescription,
-                    startTime = e.StartTime.ToString("HH:mm"),
-                    endTime = "", 
-                    TicketsLeft = e.Tickets?.Count(t => t.UserAccountId == null) ?? 0,
-                    Category = e.Category,
-                    Organization = e.Organizer != null && e.Organizer.Account != null
-                        ? $"{e.Organizer.Account.FirstName} {e.Organizer.Account.LastName}"
-                        : "Unknown",
-                    Popularity = e.Tickets?.Count ?? 0,
-                    isActive = e.isActive,
-                    IsMockPaid = e.Tickets?.Any(t => t.UserAccountId == 1) ?? false // mock user 1
+                    int claimedTickets = e.Tickets?.Count(t => t.UserAccountId != null) ?? 0;
+
+                    return new EventItem
+                    {
+                        Id = e.Id,
+                        Name = e.EventName,
+                        Date = e.StartTime.ToString("yyyy-MM-dd"),
+                        Location = e.Address + ", " + e.City,
+                        Price = e.Prices.Any() ? e.Prices.Min(p => p.Price) : 0,
+                        Description = e.EventDescription,
+                        startTime = e.StartTime.ToString("HH:mm"),
+                        endTime = "",
+                        TicketsLeft = e.Tickets?.Count(t => t.UserAccountId == null) ?? 0,
+                        RemainingCapacity = e.Capacity - claimedTickets,
+                        Category = e.Category,
+                        Organization = e.Organizer != null && e.Organizer.Account != null
+                            ? $"{e.Organizer.Account.FirstName} {e.Organizer.Account.LastName}"
+                            : "Unknown",
+                        Popularity = e.Tickets?.Count ?? 0,
+                        isActive = e.isActive
+                    };
                 }).ToList();
 
+            // Populate filters
             AllOrganizations = events.Select(e => e.Organization).Distinct().ToList();
             AllLocations = events.Select(e => e.Location).Distinct().ToList();
 
+            // Apply filtering
             var filtered = events.AsQueryable();
 
             if (!string.IsNullOrEmpty(SearchQuery))
@@ -130,6 +139,8 @@ namespace Lucky_Charm_Event_track.Pages
             ticket.QRCodeText = Guid.NewGuid().ToString();
             _context.SaveChanges();
 
+            UpdateMetric(eventId, ticket.Price);
+
             TempData["SuccessMessage"] = "Ticket claimed successfully!";
             return RedirectToPage();
         }
@@ -152,8 +163,43 @@ namespace Lucky_Charm_Event_track.Pages
             ticket.QRCodeText = Guid.NewGuid().ToString();
             _context.SaveChanges();
 
+            UpdateMetric(eventId, ticket.Price);
+
             TempData["SuccessMessage"] = "Mock payment successful!";
             return RedirectToPage();
+        }
+
+        // Enhanced metric update 
+        private void UpdateMetric(int eventId, double ticketPrice)
+        {
+            var metric = _context.Metrics.FirstOrDefault(m => m.EventId == eventId);
+            var eventEntity = _context.Events
+                .Include(e => e.Tickets)
+                .FirstOrDefault(e => e.Id == eventId);
+
+            if (metric == null)
+            {
+                metric = new Metric
+                {
+                    EventId = eventId,
+                    TotalRevenue = 0,
+                    NewAttendees = 0,
+                    TotalCapacity = eventEntity?.Capacity ?? 0,
+                    UsedCapacity = 0,
+                    LastRemaining = eventEntity?.Capacity ?? 0
+                };
+                _context.Metrics.Add(metric);
+            }
+
+            metric.TotalRevenue += ticketPrice;
+            metric.NewAttendees += 1;
+
+            // Dynamically update remaining and used capacity
+            int used = eventEntity?.Tickets.Count(t => t.UserAccountId != null) ?? 0;
+            metric.UsedCapacity = used;
+            metric.LastRemaining = (eventEntity?.Capacity ?? 0) - used;
+
+            _context.SaveChanges();
         }
 
         public class EventItem
@@ -167,11 +213,11 @@ namespace Lucky_Charm_Event_track.Pages
             public string startTime { get; set; }
             public string endTime { get; set; }
             public int TicketsLeft { get; set; }
+            public int RemainingCapacity { get; set; }
             public string Category { get; set; }
             public string Organization { get; set; }
             public int Popularity { get; set; }
             public bool isActive { get; set; }
-            public bool IsMockPaid { get; set; }
         }
     }
 }
