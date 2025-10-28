@@ -50,6 +50,22 @@ namespace Lucky_Charm_Event_track.Pages
 
         public void OnGet()
         {
+            // Sample events
+            AllEvents = new List<EventItem> {
+                new EventItem { Id = 7, Name = "Tech Expo 2025", Date = "2025-10-20", Location = "Main Hall", Price = 10, Description = "Tech showcase.", startTime = "09:00", endTime = "17:00", TicketsLeft = 50, Category = "workshop", Organization = "TechOrg", Popularity = 80, isActive = true },
+                new EventItem { Id = 7,  Name = "Career Fair", Date = "2025-10-22", Location = "Conference Room A", Price = 0, Description = "Meet top employers.", startTime = "10:00", endTime = "16:00", TicketsLeft = 100, Category = "conference", Organization = "CareerCenter", Popularity = 120, isActive = true },
+                new EventItem { Id = 7, Name = "AI Workshop", Date = "2025-10-25", Location = "Lab 3", Price = 25, Description = "Learn AI hands-on.", startTime = "13:00", endTime = "16:00", TicketsLeft = 20, Category = "workshop", Organization = "AI Club", Popularity = 60, isActive = true },
+                new EventItem { Id = 7, Name = "Music Night", Date = "2025-11-01", Location = "Auditorium", Price = 15, Description = "Live performances.", startTime = "19:00", endTime = "22:00", TicketsLeft = 200, Category = "social", Organization = "MusicSociety", Popularity = 200, isActive = true }
+            };
+
+            // Get all unique organizations and locations
+            AllOrganizations = AllEvents.Select(e => e.Organization).Distinct().ToList();
+            AllLocations = AllEvents.Select(e => e.Location).Distinct().ToList();
+
+            // Filter active events
+            var events = AllEvents.Where(e => e.isActive);
+
+            // Apply search
             // Fetch all active events with related data
             var events = _context.Events
                 .Include(e => e.Prices)

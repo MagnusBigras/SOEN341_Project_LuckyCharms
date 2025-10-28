@@ -3,6 +3,7 @@ using System;
 using Lucky_Charm_Event_track.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LuckyCharmEventtrack.Migrations
 {
     [DbContext(typeof(WebAppDBContext))]
-    partial class WebAppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20251026143253_AddQRCode")]
+    partial class AddQRCode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -28,9 +31,6 @@ namespace LuckyCharmEventtrack.Migrations
 
                     b.Property<int>("Capacity")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Category")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("City")
                         .HasColumnType("TEXT");
@@ -179,12 +179,6 @@ namespace LuckyCharmEventtrack.Migrations
                     b.Property<int>("EventId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsHiddenInCalendar")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("Paid")
-                        .HasColumnType("INTEGER");
-
                     b.Property<double>("Price")
                         .HasColumnType("REAL");
 
@@ -200,7 +194,7 @@ namespace LuckyCharmEventtrack.Migrations
                     b.Property<int>("TicketType")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("UserAccountId")
+                    b.Property<int>("UserAccountId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -313,7 +307,9 @@ namespace LuckyCharmEventtrack.Migrations
 
                     b.HasOne("Lucky_Charm_Event_track.Models.UserAccount", "Account")
                         .WithMany("Tickets")
-                        .HasForeignKey("UserAccountId");
+                        .HasForeignKey("UserAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Account");
 
