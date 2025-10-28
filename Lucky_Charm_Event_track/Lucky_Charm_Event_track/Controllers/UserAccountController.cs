@@ -1,5 +1,6 @@
 
 ﻿using Lucky_Charm_Event_track.Enums;
+using Lucky_Charm_Event_track.Globals;
 using Lucky_Charm_Event_track.Models;
 ﻿using Lucky_Charm_Event_track.Models;
 using Lucky_Charm_Event_track.Services;
@@ -106,6 +107,34 @@ namespace Lucky_Charm_Event_track.Controllers
             }
             Globals.Globals.SessionManager.InitializeSession((UserAccount)account, "login");
             return Ok(account);
+        }
+        [HttpPost("upgradetoOrganizer")]
+        public ActionResult<EventOrganizer> UpgradetoEventOrganzer(int id) 
+        {
+            //check if logged in user is admin
+            if(Globals.Globals.SessionManager.CurrentLoggedInUser == null) 
+            {
+                return BadRequest(new { message = "Error! User not logged in!" });
+            }
+            if (!Globals.Globals.SessionManager.IsAdmin) 
+            {
+                return BadRequest(new { message = "Error! User Must Be an Admin to Upgrade Account!" });
+            }
+
+            var account = _dbContext.UserAccounts.Find(id);
+            if (account == null)
+            {
+                return BadRequest(new { message = "Error! Not a valid User!" });
+            }
+            EventOrganizer organizer = new EventOrganizer
+            {
+                UserAccountId = account.Id,
+                CreatedAt = account.AccountCreationDate,
+                IsActive = account.IsActive
+            };
+            _dbContext.EventOrganizers.Add(organizer);
+            _dbContext.SaveChanges();
+            return Ok(organizer);
         }
     }
 }
