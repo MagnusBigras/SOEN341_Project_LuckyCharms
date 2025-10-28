@@ -30,6 +30,15 @@
                 </a>
             </div>
 
+            <!-- Tickets -->
+            <div class="sidebar-item">
+                <a asp-page="/StudentsMyTickets" class="sidebar-link active">
+                    <img src="~/Images/86c1865905340afb06ee2948873e0be24974cff4.png" class="sidebar-icon" alt="Events">
+                    <span class="sidebar-text">Tickets</span>
+                </a>
+            </div>
+
+
             <!-- Feedback -->
             <div class="sidebar-item">
                 <img src="~/Images/2508862806f0dced98f9ab1e25e74ce54c4711b2.png" class="sidebar-icon" alt="Feedback">
@@ -112,68 +121,46 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
     <script src="~/js/studentportal.js"></script>
 
-    <script>
+<script>
     document.addEventListener('DOMContentLoaded', function () {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
+        const calendarEl = document.getElementById('calendar');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
-            height: 'auto',
-            selectable: true,
             editable: false,
-
             eventClick: function(info) {
                 const now = new Date();
-                let eventStatus = "Active";
+                let status = info.event.extendedProps.status === 'cancelled' ? 'Cancelled' : 'Active';
+                if (!info.event.end && new Date(info.event.start) < now) status = 'Finished';
 
-                // Check event status
-                if (info.event.extendedProps.status === "cancelled") {
-                    eventStatus = "Cancelled";
-                } else {
-                    const eventEnd = info.event.end ? new Date(info.event.end) : new Date(info.event.start);
-                    if (eventEnd < now) {
-                        eventStatus = "Finished";
-                    }
-                }
-
-                // Populate popup
                 document.getElementById('popupTitle').innerText = info.event.title;
-                document.getElementById('popupStatus').innerText = eventStatus;
-                document.getElementById('popupStart').innerText = info.event.start ? info.event.start.toLocaleString() : 'N/A';
-                document.getElementById('popupEnd').innerText = info.event.end ? info.event.end.toLocaleString() : 'N/A';
+                document.getElementById('popupStatus').innerText = status;
+                document.getElementById('popupStart').innerText = info.event.start?.toLocaleString() || 'N/A';
+                document.getElementById('popupEnd').innerText = info.event.end?.toLocaleString() || 'N/A';
                 document.getElementById('popupLocation').innerText = info.event.extendedProps.location || 'N/A';
                 document.getElementById('popupDescription').innerText = info.event.extendedProps.description || 'N/A';
                 document.getElementById('popupOrganizer').innerText = info.event.extendedProps.organizer || 'N/A';
                 document.getElementById('popupCategory').innerText = info.event.extendedProps.category || 'N/A';
+                document.getElementById('eventPopup').style.display = 'block';
 
-                // Show popup
-                var popup = document.getElementById('eventPopup');
-                popup.style.display = 'block';
-                popup.scrollIntoView({ behavior: 'smooth' });
-
-                // Remove event button
-                const removeBtn = document.getElementById('removeEventBtn');
-                removeBtn.onclick = function() {
-                    info.event.remove();
-                    closePopup();
+                document.getElementById('removeEventBtn').onclick = async function() {
+                    const userId = 1; // hardcoded for now
+                    const response = await fetch(`/api/tickets/hide-by-event?eventId=${info.event.extendedProps.eventId}&userId=${userId}`, { method: 'POST' });
+                    const data = await response.json();
+                    if(data.success) {
+                        info.event.remove();
+                        closePopup();
+                    } else {
+                        alert("Error hiding event: " + (data.error || "Unknown error"));
+                    }
                 };
             }
         });
 
-        var eventIds = new Set();
-        var eventsFromBackend = @Html.Raw(Model.GetEventsJson());
-
-        eventsFromBackend.forEach(e => {
+        const events = @Html.Raw(Model.GetEventsJson());
+        const eventIds = new Set();
+        events.forEach(e => {
             if (!eventIds.has(e.id)) {
-                const now = new Date();
-                const eventEnd = e.end ? new Date(e.end) : new Date(e.start);
-                let color = "";
-
-                if (e.status === "cancelled") {
-                    color = "#d3d3d3"; // grey
-                } else if (eventEnd < now) {
-                    color = "#c2f0c2"; // light green for finished
-                }
-
+                let color = e.status === 'cancelled' ? '#d3d3d3' : '';
                 calendar.addEvent({
                     id: e.id,
                     title: e.title,
@@ -184,7 +171,8 @@
                     organizer: e.organizer,
                     category: e.category,
                     status: e.status,
-                    color: color
+                    color: color,
+                    eventId: e.eventId
                 });
                 eventIds.add(e.id);
             }

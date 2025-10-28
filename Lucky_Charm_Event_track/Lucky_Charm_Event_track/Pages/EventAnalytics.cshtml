@@ -96,11 +96,11 @@
 
             <div class="analytics-card">
                 <h2>Remaining Capacity</h2>
-            <h3 id="remCapacity">@((Model.EventMetric?.LastRemaining ?? 0).ToString())</h3>
-                <p id="capacityChange"></p>
+                <h3 id="remCapacity">@((Model.EventMetric?.LastRemaining ?? 0).ToString())</h3>
+                <p id="attendance">@((Model.EventMetric != null && Model.EventMetric.TotalCapacity > 0) ? $"{(Model.EventMetric.UsedCapacity * 100.0 / Model.EventMetric.TotalCapacity):F1}% attendance" : "0% attendance")</p>
             </div>
         </div>
-
+        <!--
         <div class="analytics-container bottom-row">
             <div class="analytics-card large">
                 <h4>Total Revenue</h4>
@@ -111,10 +111,12 @@
                 <h4>Event Attendance</h4>
                 <canvas id="attendanceChart"></canvas>
             </div>
-        </div>
+        </div> -->
     </div>
 
     <!-- Scripts -->
+   <!--<script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+    <script src="~/js/site.js"></script>
 
 </body>
 </html>

@@ -23,33 +23,27 @@
                     <span class="sidebar-text">Events</span>
                 </a>
             </div>
-
             <div class="sidebar-item">
                 <img src="~/Images/2508862806f0dced98f9ab1e25e74ce54c4711b2.png" class="sidebar-icon" alt="Feedback">
                 <span class="sidebar-text">Feedback</span>
             </div>
-
             <div class="sidebar-item" id="sidebarCreate">
                 <a asp-page="/EventForm" class="sidebar-link">
                     <img src="~/Images/758ad898c74a67305bc208032ee5f2ed40d10d8d.png" class="sidebar-icon" alt="Create Event">
                     <span class="sidebar-text">Create Event</span>
                 </a>
             </div>
-
             <div class="sidebar-bar"></div>
-
             <div class="sidebar-extra">
                 <div class="sidebar-item">
                     <img src="~/Images/7965593328e6cb27ffb10553f680443da25fad1a.png" class="sidebar-icon" alt="Organization Settings">
                     <span class="sidebar-text">Organization Settings</span>
                 </div>
-
                 <div class="sidebar-item">
                     <img src="~/Images/af7e2a95556abcf8c3cc0c41fedea581cd0f43af.png" class="sidebar-icon" alt="Sign out">
                     <span class="sidebar-text">Sign out</span>
                 </div>
             </div>
-
             <div class="sidebar-contact">
                 <div class="sidebar-item">
                     <img src="~/Images/Untitled%20design.png" class="sidebar-icon" alt="Contact">
@@ -64,7 +58,6 @@
         <div class="navbar-left">
             <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
         </div>
-        
         <div class="navbar-right">
             <a class="create-btn" asp-page="/EventForm"> + Create </a>
             <button class="account-btn">
@@ -96,68 +89,47 @@
                     <button type="submit" class="export-btn">Export CSV</button>
                 </form>
             </div>
-
         </div>
     </div>
 
-
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-    <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const qrReaderDiv = document.getElementById("my-qr-reader");
-        const resultDiv = document.getElementById("scan-result");
-        const startBtn = document.getElementById("startScannerBtn");
-        const fileInput = document.getElementById("qrFileInput"); // optional: your file input for uploads
+   <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const qrReaderDiv = document.getElementById("my-qr-reader");
+    const resultDiv = document.getElementById("scan-result");
+    const startBtn = document.getElementById("startScannerBtn");
 
-        // Unified function to validate a QR code (text or file)
-        async function validateQRCode(qrBlob, displayText) {
-            const formData = new FormData();
-            formData.append("qrCodeImage", qrBlob, "ticket.txt");
-
-            resultDiv.textContent = `Ticket Scanned: ${displayText} ... Validating...`;
-
-            try {
-                const res = await fetch("/api/tools/validate-qr", {
-                    method: "POST",
-                    body: formData
-                });
-                const data = await res.json();
-                if (data.success) {
-                    resultDiv.textContent = `✅ Ticket Validated: ${displayText}`;
-                } else {
-                    resultDiv.textContent = `❌ Invalid or already used ticket: ${displayText}`;
-                }
-            } catch (err) {
-                console.error(err);
-                resultDiv.textContent = `⚠ Error validating ticket: ${displayText}`;
+    async function validateQRCodeText(decodedText) {
+        resultDiv.textContent = `Ticket Scanned: ${decodedText} ... Validating...`;
+        try {
+            const res = await fetch("/api/tools/validate-payload", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ payload: decodedText })
+            });
+            const data = await res.json();
+            if (data.success) {
+                resultDiv.textContent = `✅ Ticket Validated: ${decodedText}`;
+            } else {
+                resultDiv.textContent = `❌ ${data.error}`;
             }
+        } catch (err) {
+            console.error(err);
+            resultDiv.textContent = `⚠ Error validating ticket: ${decodedText}`;
         }
+    }
 
-        // Camera scan
-        startBtn.addEventListener("click", function () {
-            if (qrReaderDiv.style.display === "block") return;
-            qrReaderDiv.style.display = "block";
+    startBtn.addEventListener("click", function () {
+        if (qrReaderDiv.style.display === "block") return;
+        qrReaderDiv.style.display = "block";
 
-            const htmlScanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbox: 250 });
-            htmlScanner.render(decodedText => {
-                const blob = new Blob([decodedText], { type: "text/plain" });
-                validateQRCode(blob, decodedText);
-            });
+        const htmlScanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbox: 250 });
+        htmlScanner.render(decodedText => {
+            validateQRCodeText(decodedText);
         });
-
-        // Manual file upload
-        if (fileInput) {
-            fileInput.addEventListener("change", function () {
-                if (!fileInput.files.length) return;
-                const file = fileInput.files[0];
-                validateQRCode(file, file.name);
-            });
-        }
     });
-    </script>
-
-
-
+});
+</script>
 
 </body>
 </html>

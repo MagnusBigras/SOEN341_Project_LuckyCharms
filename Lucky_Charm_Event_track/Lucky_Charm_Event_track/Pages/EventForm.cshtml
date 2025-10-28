@@ -114,31 +114,51 @@ eventTypeSelect.addEventListener("change", function() {
     priceGroup.style.display = this.value === "paid" ? "block" : "none";
 });
 
+const eventDateInput = document.getElementById("eventDate");
+const today = new Date().toISOString().split("T")[0];
+eventDateInput.setAttribute("min", today);
+
+
 // Form submit
 document.getElementById('eventForm').addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const form = e.target;
 
-    const payload = {
-        eventName: form.eventName.value,
-        eventDescription: form.eventDescription.value,
-        startTime: `${form.eventDate.value}T${form.eventTime.value}`, // ISO format
-        address: form.eventLocation.value,
-        city: form.city.value,
-        region: form.region.value,
-        postalCode: form.postalCode.value,
-        country: form.country.value,
-        capacity: parseInt(form.capacity.value, 10),
-        eventType: form.eventType.value, // "paid" or "free"
-        price: form.eventType.value === "paid" ? parseFloat(form.price.value) : 0,
-        category: form.category.value,
-        eventOrganizerId: 1, 
-        ticketType: 3, 
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-    };
+   const payload = {
+    EventName: form.eventName.value,
+    EventDescription: form.eventDescription.value,
+    StartTime: `${form.eventDate.value}T${form.eventTime.value}`,
+    Address: form.eventLocation.value,
+    City: form.city.value,
+    Region: form.region.value,
+    PostalCode: form.postalCode.value,
+    Country: form.country.value,
+    Capacity: parseInt(form.capacity.value, 10),
+    TicketType: form.eventType.value === "paid" ? 0 : 3, 
+    IsActive: true,
+    Category: form.category.value,
+    EventOrganizerId: 1,
+    CreatedAt: new Date().toISOString(),
+    UpdatedAt: new Date().toISOString(),
+    Prices: form.eventType.value === "paid"
+        ? [{
+            Price: parseFloat(form.price.value),
+            TicketType: 0,  
+            Label: "Default",
+            MaxQuantity: parseInt(form.capacity.value, 10),
+            isAvailable: true
+        }]
+        : [{
+            Price: 0,
+            TicketType: 3,   
+            Label: "Free",
+            MaxQuantity: parseInt(form.capacity.value, 10),
+            isAvailable: true
+        }]
+};
+
+
 
     try {
         const response = await fetch('/api/events/create', {
