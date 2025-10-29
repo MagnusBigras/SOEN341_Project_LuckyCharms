@@ -95,7 +95,11 @@ namespace Lucky_Charm_Event_track.Controllers
         {
             var selectedevent = _dbContext.Events.Find(eventid);
             string qr_payload = "test";
-            if (selectedevent == null || Globals.Globals.SessionManager.CurrentLoggedInUser == null) 
+            if (Globals.Globals.SessionManager.CurrentLoggedInUser == null) 
+            {
+                return BadRequest(new { message = "Error! User Not Not Logged In!" });
+            }
+            if (selectedevent == null || Globals.Globals.SessionManager.CurrentLoggedInUser == null)
             {
                 return BadRequest();
             }
@@ -115,7 +119,7 @@ namespace Lucky_Charm_Event_track.Controllers
             _dbContext.SaveChanges();
             selectedevent.Tickets.Add(ticket);
             return Ok(ticket);
-
+        }
         // Hides all tickets for a given event and user
         [HttpPost("hide-by-event")]
         public async Task<IActionResult> HideEventTickets([FromQuery] int eventId, [FromQuery] int userId)

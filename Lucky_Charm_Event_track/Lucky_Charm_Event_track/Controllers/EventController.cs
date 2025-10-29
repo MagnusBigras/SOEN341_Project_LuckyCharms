@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System;
+using Lucky_Charm_Event_track.Helpers;
 
 namespace Lucky_Charm_Event_track.Controllers
 {
@@ -54,9 +55,16 @@ namespace Lucky_Charm_Event_track.Controllers
         [HttpPost("create")]
         public ActionResult<Event> CreateEvent([FromBody] Event newEvent)
         {
+            if(Globals.Globals.SessionManager.CurrentLoggedInUser == null) 
+            {
+                return BadRequest(new { message = "Error! User Not Not Logged In!" });
+            }
             if (newEvent == null) 
                 return BadRequest("Event cannot be null");
-
+            if (!EventVerificationHelper.PerformEventVerification(_dbContext, newEvent))
+            {
+                return BadRequest(new { message = "Event Verification Failed" });
+            }
             // Add the event to the database
             _dbContext.Events.Add(newEvent);
             _dbContext.SaveChanges(); 
