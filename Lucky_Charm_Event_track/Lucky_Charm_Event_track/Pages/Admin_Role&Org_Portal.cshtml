@@ -1,0 +1,120 @@
+@page
+@model dynamic
+@{
+  ViewData["Title"] = "Admin Portal";
+  Layout = "_Layout"; // ensure this page uses the site's shared layout (header/logo/menu)
+}
+
+<link rel="stylesheet" href="~/css/Admin_Role&Org.css" />
+
+<div class="page-wrap">
+
+  <!-- HEADER -->
+  <header class="page-header">
+    <h1>Admin Portal</h1>
+    <p class="sub">Manage organizations, user roles, and restrictions</p>
+  </header>
+
+  <!-- MANAGE ORGANIZATIONS -->
+  <section class="card">
+    <div class="card-header">
+      <h2>Manage Organizations</h2>
+      <div class="add-org">
+        <input id="orgNameInput" type="text" placeholder="New organization name" />
+        <button id="addOrgBtn" class="btn">Add Organization</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="table" id="orgTable">
+        <thead>
+          <tr>
+            <th style="width:40%">Name</th>
+            <th style="width:20%">Users</th>
+            <th style="width:20%">Status</th>
+            <th style="width:20%">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Filled by JS -->
+        </tbody>
+      </table>
+    </div>
+    <div id="orgErrors" class="error hidden"></div>
+  </section>
+
+  <!-- USERS MANAGEMENT -->
+  <section class="grid two">
+    <!-- USERS ROLES -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Users Management — Roles</h2>
+      </div>
+
+      <div class="form-row">
+        <input id="roleEmail" type="email" placeholder="user@example.com" />
+        <select id="roleSelect">
+          <option>User</option>
+          <option>Organizator</option>
+          <option>Admin</option>
+        </select>
+        <button id="assignRoleBtn" class="btn">Assign Role</button>
+      </div>
+
+      <div id="roleErrors" class="error hidden"></div>
+
+      <div class="table-wrap">
+        <table class="table" id="rolesTable">
+          <thead>
+            <tr>
+              <th style="width:60%">Email</th>
+              <th style="width:40%">Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Filled by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- USER RESTRICTIONS -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Users Management — Restrictions</h2>
+      </div>
+
+      <div class="form-row wrap">
+        <input id="restrEmail" type="email" placeholder="user@example.com" />
+        <select id="suspendDuration">
+          <option value="1d">Suspend 1 day</option>
+          <option value="7d">Suspend 1 week</option>
+          <option value="30d">Suspend 1 month</option>
+          <option value="perm">Suspend permanently</option>
+        </select>
+        <button id="banBtn" class="btn danger">Ban</button>
+        <button id="unbanBtn" class="btn">Unban</button>
+        <button id="suspendBtn" class="btn warn">Suspend</button>
+      </div>
+
+      <div id="restrErrors" class="error hidden"></div>
+
+      <div class="table-wrap">
+        <table class="table" id="restrictionsTable">
+          <thead>
+            <tr>
+              <th style="width:50%">Email</th>
+              <th style="width:50%">Restriction</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Filled by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="~/js/Admin_Role&Org.js"></script>

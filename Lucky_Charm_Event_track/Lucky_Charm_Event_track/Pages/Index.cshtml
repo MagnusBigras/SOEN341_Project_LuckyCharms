@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -17,8 +17,18 @@
         <div class="hero-text">
             <h1>Plan and Manage On Campus Events</h1>
             <a href="/events" class="hero-button">Register Now</a>
+
+                <!--Admin button hidden by default -->
+                <a id="adminPortalBtn"
+                    asp-page="/Admin_Role&Org_Portal"
+                    class="hero-button"
+                    style="display:none; margin-left: 10px;">
+                    Admin Portal
+                </a>
+
         </div>
     </header>
+
     <section class="description-section">
         <div class="description-grid">
             <div class="description-image">
@@ -35,5 +45,17 @@
             </div>
         </div>
     </section>
+
+    <!-- Script to show admin button if logged in as Admin -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const role = localStorage.getItem("userRole");
+
+            if (role === "Admin") {
+                document.getElementById("adminPortalBtn").style.display = "inline-block";
+            }
+        });
+    </script>
 </body>
+
 </html>
