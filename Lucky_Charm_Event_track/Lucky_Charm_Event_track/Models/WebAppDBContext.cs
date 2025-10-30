@@ -9,6 +9,7 @@ namespace Lucky_Charm_Event_track.Models
     {
         public DbSet<Event> Events { get; set; }
         public DbSet<EventOrganizer> EventOrganizers { get; set; }
+        public DbSet<Organization> Organizations { get; set; }
         public DbSet<PriceTier> PriceTiers { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<UserAccount> UserAccounts { get; set; }
@@ -42,6 +43,12 @@ namespace Lucky_Charm_Event_track.Models
                     .HasMany(eo => eo.Events)
                     .WithOne(e => e.Organizer)
                     .HasForeignKey(e => e.EventOrganizerId);
+
+                // EventOrganizer → Organizations (One-to-Many)
+                modelBuilder.Entity<EventOrganizer>()
+                    .HasMany(eo => eo.Organizations)
+                    .WithOne(o => o.Organizer)
+                    .HasForeignKey(o => o.EventOrganizerId);
 
                 // Event → Tickets (One-to-Many)
                 modelBuilder.Entity<Event>()

@@ -10,8 +10,15 @@ namespace Lucky_Charm_Event_track.Services
     {
         public static void Seed(WebAppDBContext db)
         {
-            // Only seed if no events exist
-            if (db.Events.Any()) return;
+            Console.WriteLine("[DatabaseSeeder] Starting seed check...");
+
+            // Prefer idempotent checks: look for a specific seed user instead of any event.
+            // This avoids skipping seeding because some other test data exists.
+            if (db.UserAccounts.Any(u => u.UserName == "seeduser"))
+            {
+                Console.WriteLine("[DatabaseSeeder] Seed data already present (seeduser). Skipping.");
+                return;
+            }
 
             var rnd = new Random();
 
@@ -32,6 +39,7 @@ namespace Lucky_Charm_Event_track.Services
             };
             db.UserAccounts.Add(user);
             db.SaveChanges();
+            Console.WriteLine($"[DatabaseSeeder] Created seed user id={user.Id}");
 
             var organizer = new EventOrganizer
             {
@@ -41,6 +49,7 @@ namespace Lucky_Charm_Event_track.Services
             };
             db.EventOrganizers.Add(organizer);
             db.SaveChanges();
+            Console.WriteLine($"[DatabaseSeeder] Created EventOrganizer id={organizer.Id} for userId={organizer.UserAccountId}");
 
             var newEvent = new Event
             {
@@ -61,6 +70,7 @@ namespace Lucky_Charm_Event_track.Services
             };
             db.Events.Add(newEvent);
             db.SaveChanges();
+            Console.WriteLine($"[DatabaseSeeder] Created Event id={newEvent.Id} name='{newEvent.EventName}'");
 
             var newEvent2 = new Event
             {
@@ -81,6 +91,7 @@ namespace Lucky_Charm_Event_track.Services
             };
             db.Events.Add(newEvent2);
             db.SaveChanges();
+            Console.WriteLine($"[DatabaseSeeder] Created Event id={newEvent2.Id} name='{newEvent2.EventName}'");
             var newEvent3 = new Event
             {
                 EventName = "Simulated Event 3",
@@ -100,6 +111,7 @@ namespace Lucky_Charm_Event_track.Services
             };
             db.Events.Add(newEvent3);
             db.SaveChanges();
+            Console.WriteLine($"[DatabaseSeeder] Created Event id={newEvent3.Id} name='{newEvent3.EventName}'");
 
             // generate random values for metric 1
             var totalRevenue1 = Math.Round(rnd.NextDouble() * 5000 + 50, 2);
