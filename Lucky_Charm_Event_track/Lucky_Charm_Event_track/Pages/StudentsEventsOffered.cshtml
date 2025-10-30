@@ -10,8 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/css/studentportal.css">
-        <link rel="stylesheet" href="~/css/site.css">
-
+    <link rel="stylesheet" href="~/css/site.css">
 
     <style>
         .alert {
@@ -72,7 +71,6 @@
             font-weight: 600;
             transition: 0.2s ease;
         }
-
     </style>
 </head>
 <body>
@@ -219,10 +217,6 @@
                             onclick="openEventsOfferedPopup('@e.Name', '@e.Date', '@e.startTime', '@e.endTime', '@e.Location', '@(e.Price == 0 ? "Free" : "$" + e.Price)', '@e.Description', '@e.TicketsLeft', '@e.Category', '@e.Organization')">
                             View Details
                         </button>
-
-                        <button class="purchase-btn" onclick="claimTicket(@e.Id)">
-                            @(e.Price == 0 ? "Claim Ticket" : "Purchase Ticket")
-                        </button>
                         @if (e.Price == 0)
                         {
                             <form method="post">
@@ -234,12 +228,9 @@
                         }
                         else
                         {
-                            <form method="post">
-                                <input type="hidden" name="eventId" value="@e.Id" />
-                                <button type="submit" formaction="?handler=MockPay" class="purchase-btn">
-                                    Pay Ticket
-                                </button>
-                            </form>
+                            <button type="button" class="purchase-btn" onclick="openPaymentModal('@e.Name', '@e.Price', '@e.Id')">
+                                Pay Ticket
+                            </button>
                         }
                     </div>
                 </div>
@@ -265,59 +256,131 @@
     </div>
 </div>
 
+<!-- Mock Payment Popup with Pay and Points -->
+<div id="paymentModal" class="modal" style="display:none; position:fixed; z-index:100; left:0; top:0; width:100%; height:100%; background-color: rgba(0,0,0,0.4); overflow-y:auto;">
+    <div class="modal-content" style="background-color:#fff; margin:7% auto; padding:20px; border-radius:10px; width:450px; max-height:85vh; overflow-y:auto; box-shadow:0 2px 10px rgba(0,0,0,0.2); position:relative;">
+        <span class="close" onclick="closePaymentModal()" style="position:absolute; top:15px; right:15px; font-size:20px; cursor:pointer; color:#aaa;">&times;</span>
+        
+        <div class="modal-header" style="font-size:18px; font-weight:bold; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+            <span>Mock Payment</span>
+            <span id="pointsBalance" style="font-size:0.9rem; color:#555;">Points: 0</span>
+        </div>
+
+        <p id="eventName"></p>
+        <p id="eventPoints" style="font-size:0.9rem; color:#555; margin-bottom:12px;"></p>
+
+        <form id="paymentForm" method="post" onsubmit="return validatePaymentForm()">
+            <input type="hidden" id="eventIdInput" name="eventId" value="" />
+
+            <label>Cardholder Name</label>
+            <input type="text" id="cardName" placeholder="" required style="width:100%; padding:8px; margin-top:6px; margin-bottom:12px; border:1px solid #ccc; border-radius:4px;" />
+
+            <label>Card Number</label>
+            <input type="text" id="cardNumber" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" required style="width:100%; padding:8px; margin-top:6px; margin-bottom:12px; border:1px solid #ccc; border-radius:4px;" />
+
+            <label>Expiration Date</label>
+            <input type="month" id="expiryDate" required style="width:100%; padding:8px; margin-top:6px; margin-bottom:12px; border:1px solid #ccc; border-radius:4px;" />
+
+            <label>CVV / Security Code</label>
+            <input type="text" id="cvv" placeholder="XXX" required pattern="\d{3}" maxlength="3" style="width:100%; padding:8px; margin-top:6px; margin-bottom:12px; border:1px solid #ccc; border-radius:4px;" />
+
+            <label>Amount ($)</label>
+            <input type="number" id="amountInput" readonly style="width:100%; padding:8px; margin-top:6px; margin-bottom:4px; border:1px solid #ccc; border-radius:4px;" />
+
+            <p style="font-size:0.85rem; color:#555; margin-bottom:12px;">
+                Or you can pay with points! $10 = 1 point.
+            </p>
+
+            <button type="button" id="pointsBtn" style="width:100%; background-color:#28a745; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:600; cursor:pointer; margin-bottom:12px;">
+                Pay with Points
+            </button>
+
+            <button type="submit" formaction="?handler=MockPay" style="width:100%; background-color:#721c24; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:600; cursor:pointer;">Confirm Payment</button>
+        </form>
+    </div>
+</div>
+
 <script>
-    function openEventsOfferedPopup(name, date, start, end, location, price, description, tickets, category, organization) {
-        document.getElementById('eventsOfferedName').innerText = name;
-        document.getElementById('eventsOfferedDate').innerText = date;
-        document.getElementById('eventsOfferedStart').innerText = start || "N/A";
-        document.getElementById('eventsOfferedEnd').innerText = end || "N/A";
-        document.getElementById('eventsOfferedLocation').innerText = location;
-        document.getElementById('eventsOfferedPrice').innerText = price;
-        document.getElementById('eventsOfferedDescription').innerText = description;
-        document.getElementById('eventsOfferedTickets').innerText = tickets;
-        document.getElementById('eventsOfferedCategory').innerText = category;
-        document.getElementById('eventsOfferedOrganization').innerText = organization;
+function validatePaymentForm() {
+    const expiry = document.getElementById("expiryDate").value;
+    const cvv = document.getElementById("cvv").value;
 
-        document.getElementById('eventsOfferedPopup').style.display = 'block';
-    }
-
-    function closeEventsOfferedPopup() {
-        document.getElementById('eventsOfferedPopup').style.display = 'none';
-    }
-
-    window.onclick = function(event) {
-        const popup = document.getElementById('eventsOfferedPopup');
-        if (event.target === popup) {
-            popup.style.display = 'none';
+    if (expiry) {
+        const today = new Date();
+        const [year, month] = expiry.split('-').map(Number);
+        const expiryDate = new Date(year, month - 1);
+        if (expiryDate < new Date(today.getFullYear(), today.getMonth())) {
+            alert("Expiration date cannot be in the past.");
+            return false;
         }
     }
-    async function claimTicket(eventId) {
-            try {
-                const response = await fetch(`/api/tickets/claim?eventid=${eventId}`, {
-                    method: 'POST'
-                });
 
-                if (response.ok) {
-                    const ticket = await response.json();
-                    alert(`Ticket claimed for event ID ${eventId}`);
-                } else {
-                    const error = await response.text();
-                    alert(`Failed to claim ticket: ${error}`);
-                }
-            } catch (err) {
-                console.error("Network error:", err);
-                alert("Something went wrong. Please try again.");
-            }
-        }
-
-    const alertBox = document.getElementById("alertMessage");
-    if (alertBox) {
-        setTimeout(() => {
-            alertBox.style.transition = "opacity 0.4s";
-            alertBox.style.opacity = "0";
-            setTimeout(() => alertBox.remove(), 400);
-        }, 4000);
+    if (!/^\d{3,4}$/.test(cvv)) {
+        alert("Enter a valid CVV (3 or 4 digits).");
+        return false;
     }
+
+    return true;
+}
+
+function openEventsOfferedPopup(name, date, start, end, location, price, description, tickets, category, organization) {
+    document.getElementById('eventsOfferedName').innerText = name;
+    document.getElementById('eventsOfferedDate').innerText = date;
+    document.getElementById('eventsOfferedStart').innerText = start || "N/A";
+    document.getElementById('eventsOfferedEnd').innerText = end || "N/A";
+    document.getElementById('eventsOfferedLocation').innerText = location;
+    document.getElementById('eventsOfferedPrice').innerText = price;
+    document.getElementById('eventsOfferedDescription').innerText = description;
+    document.getElementById('eventsOfferedTickets').innerText = tickets;
+    document.getElementById('eventsOfferedCategory').innerText = category;
+    document.getElementById('eventsOfferedOrganization').innerText = organization;
+
+    document.getElementById('eventsOfferedPopup').style.display = 'block';
+}
+
+function closeEventsOfferedPopup() {
+    document.getElementById('eventsOfferedPopup').style.display = 'none';
+}
+
+const paymentModal = document.getElementById("paymentModal");
+const eventNameDisplay = document.getElementById("eventName");
+const amountInput = document.getElementById("amountInput");
+const eventIdInput = document.getElementById("eventIdInput");
+
+function openPaymentModal(eventName, amount, eventId, eventPointsCost = 0, userPoints = 0) {
+    document.getElementById("eventName").textContent = "Paying for: " + eventName;
+    document.getElementById("amountInput").value = amount;
+    document.getElementById("eventIdInput").value = eventId;
+    document.getElementById("pointsBalance").textContent = "Points: " + userPoints;
+    document.getElementById("eventPoints").textContent = "Event Costs: " + eventPointsCost + " points";
+    paymentModal.style.display = "block";
+}
+function closePaymentModal() {
+    paymentModal.style.display = "none";
+}
+
+document.getElementById("pointsBtn").addEventListener("click", () => {
+    alert("Pay with points clicked! Functionality will be added later.");
+});
+
+window.onclick = function(event) {
+    const popup = document.getElementById('eventsOfferedPopup');
+    if (event.target === popup) {
+        closeEventsOfferedPopup();
+    }
+    if (event.target === paymentModal) {
+        closePaymentModal();
+    }
+}
+
+const alertBox = document.getElementById("alertMessage");
+if (alertBox) {
+    setTimeout(() => {
+        alertBox.style.transition = "opacity 0.4s";
+        alertBox.style.opacity = "0";
+        setTimeout(() => alertBox.remove(), 400);
+    }, 4000);
+}
 </script>
 
 </body>
