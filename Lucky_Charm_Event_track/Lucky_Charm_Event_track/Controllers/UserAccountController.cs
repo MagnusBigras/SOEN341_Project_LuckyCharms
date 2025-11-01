@@ -4,11 +4,13 @@ using Lucky_Charm_Event_track.Globals;
 using Lucky_Charm_Event_track.Models;
 ﻿using Lucky_Charm_Event_track.Models;
 using Lucky_Charm_Event_track.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace Lucky_Charm_Event_track.Controllers
@@ -42,6 +44,16 @@ namespace Lucky_Charm_Event_track.Controllers
         {
             var active_accounts = _dbContext.UserAccounts.Where(e => e.IsActive).ToList();
             return active_accounts;
+        }
+        [HttpGet("getpaymentdetails")]
+        public async Task<ActionResult<PaymentDetail>> GetPaymentDetails() 
+        {
+            if(Globals.Globals.SessionManager.CurrentLoggedInUser == null) 
+            {
+                return BadRequest();
+            }
+            var paymentDetail = await _dbContext.PaymentDetails.FirstOrDefaultAsync(p => p.UserID == Globals.Globals.SessionManager.CurrentLoggedInUser.Id);
+            return Ok(paymentDetail);
         }
         [HttpPost("create")]
         public ActionResult<UserAccount> CreateUserAccount([FromBody] UserAccount newAccount)
@@ -98,7 +110,7 @@ namespace Lucky_Charm_Event_track.Controllers
 
         }
         [HttpPost("login")]
-        public ActionResult<UserAccount> Login([FromBody]LoginCreds loginCreds) 
+        public ActionResult Login([FromBody]LoginCreds loginCreds) 
         {
             var account = _dbContext.UserAccounts.FirstOrDefault(e => e.UserName == loginCreds.Username);
             if (account == null)
@@ -106,7 +118,21 @@ namespace Lucky_Charm_Event_track.Controllers
                 return BadRequest("Invalid credentials");
             }
             Globals.Globals.SessionManager.InitializeSession((UserAccount)account, "login");
-            return Ok(account);
+            string redirectUrl;
+            if (loginCreds.IsAdmin) 
+            {
+                redirectUrl = "/AdminPlatformOversight";
+            }
+            else 
+            {
+                redirectUrl = "/StudentsEventsOffered";
+            }
+            LoginResponse loginResponse = new LoginResponse
+            {
+                Message = "Login Successful",
+                RedirectUrl = redirectUrl
+            };
+            return Ok(loginResponse);
         }
         [HttpPost("upgradetoOrganizer")]
         public ActionResult<EventOrganizer> UpgradetoEventOrganzer(int id) 
@@ -135,6 +161,18 @@ namespace Lucky_Charm_Event_track.Controllers
             _dbContext.EventOrganizers.Add(organizer);
             _dbContext.SaveChanges();
             return Ok(organizer);
+        }
+        [HttpPost("savepaymentdetails")]
+        public ActionResult<UserAccount> SavePaymentDetails([FromBody]PaymentDetail paymentDetail) 
+        {
+            if (paymentDetail == null) 
+            {
+                return BadRequest(new { message = "Error! Invalid Payment Details" });
+            }
+            paymentDetail.UserID = Globals.Globals.SessionManager.CurrentLoggedInUser.Id;
+            _dbContext.PaymentDetails.Add(paymentDetail);
+            _dbContext.SaveChanges();
+            return Ok(paymentDetail);
         }
     }
 }

@@ -20,6 +20,9 @@ namespace Lucky_Charm_Event_track.Models
         public List<Ticket> Tickets { get; set; }
         public DateTime LastLogin { get; set; }
         public bool IsActive { get; set; }
+        public int Points { get; set; }
+        public PaymentDetail PaymentDetail { get; set; }
+        public int PaymentDetailID { get; set; }
 
     }
 }
