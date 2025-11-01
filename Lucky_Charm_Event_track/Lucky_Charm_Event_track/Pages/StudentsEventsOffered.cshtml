@@ -274,7 +274,7 @@
 
             <label>Cardholder Name</label>
             <input type="text" id="cardName" placeholder="" required style="width:100%; padding:8px; margin-top:6px; margin-bottom:12px; border:1px solid #ccc; border-radius:4px;" />
-
+                
             <label>Card Number</label>
             <input type="text" id="cardNumber" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" required style="width:100%; padding:8px; margin-top:6px; margin-bottom:12px; border:1px solid #ccc; border-radius:4px;" />
 
@@ -294,14 +294,17 @@
             <button type="button" id="pointsBtn" style="width:100%; background-color:#28a745; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:600; cursor:pointer; margin-bottom:12px;">
                 Pay with Points
             </button>
-
+            <label>Save My Payment Details for Easy Checkout Next Time </label>
+                <div id="savedetailswrapper">
+                    <input type="checkbox" id="savedetailscheckbox">
+                </div>
             <button type="submit" formaction="?handler=MockPay" style="width:100%; background-color:#721c24; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:600; cursor:pointer;">Confirm Payment</button>
         </form>
     </div>
 </div>
 
 <script>
-function validatePaymentForm() {
+async function validatePaymentForm() {
     const expiry = document.getElementById("expiryDate").value;
     const cvv = document.getElementById("cvv").value;
 
@@ -319,10 +322,56 @@ function validatePaymentForm() {
         alert("Enter a valid CVV (3 or 4 digits).");
         return false;
     }
-
+    const isChecked = document.getElementById("savedetailscheckbox").checked;
+    if(isChecked)
+    {
+                const form = document.getElementById('paymentForm')
+                const payload = {
+                    CardHolderName : form.querySelector('#cardName')?.value || '',
+                    CardNumber : form.querySelector('#cardNumber')?.value || '',
+                    ExpiryDate : form.querySelector('#expiryDate')?.value || '',
+                    CVV: form.querySelector('#cvv')?.value || ''
+                }
+                try
+                {
+                    const response = await fetch('/api/accounts/savepaymentdetails', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (response.ok) {
+                        const result = await response.json();
+                        console.log("Payment Details Saved!");
+                    } else {
+                        const error = await response.text();
+                        console.error("Failed to Save Payment Details:", error);
+                        alert("Error Saving Payment Details: " + error);
+                    }   
+                }
+                catch(error)
+                {
+                    console.error("Network or server error:", error);
+                    alert("Something went wrong. Please try again.");
+                }
+    }
     return true;
 }
+window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('/api/accounts/getpaymentdetails');
+                const result = await response.json();
 
+                if (result != null) {
+                    document.getElementById('savedetailswrapper').style.display = 'none';
+                    document.getElementById("cardName").value = result.cardHolderName;
+                    document.getElementById("cardNumber").value = result.cardNumber;
+                    document.getElementById("expiryDate").value = result.expiryDate;
+                    document.getElementById("cvv").value = result.cvv;
+                }
+            } catch (error) {
+                console.error("Error checking payment details:", error);
+            }
+});
 function openEventsOfferedPopup(name, date, start, end, location, price, description, tickets, category, organization) {
     document.getElementById('eventsOfferedName').innerText = name;
     document.getElementById('eventsOfferedDate').innerText = date;

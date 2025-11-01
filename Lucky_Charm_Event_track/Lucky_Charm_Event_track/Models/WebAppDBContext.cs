@@ -13,6 +13,7 @@ namespace Lucky_Charm_Event_track.Models
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<UserAccount> UserAccounts { get; set; }
         public DbSet<Metric> Metrics { get; set; }
+        public DbSet<PaymentDetail> PaymentDetails { get; set; }
         public string DbPath { get; set; }
 
         public WebAppDBContext(DbContextOptions<WebAppDBContext> options): base(options)
@@ -69,6 +70,11 @@ namespace Lucky_Charm_Event_track.Models
             .Ignore(m => m.RevenueByMonth)
             .Ignore(m => m.AttendanceByMonth);
 
+           
+            modelBuilder.Entity<PaymentDetail>()
+                .HasOne(eo => eo.Account)
+                .WithOne(u => u.PaymentDetail)
+                .HasForeignKey<PaymentDetail>(eo => eo.UserID);
         }
     }
 }

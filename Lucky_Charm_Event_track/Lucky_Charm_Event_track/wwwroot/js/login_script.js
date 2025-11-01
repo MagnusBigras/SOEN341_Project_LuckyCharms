@@ -67,7 +67,6 @@ document.getElementById('registerForm').addEventListener('submit', async functio
             const result = await response.json();
             console.log("Account created:", result);
             alert("Account created successfully!");
-            // Optionally redirect or reset form
         } else {
             const error = await response.text();
             console.error("Failed to create account:", error);
@@ -78,19 +77,34 @@ document.getElementById('registerForm').addEventListener('submit', async functio
         alert("Something went wrong. Please try again.");
     }
 });
-
-
-
-// Fake login for front-end only
-document.getElementById('loginForm').addEventListener('submit', function (e) {
+document.getElementById('loginForm').addEventListener('submit', async function (e) {
     e.preventDefault();
+    const form = e.target;
+    const payload = {
+        UserName: form.querySelector('#Login_UserName')?.value || '',
+        Password: form.querySelector('#Login_Password')?.value || '',
+        IsAdmin: form.querySelector('#isAdmin')?.checked || false
+    }
+    console.log("Sending payload:", payload);
+    try {
+        const response = await fetch('/api/accounts/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
 
-    const isAdmin = document.getElementById("isAdmin").checked;
-
-    // Save role in browser local storage
-    localStorage.setItem("userRole", isAdmin ? "Admin" : "Student");
-
-    // Redirect to homepage after fake login
-    window.location.href = "/";
+        if (response.ok) {
+            const result = await response.json();
+            console.log("Login successful");
+            alert("Login successful!");
+            window.location.href = result.redirectUrl;
+        } else {
+            const error = await response.text();
+            console.error("Failed to Login:", error);
+            alert("Error Logging in: " + error);
+        }
+    } catch (error) {
+        console.error("Network or server error:", error);
+        alert("Something went wrong. Please try again.");
+    }
 });
-
