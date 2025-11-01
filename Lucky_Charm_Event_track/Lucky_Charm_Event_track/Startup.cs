@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using System;
 using System.Linq;
-using Lucky_Charm_Event_track.Controllers;
 using Lucky_Charm_Event_track.Services;
 
 namespace Lucky_Charm_Event_track
@@ -24,18 +24,25 @@ namespace Lucky_Charm_Event_track
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-                services.AddDbContext<WebAppDBContext>(options => options.UseSqlite("Data Source=eventtracker.db"));
-                services.AddRazorPages();
-                services.AddControllers().AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-                });
+            services.AddDbContext<WebAppDBContext>(options => options.UseSqlite("Data Source=eventtracker.db"));
+            services.AddRazorPages();
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+            });
+
+            // Added cookie authentication
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                    .AddCookie(options =>
+                    {
+                        options.LoginPath = "/Login";
+                        options.Cookie.Name = "LuckyCharmAuth";
+                        options.ExpireTimeSpan = TimeSpan.FromHours(1);
+                    });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WebAppDBContext db)
         {
             if (env.IsDevelopment())
@@ -45,7 +52,6 @@ namespace Lucky_Charm_Event_track
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -53,20 +59,22 @@ namespace Lucky_Charm_Event_track
             app.UseStaticFiles();
             app.UseRouting();
             db.Database.Migrate();
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
-                endpoints.MapControllers(); 
+                endpoints.MapControllers();
             });
+
             seedDefaultUser(db);
             DatabaseSeeder.Seed(db);
-
         }
-        public void seedDefaultUser(WebAppDBContext db) 
-        {
 
+        public void seedDefaultUser(WebAppDBContext db)
+        {
             if (!db.UserAccounts.Any())
             {
                 var user = new UserAccount
@@ -96,8 +104,8 @@ namespace Lucky_Charm_Event_track
                     IsActive = true,
                 };
                 db.EventOrganizers.Add(eventorg);
-
                 db.SaveChanges();
+
                 var testevent = new Event
                 {
                     EventName = "test",
@@ -115,8 +123,9 @@ namespace Lucky_Charm_Event_track
                     UpdatedAt = DateTime.Now
                 };
 
-                db.Events.Add(testevent); 
+                db.Events.Add(testevent);
                 db.SaveChanges();
+
                 db.Tickets.Add(new Ticket
                 {
                     EventId = testevent.Id,

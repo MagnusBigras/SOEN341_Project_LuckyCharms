@@ -5,12 +5,16 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 
 namespace Lucky_Charm_Event_track.Pages
 {
     public class StudentsEventsOfferedModel : PageModel
     {
         private readonly WebAppDBContext _context;
+
+        public string FirstName { get; set; } = "Guest"; 
+        public int UserId { get; set; }
 
         public StudentsEventsOfferedModel(WebAppDBContext context)
         {
@@ -42,8 +46,18 @@ namespace Lucky_Charm_Event_track.Pages
 
         public void OnGet()
         {
+            // Get logged-in user ID from claims
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!string.IsNullOrEmpty(userIdClaim))
+            {
+                UserId = int.Parse(userIdClaim);
+                var user = _context.UserAccounts.FirstOrDefault(u => u.Id == UserId);
+                if (user != null)
+                {
+                    FirstName = user.FirstName;
+                }
+            }
 
-            // Apply search
             // Fetch all active events with related data
             var events = _context.Events
                 .Include(e => e.Prices)
@@ -118,13 +132,14 @@ namespace Lucky_Charm_Event_track.Pages
         // Purchase free ticket
         public IActionResult OnPostPurchaseTicket(int eventId)
         {
-            int userId = 1; // mock user
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            int userId = !string.IsNullOrEmpty(userIdClaim) ? int.Parse(userIdClaim) : 0;
 
             var ticket = _context.Tickets.FirstOrDefault(t => t.EventId == eventId && t.UserAccountId == null);
 
-            if (ticket == null)
+            if (ticket == null || userId == 0)
             {
-                TempData["ErrorMessage"] = "No tickets available for this event.";
+                TempData["ErrorMessage"] = "No tickets available or user not logged in.";
                 return RedirectToPage();
             }
 
@@ -142,13 +157,14 @@ namespace Lucky_Charm_Event_track.Pages
         // Mock payment for paid tickets
         public IActionResult OnPostMockPay(int eventId)
         {
-            int userId = 1; // mock user
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            int userId = !string.IsNullOrEmpty(userIdClaim) ? int.Parse(userIdClaim) : 0;
 
             var ticket = _context.Tickets.FirstOrDefault(t => t.EventId == eventId && t.UserAccountId == null);
 
-            if (ticket == null)
+            if (ticket == null || userId == 0)
             {
-                TempData["ErrorMessage"] = "No tickets available for this event.";
+                TempData["ErrorMessage"] = "No tickets available or user not logged in.";
                 return RedirectToPage();
             }
 
@@ -188,7 +204,6 @@ namespace Lucky_Charm_Event_track.Pages
             metric.TotalRevenue += ticketPrice;
             metric.NewAttendees += 1;
 
-            // Dynamically update remaining and used capacity
             int used = eventEntity?.Tickets.Count(t => t.UserAccountId != null) ?? 0;
             metric.UsedCapacity = used;
             metric.LastRemaining = (eventEntity?.Capacity ?? 0) - used;
