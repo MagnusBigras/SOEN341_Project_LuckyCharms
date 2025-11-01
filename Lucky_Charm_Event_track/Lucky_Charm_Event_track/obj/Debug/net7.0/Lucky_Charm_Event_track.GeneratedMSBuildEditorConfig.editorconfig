@@ -1,0 +1,107 @@
+is_global = true
+build_property.TargetFramework = net7.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = Lucky_Charm_Event_track
+build_property.RootNamespace = Lucky_Charm_Event_track
+build_property.ProjectDir = /Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 7.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = /Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track
+build_property._RazorSourceGeneratorDebug = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/AdminAnalytics.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQWRtaW5BbmFseXRpY3MuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/AdminManagement.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQWRtaW5NYW5hZ2VtZW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/AdminPlatformOversight.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQWRtaW5QbGF0Zm9ybU92ZXJzaWdodC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/Admin_Role&Org_Portal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQWRtaW5fUm9sZSZPcmdfUG9ydGFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/EditConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRWRpdENvbmZpcm1hdGlvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/EditEventPage.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRWRpdEV2ZW50UGFnZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRXJyb3IuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/EventAnalytics.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRXZlbnRBbmFseXRpY3MuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/EventConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRXZlbnRDb25maXJtYXRpb24uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/EventForm.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRXZlbnRGb3JtLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/events.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvZXZlbnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvTG9naW4uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/OrganizerTools.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvT3JnYW5pemVyVG9vbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUHJpdmFjeS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvU2hhcmVkL19MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvU2hhcmVkL19WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/StudentsEventsOffered.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvU3R1ZGVudHNFdmVudHNPZmZlcmVkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/StudentsMyCalendar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvU3R1ZGVudHNNeUNhbGVuZGFyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/StudentsMyTickets.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvU3R1ZGVudHNNeVRpY2tldHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Pages/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
