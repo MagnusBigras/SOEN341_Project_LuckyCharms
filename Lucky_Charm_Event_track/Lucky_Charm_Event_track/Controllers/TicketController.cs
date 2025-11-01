@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Claims;
+
 
 namespace Lucky_Charm_Event_track.Controllers
 {
@@ -95,7 +97,7 @@ namespace Lucky_Charm_Event_track.Controllers
         {
             var selectedevent = _dbContext.Events.Find(eventid);
             string qr_payload = "test";
-            if (Globals.Globals.SessionManager.CurrentLoggedInUser == null) 
+            if (Globals.Globals.SessionManager.CurrentLoggedInUser == null)
             {
                 return BadRequest(new { message = "Error! User Not Not Logged In!" });
             }
@@ -120,21 +122,26 @@ namespace Lucky_Charm_Event_track.Controllers
             selectedevent.Tickets.Add(ticket);
             return Ok(ticket);
         }
-        // Hides all tickets for a given event and user
         [HttpPost("hide-by-event")]
-        public async Task<IActionResult> HideEventTickets([FromQuery] int eventId, [FromQuery] int userId)
+        public async Task<IActionResult> HideEventTickets([FromQuery] int eventId)
         {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdClaim))
+                return Unauthorized(new { success = false, error = "User not logged in." });
+
+            int userId = int.Parse(userIdClaim);
+
             var tickets = await _dbContext.Tickets
                 .Where(t => t.EventId == eventId && t.UserAccountId == userId)
                 .ToListAsync();
 
             if (!tickets.Any())
-                return NotFound(new { success = false, error = "No tickets found for this event." });
+                return NotFound(new { success = false, error = "You have no tickets for this event." });
 
             tickets.ForEach(t => t.IsHiddenInCalendar = true);
             await _dbContext.SaveChangesAsync();
 
-            return Ok(new { success = true, message = "All tickets for this event hidden." });
+            return Ok(new { success = true, message = "Your tickets for this event have been hidden." });
         }
 
 

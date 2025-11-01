@@ -52,8 +52,7 @@
             </div>
         </div>
     </div>
-
-    <!-- Top navbar -->
+    <!-- Top navigation bar -->
     <div class="top-navbar">
         <div class="navbar-left">
             <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
@@ -62,10 +61,12 @@
             <a class="create-btn" asp-page="/EventForm"> + Create </a>
             <button class="account-btn">
                 <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
-                <span class="account-name">Alex</span>
+                <span class="account-name">@Model.FirstName</span>
+
             </button>
         </div>
     </div>
+
 
     <!-- Main content -->
     <div class="main-content">
