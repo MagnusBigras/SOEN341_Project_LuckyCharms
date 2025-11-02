@@ -3,6 +3,7 @@ using System;
 using Lucky_Charm_Event_track.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LuckyCharmEventtrack.Migrations
 {
     [DbContext(typeof(WebAppDBContext))]
-    partial class WebAppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20251102165512_UserAccountSuspensionAndBannedStatus")]
+    partial class UserAccountSuspensionAndBannedStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -135,6 +138,7 @@ namespace LuckyCharmEventtrack.Migrations
 
                     b.ToTable("Metrics");
                 });
+
             modelBuilder.Entity("Lucky_Charm_Event_track.Models.Organization", b =>
                 {
                     b.Property<int>("Id")
@@ -164,34 +168,6 @@ namespace LuckyCharmEventtrack.Migrations
                     b.HasIndex("EventOrganizerId");
 
                     b.ToTable("Organizations");
-                });
-            modelBuilder.Entity("Lucky_Charm_Event_track.Models.PaymentDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("CVV")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CardHolderName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("CardNumber")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ExpiryDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("UserID")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserID")
-                        .IsUnique();
-
-                    b.ToTable("PaymentDetails");
                 });
 
             modelBuilder.Entity("Lucky_Charm_Event_track.Models.PriceTier", b =>
@@ -294,6 +270,9 @@ namespace LuckyCharmEventtrack.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsBanned")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("LastLogin")
                         .HasColumnType("TEXT");
 
@@ -306,22 +285,13 @@ namespace LuckyCharmEventtrack.Migrations
                     b.Property<string>("PasswordSalt")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("PaymentDetailID")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("Points")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("IsBanned")
-                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("SuspensionEndUtc")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UserName")  
+                    b.Property<string>("UserName")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -362,17 +332,7 @@ namespace LuckyCharmEventtrack.Migrations
                     b.Navigation("Event");
                 });
 
-            modelBuilder.Entity("Lucky_Charm_Event_track.Models.PaymentDetail", b =>
-                {
-                    b.HasOne("Lucky_Charm_Event_track.Models.UserAccount", "Account")
-                        .WithOne("PaymentDetail")
-                        .HasForeignKey("Lucky_Charm_Event_track.Models.PaymentDetail", "UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-                });
-                        modelBuilder.Entity("Lucky_Charm_Event_track.Models.Organization", b =>
+            modelBuilder.Entity("Lucky_Charm_Event_track.Models.Organization", b =>
                 {
                     b.HasOne("Lucky_Charm_Event_track.Models.EventOrganizer", "Organizer")
                         .WithMany("Organizations")
@@ -423,14 +383,12 @@ namespace LuckyCharmEventtrack.Migrations
             modelBuilder.Entity("Lucky_Charm_Event_track.Models.EventOrganizer", b =>
                 {
                     b.Navigation("Events");
-                    
+
                     b.Navigation("Organizations");
                 });
 
             modelBuilder.Entity("Lucky_Charm_Event_track.Models.UserAccount", b =>
                 {
-                    b.Navigation("PaymentDetail");
-
                     b.Navigation("Tickets");
                 });
 #pragma warning restore 612, 618

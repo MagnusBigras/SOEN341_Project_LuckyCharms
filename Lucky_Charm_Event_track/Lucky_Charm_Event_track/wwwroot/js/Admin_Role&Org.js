@@ -1,34 +1,91 @@
-//local storage helpers
-const STORAGE_KEYS = {
-  orgs: "admin_portal_orgs",
-  roles: "admin_portal_roles",
-  restrictions: "admin_portal_restrictions",
-};
-
-const saveLS = (k, v) => localStorage.setItem(k, JSON.stringify(v));
-const loadLS = (k, fallback) => {
-  try { return JSON.parse(localStorage.getItem(k)) ?? fallback; }
-  catch { return fallback; }
-};
+// NOTE: localStorage usage removed for roles/orgs/restrictions; data comes from the server when available
+// Diagnostic load marker - safe and non-intrusive. If you don't see this in the console then the script didn't run.
+console.debug('Admin_Role&Org.js loaded');
 
 //seed data
 
-let organizations = loadLS(STORAGE_KEYS.orgs, [
-  { id: crypto.randomUUID(), name: "Tech Corp", users: 58, active: true },
-  { id: crypto.randomUUID(), name: "Health Plus", users: 42, active: true },
-  { id: crypto.randomUUID(), name: "EduFuture", users: 25, active: false },
-]);
+let organizations = []; // populated from the database via API
 
 // roles: { [email]: "User" | "Organizator" | "Admin" }
-let roles = loadLS(STORAGE_KEYS.roles, {
-  "admin@example.com": "Admin",
-  "org@example.com": "Organizator",
-});
+// roles are fetched from the server; the client no longer stores role overrides in localStorage
+let roles = {};
+let accountsByEmail = {}; // map email -> account object (includes Id and AccountType)
+
+async function loadRolesFromServer(){
+  try{
+  // fetch lightweight summary directly from DB via server endpoint to avoid preserved-reference wrappers
+  const res = await fetch('/api/accounts/summary');
+    if(!res.ok) throw new Error('Failed to fetch accounts');
+    const accounts = await res.json();
+    console.debug('loadRolesFromServer: fetched accounts', accounts);
+    // handle cases where JSON serializer wrapped arrays (ReferenceHandler.Preserve -> {$id, $values})
+    let accountsList = accounts;
+    if (!Array.isArray(accountsList)) {
+      accountsList = accountsList?.$values ?? accountsList?.Values ?? accountsList?.value ?? accountsList ?? null;
+      // If $values is an object with numeric keys (not a true array), convert to an array
+      if (accountsList && !Array.isArray(accountsList) && typeof accountsList === 'object') {
+        accountsList = Object.values(accountsList);
+      }
+      if (!Array.isArray(accountsList)) {
+        // last resort: try extracting array-like entries that look like accounts
+        const maybe = Object.values(accounts || {}).filter(v => v && (v.email || v.Email));
+        accountsList = maybe.length ? maybe : [];
+      }
+    }
+    accountsByEmail = {};
+    roles = {};
+  console.debug('loadRolesFromServer: normalized accountsList', accountsList);
+  accountsList.forEach(acc => {
+        // be tolerant of JSON property casing and enum representation
+        const emailRaw = acc.email || acc.Email;
+        if(!emailRaw) return;
+        const email = String(emailRaw).toLowerCase();
+
+        const id = acc.id || acc.Id;
+        accountsByEmail[email] = { ...(acc || {}), id };
+
+        // AccountType may be serialized as a string ("Administrator") or number (0/1/2)
+        let acctTypeRaw = acc.accountType ?? acc.AccountType;
+        let acctTypeStr = '';
+        if (acctTypeRaw === undefined || acctTypeRaw === null) acctTypeStr = '';
+        else if (typeof acctTypeRaw === 'number') {
+          // map numeric enum values -> names (follow AccountTypes enum)
+          const enumMap = {
+            0: 'GeneralUser',
+            1: 'EventOrganizer',
+            2: 'Administrator'
+          };
+          acctTypeStr = enumMap[acctTypeRaw] || String(acctTypeRaw);
+        } else {
+          acctTypeStr = String(acctTypeRaw);
+        }
+
+        let roleStr = 'User';
+        const t = acctTypeStr.toLowerCase();
+        if(t.includes('administrator')) roleStr = 'Admin';
+        else if(t.includes('eventorganizer') || t.includes('event_organizer')) roleStr = 'Organizator';
+        else roleStr = 'User';
+        roles[email] = roleStr;
+      });
+
+  // No local overrides applied — server is authoritative
+
+  }catch(err){
+    console.error('Could not load accounts from server.', err);
+    if(roleErrors){
+      roleErrors.textContent = 'Could not load accounts from server: ' + (err && err.message ? err.message : err);
+      roleErrors.classList.remove('hidden');
+    }
+    // fallback: no roles available
+    roles = {};
+  }
+
+  renderRoles();
+}
 
 // restrictions: { [email]: { type: "none"|"banned"|"suspended", until?: ISO } }
-let restrictions = loadLS(STORAGE_KEYS.restrictions, {
-  "banned@example.com": { type: "banned" },
-});
+// NOTE: client-side restrictions are kept in-memory only until a server-backed model exists
+let restrictions = {};
 
 
 // Orgs
@@ -64,8 +121,12 @@ function renderOrgs(){
 
     // name cell (with inline edit support)
     const nameTd = document.createElement("td");
+    const subtitle = org.organizerUserName && org.organizerUserName !== org.name ? `<div class="muted small">Owner: ${org.organizerUserName}</div>` : '';
     nameTd.innerHTML = `
-      <span class="name-text">${org.name}</span>
+      <div>
+        <span class="name-text">${org.name}</span>
+        ${subtitle}
+      </div>
       <div class="edit-wrap hidden">
         <input class="edit-input" type="text" value="${org.name}">
         <button class="btn sm save-edit">Save</button>
@@ -106,6 +167,7 @@ function renderRoles(){
   rolesTableBody.innerHTML = "";
   Object.entries(roles).forEach(([email, role]) => {
     const tr = document.createElement("tr");
+    // Show only the role text in the roles table (no restriction/status metadata)
     tr.innerHTML = `<td>${email}</td><td>${role}</td>`;
     rolesTableBody.appendChild(tr);
   });
@@ -123,6 +185,7 @@ function restrictionLabel(r){
 }
 function renderRestrictions(){
   restrictionsTableBody.innerHTML = "";
+  // render computed restrictions
   Object.entries(restrictions).forEach(([email, r]) => {
     const tr = document.createElement("tr");
     tr.innerHTML = `<td>${email}</td><td>${restrictionLabel(r)}</td>`;
@@ -130,10 +193,72 @@ function renderRestrictions(){
   });
 }
 
+// Load restrictions (banned / suspended) from the server by reading account fields
+async function loadRestrictionsFromServer(){
+  try{
+    // Try a few endpoints in order of preference so this works even if the server wasn't restarted
+    const tryEndpoints = ['/api/accounts/restrictions','/api/accounts/all','/api/accounts/summary'];
+    let data = null;
+    let usedEndpoint = null;
+    for(const ep of tryEndpoints){
+      try{
+        const r = await fetch(ep);
+        if(!r.ok) { console.debug('loadRestrictionsFromServer: endpoint', ep, 'returned', r.status); continue; }
+        data = await r.json();
+        usedEndpoint = ep;
+        break;
+      }catch(err){
+        console.debug('loadRestrictionsFromServer: fetch to', ep, 'failed', err && err.message ? err.message : err);
+        continue;
+      }
+    }
+    if(!data){
+      throw new Error('No endpoint returned data');
+    }
+    console.debug('loadRestrictionsFromServer: using endpoint', usedEndpoint, 'raw data=', data);
+    // normalize shapes (ReferenceHandler.Preserve)
+    let list = data;
+    if(!Array.isArray(list)){
+      list = data?.$values ?? data?.Values ?? data ?? [];
+      if(list && !Array.isArray(list) && typeof list === 'object') list = Object.values(list);
+      if(!Array.isArray(list)) list = [];
+    }
+    restrictions = {};
+  console.debug('loadRestrictionsFromServer: fetched accounts list', list);
+    list.forEach(acc => {
+      const emailRaw = acc.email || acc.Email || acc.UserName || acc.userName || acc.EmailAddress || acc.emailAddress;
+      if(!emailRaw) return;
+      const email = String(emailRaw).toLowerCase();
+      const isBanned = acc.isBanned ?? acc.IsBanned ?? false;
+      const suspensionRaw = acc.suspensionEndUtc ?? acc.SuspensionEndUtc ?? acc.SuspensionEndDate ?? null;
+      if(isBanned){
+        restrictions[email] = { type: 'banned' };
+      } else if(suspensionRaw){
+        // parse date and only treat as suspended if in the future
+        const until = new Date(suspensionRaw);
+        if(!isNaN(until) && until > new Date()){
+          restrictions[email] = { type: 'suspended', until: until.toISOString() };
+        } else {
+          // expired or invalid -> none
+          // ensure any previous entry is cleared
+        }
+      }
+    });
+    console.debug('loadRestrictionsFromServer: computed restrictions map', restrictions);
+    renderRestrictions();
+    // Also re-render the roles table so any newly-loaded restriction status appears next to roles
+    try { renderRoles(); } catch(e) { console.debug('renderRoles failed after restrictions load', e); }
+      // Update visible debug block (if present) so we can see the computed map on the page
+      // no visible debug output in page (cleanup)
+  }catch(err){
+    console.warn('Could not load restrictions from server', err);
+  }
+}
+
 /* -------------------------------------------------
    Orgs: add / edit / delete / toggle
 ------------------------------------------------- */
-addOrgBtn.addEventListener("click", () => {
+if (addOrgBtn) addOrgBtn.addEventListener("click", () => {
   const name = (orgNameInput.value || "").trim();
   orgErrors.classList.add("hidden");
   if(!name){
@@ -146,18 +271,19 @@ addOrgBtn.addEventListener("click", () => {
     orgErrors.classList.remove("hidden");
     return;
   }
-  organizations.unshift({ id: crypto.randomUUID(), name, users: 0, active: true });
-  saveLS(STORAGE_KEYS.orgs, organizations);
-  orgNameInput.value = "";
-  renderOrgs();
+  // Organization creation must be done via the backend API. For now, inform the admin.
+  orgErrors.textContent = "Organization changes are managed via the server. Use the backend API to create organizations.";
+  orgErrors.classList.remove("hidden");
+  return;
 });
 
 // event delegation for actions
-orgTableBody.addEventListener("click", (e) => {
+if (orgTableBody) orgTableBody.addEventListener("click", (e) => {
   const tr = e.target.closest("tr");
   if(!tr) return;
   const id = tr.dataset.id;
-  const org = organizations.find(o => o.id === id);
+  // dataset values are strings; compare as strings so numeric ids also match
+  const org = organizations.find(o => String(o.id) === String(id));
   if(!org) return;
 
   // edit start
@@ -170,22 +296,47 @@ orgTableBody.addEventListener("click", (e) => {
 
   // save edit
   if(e.target.closest(".save-edit")){
-    const input = tr.querySelector(".edit-input");
-    const newName = (input.value || "").trim();
-    orgErrors.classList.add("hidden");
-    if(!newName){
-      orgErrors.textContent = "Organization name cannot be empty.";
-      orgErrors.classList.remove("hidden");
-      return;
-    }
-    if(organizations.some(o => o.id !== id && o.name.toLowerCase() === newName.toLowerCase())){
-      orgErrors.textContent = "Duplicate organization name.";
-      orgErrors.classList.remove("hidden");
-      return;
-    }
-    org.name = newName;
-    saveLS(STORAGE_KEYS.orgs, organizations);
-    renderOrgs();
+    (async () => {
+      const saveBtn = e.target.closest('.save-edit');
+      const cancelBtn = tr.querySelector('.cancel-edit');
+      const input = tr.querySelector(".edit-input");
+      const newName = (input.value || "").trim();
+      orgErrors.classList.add("hidden");
+      if(!newName){
+        orgErrors.textContent = "Organization name cannot be empty.";
+        orgErrors.classList.remove("hidden");
+        return;
+      }
+      if(organizations.some(o => String(o.id) !== String(id) && o.name.toLowerCase() === newName.toLowerCase())){
+        orgErrors.textContent = "Duplicate organization name.";
+        orgErrors.classList.remove("hidden");
+        return;
+      }
+      try{
+        if(saveBtn) saveBtn.disabled = true;
+        if(cancelBtn) cancelBtn.disabled = true;
+        const resp = await fetch('/api/organization/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ Id: Number(id), Name: newName })
+        });
+        if(!resp.ok){
+          const txt = await resp.text().catch(() => null);
+          orgErrors.textContent = 'Failed to update organization: ' + (txt || resp.status);
+          orgErrors.classList.remove('hidden');
+          if(saveBtn) saveBtn.disabled = false;
+          if(cancelBtn) cancelBtn.disabled = false;
+          return;
+        }
+        await loadOrgsFromServer();
+      }catch(err){
+        console.error('Update org failed', err);
+        orgErrors.textContent = 'Update failed: ' + (err && err.message ? err.message : err);
+        orgErrors.classList.remove('hidden');
+        if(saveBtn) saveBtn.disabled = false;
+        if(cancelBtn) cancelBtn.disabled = false;
+      }
+    })();
   }
 
   // cancel edit
@@ -195,38 +346,146 @@ orgTableBody.addEventListener("click", (e) => {
 
   // delete
   if(e.target.closest(".delete-org")){
-    organizations = organizations.filter(o => o.id !== id);
-    saveLS(STORAGE_KEYS.orgs, organizations);
-    renderOrgs();
+    (async () => {
+      orgErrors.classList.add('hidden');
+      const delBtn = e.target.closest('.delete-org');
+      if(!delBtn) return;
+      // confirm
+      const confirmDel = window.confirm(`Delete organization '${org.name}'? This cannot be undone.`);
+      if(!confirmDel) return;
+      try{
+        delBtn.disabled = true;
+        const resp = await fetch('/api/organization/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(Number(id))
+        });
+        if(!resp.ok){
+          const txt = await resp.text().catch(()=>null);
+          orgErrors.textContent = 'Failed to delete organization: ' + (txt || resp.status);
+          orgErrors.classList.remove('hidden');
+          return;
+        }
+        // refresh list
+        await loadOrgsFromServer();
+      }catch(err){
+        console.error('Delete org failed', err);
+        orgErrors.textContent = 'Delete failed: ' + (err && err.message ? err.message : err);
+        orgErrors.classList.remove('hidden');
+      }finally{
+        delBtn.disabled = false;
+      }
+    })();
+    return;
   }
 
   // toggle active
   if(e.target.classList.contains("switch")){
-    org.active = !org.active;
-    saveLS(STORAGE_KEYS.orgs, organizations);
-    renderOrgs();
+    // toggle active state via server
+    (async () => {
+      orgErrors.classList.add('hidden');
+      const switchEl = e.target.closest('.switch');
+      if(!switchEl) return;
+      // prevent double clicks
+      if(switchEl.dataset.busy === '1') return;
+      switchEl.dataset.busy = '1';
+      const newActive = !org.active;
+      try{
+        const resp = await fetch('/api/organization/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ Id: Number(id), Name: org.name || '', IsActive: newActive })
+        });
+        if(!resp.ok){
+          const txt = await resp.text().catch(()=>null);
+          orgErrors.textContent = 'Failed to update organization activation: ' + (txt || resp.status);
+          orgErrors.classList.remove('hidden');
+          return;
+        }
+        // refresh organizations from server to get authoritative state
+        await loadOrgsFromServer();
+      }catch(err){
+        console.error('Toggle org active failed', err);
+        orgErrors.textContent = 'Failed to update organization activation: ' + (err && err.message ? err.message : err);
+        orgErrors.classList.remove('hidden');
+      }finally{
+        delete switchEl.dataset.busy;
+      }
+    })();
+    return;
   }
 });
 
 //ROLES ASSIGN
-assignRoleBtn.addEventListener("click", () => {
-  roleErrors.classList.add("hidden");
-  const email = (roleEmail.value || "").trim().toLowerCase();
-  if(!emailOk(email)){
-    roleErrors.textContent = "Please enter a valid email address.";
+if (assignRoleBtn) assignRoleBtn.addEventListener("click", () => {
+  (async () => {
+    roleErrors.classList.add("hidden");
+    const email = (roleEmail.value || "").trim().toLowerCase();
+    if(!emailOk(email)){
+      roleErrors.textContent = "Please enter a valid email address.";
+      roleErrors.classList.remove("hidden");
+      return;
+    }
+    const role = roleSelect.value;
+
+    // attempt to find user id from fetched accounts
+    const acc = accountsByEmail[email];
+    const mapToAccountType = (r) => {
+      if(r === 'Admin') return 'Administrator';
+      if(r === 'Organizator') return 'EventOrganizer';
+      return 'GeneralUser';
+    };
+    if(acc && acc.id){
+      try{
+        const resp = await fetch('/api/accounts/assign-role', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ UserId: acc.id, Role: mapToAccountType(role) })
+        });
+        if(!resp.ok){
+          const txt = await resp.text();
+          roleErrors.textContent = `Failed to assign role on server: ${txt}`;
+          roleErrors.classList.remove("hidden");
+          return;
+        }
+            // success -> update UI from server. Remove any local override so server becomes authoritative
+            // reload authoritative roles from server
+            roleEmail.value = "";
+            await loadRolesFromServer();
+            return;
+      }catch(err){
+        console.warn('Assign role request failed', err);
+        roleErrors.textContent = 'Assign role request failed (network).';
+        roleErrors.classList.remove("hidden");
+        return;
+      }
+    }
+
+    // No account found in DB — inform admin (do not save local overrides)
+    roleErrors.textContent = 'User not found in the database. Please ensure the email exists.';
     roleErrors.classList.remove("hidden");
     return;
-  }
-  const role = roleSelect.value;
-  roles[email] = role;
-  saveLS(STORAGE_KEYS.roles, roles);
-  roleEmail.value = "";
-  renderRoles();
+  })();
 });
 
 // Restrictions: ban / unban / suspend 
+// helper to call the restrict endpoint
+async function callRestrictApi(userId, action, untilUtc = null) {
+  const payload = { UserId: userId, Action: action };
+  if (untilUtc) payload.UntilUtc = untilUtc;
+  const resp = await fetch('/api/accounts/restrict', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (!resp.ok) {
+    const txt = await resp.text().catch(() => null);
+    throw new Error(txt || `Server returned ${resp.status}`);
+  }
+  try { return await resp.json(); } catch { return null; }
+}
 
-banBtn.addEventListener("click", () => {
+if (banBtn) banBtn.addEventListener("click", async () => {
   restrErrors.classList.add("hidden");
   const email = (restrEmail.value || "").trim().toLowerCase();
   if(!emailOk(email)){
@@ -234,12 +493,28 @@ banBtn.addEventListener("click", () => {
     restrErrors.classList.remove("hidden");
     return;
   }
-  restrictions[email] = { type:"banned" };
-  saveLS(STORAGE_KEYS.restrictions, restrictions);
-  renderRestrictions();
+  const acc = accountsByEmail[email];
+  if(!acc || !acc.id){
+    restrErrors.textContent = "User not found in the database.";
+    restrErrors.classList.remove("hidden");
+    return;
+  }
+  banBtn.disabled = true;
+  try{
+    await callRestrictApi(acc.id, 'ban', null);
+  await loadRolesFromServer();
+  await loadOrgsFromServer();
+  await loadRestrictionsFromServer();
+  restrErrors.classList.add('hidden');
+  restrEmail.value = '';
+  }catch(err){
+    console.error('Ban failed', err);
+    restrErrors.textContent = 'Ban failed: ' + (err && err.message ? err.message : err);
+    restrErrors.classList.remove('hidden');
+  }finally{ banBtn.disabled = false; }
 });
 
-unbanBtn.addEventListener("click", () => {
+if (unbanBtn) unbanBtn.addEventListener("click", async () => {
   restrErrors.classList.add("hidden");
   const email = (restrEmail.value || "").trim().toLowerCase();
   if(!emailOk(email)){
@@ -247,16 +522,38 @@ unbanBtn.addEventListener("click", () => {
     restrErrors.classList.remove("hidden");
     return;
   }
-  restrictions[email] = { type:"none" };
-  saveLS(STORAGE_KEYS.restrictions, restrictions);
-  renderRestrictions();
+  const acc = accountsByEmail[email];
+  if(!acc || !acc.id){
+    restrErrors.textContent = "User not found in the database.";
+    restrErrors.classList.remove("hidden");
+    return;
+  }
+  unbanBtn.disabled = true;
+  try{
+    await callRestrictApi(acc.id, 'unban', null);
+  await loadRolesFromServer();
+  await loadOrgsFromServer();
+  await loadRestrictionsFromServer();
+  restrErrors.classList.add('hidden');
+  restrEmail.value = '';
+  }catch(err){
+    console.error('Unban failed', err);
+    restrErrors.textContent = 'Unban failed: ' + (err && err.message ? err.message : err);
+    restrErrors.classList.remove('hidden');
+  }finally{ unbanBtn.disabled = false; }
 });
 
-suspendBtn.addEventListener("click", () => {
+if (suspendBtn) suspendBtn.addEventListener("click", async () => {
   restrErrors.classList.add("hidden");
   const email = (restrEmail.value || "").trim().toLowerCase();
   if(!emailOk(email)){
     restrErrors.textContent = "Please enter a valid email address.";
+    restrErrors.classList.remove("hidden");
+    return;
+  }
+  const acc = accountsByEmail[email];
+  if(!acc || !acc.id){
+    restrErrors.textContent = "User not found in the database.";
     restrErrors.classList.remove("hidden");
     return;
   }
@@ -267,9 +564,20 @@ suspendBtn.addEventListener("click", () => {
   else if(val === "30d") until = addDays(new Date(), 30);
   else if(val === "perm") until = null;
 
-  restrictions[email] = { type: "suspended", ...(until ? { until: until.toISOString() } : {}) };
-  saveLS(STORAGE_KEYS.restrictions, restrictions);
-  renderRestrictions();
+  suspendBtn.disabled = true;
+  try{
+    const untilIso = until ? until.toISOString() : null;
+    await callRestrictApi(acc.id, 'suspend', untilIso);
+  await loadRolesFromServer();
+  await loadOrgsFromServer();
+  await loadRestrictionsFromServer();
+  restrErrors.classList.add('hidden');
+  restrEmail.value = '';
+  }catch(err){
+    console.error('Suspend failed', err);
+    restrErrors.textContent = 'Suspend failed: ' + (err && err.message ? err.message : err);
+    restrErrors.classList.remove('hidden');
+  }finally{ suspendBtn.disabled = false; }
 });
 
 function addDays(d, days){
@@ -278,7 +586,45 @@ function addDays(d, days){
   return x;
 }
 
+// Load organizations from server
+async function loadOrgsFromServer(){
+  try{
+    // fetch organizations (server-side Organization model)
+    const res = await fetch('/api/organization/all');
+    if(!res.ok) throw new Error('Failed to fetch organizations');
+    let data = await res.json();
+    // normalize ReferenceHandler.Preserve shapes
+    let list = data;
+    if(!Array.isArray(list)){
+      list = data?.$values ?? data?.Values ?? data ?? [];
+      if(list && !Array.isArray(list) && typeof list === 'object') list = Object.values(list);
+      if(!Array.isArray(list)) list = [];
+    }
+    organizations = list.map(o => {
+      const id = o.id ?? o.Id ?? 0;
+      const active = (o.isActive ?? o.IsActive);
+      const usersCount = o.currentUserCount ?? o.CurrentUserCount ?? o.currentUsers ?? o.CurrentUsers ?? 0;
+      // Prefer the Organization.Name; if missing, fall back to the owning organizer's username
+      const organizerUserName = o.organizer?.account?.userName ?? o.Organizer?.Account?.UserName ?? o.organizer?.userName ?? o.Organizer?.UserName ?? null;
+      const name = (o.name ?? o.Name) || organizerUserName || `org-${id}`;
+      const maxUsers = o.maxUsers ?? o.MaxUsers ?? 0;
+      return { id, name, users: usersCount, maxUsers, active: active === undefined ? true : !!active, organizerUserName };
+    });
+  }catch(err){
+    console.warn('Could not load organizations from server, falling back to empty list.', err);
+    organizations = [];
+    orgErrors.textContent = 'Could not load organizations from server.';
+    orgErrors.classList.remove('hidden');
+  }
+  renderOrgs();
+}
 
-renderOrgs();
-renderRoles();
-renderRestrictions();
+
+// bootstrap: load server-backed data then render
+(async () => {
+  await loadOrgsFromServer();
+  await loadRolesFromServer();
+  await loadRestrictionsFromServer();
+})();
+
+// debug helpers removed in cleanup

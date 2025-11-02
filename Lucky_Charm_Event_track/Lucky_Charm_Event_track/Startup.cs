@@ -69,77 +69,93 @@ namespace Lucky_Charm_Event_track
                 endpoints.MapControllers();
             });
 
-            seedDefaultUser(db);
+
             DatabaseSeeder.Seed(db);
+            seedDefaultUser(db);   
         }
 
         public void seedDefaultUser(WebAppDBContext db)
         {
-            if (!db.UserAccounts.Any())
+            if (db.UserAccounts.Any(u => u.UserName == "defaultuser"))
             {
-                var user = new UserAccount
-                {
-                    FirstName = "Default",
-                    LastName = "User",
-                    UserName = "defaultuser",
-                    Email = "default@events.com",
-                    Password = "hashedpassword",
-                    PasswordSalt = "salt",
-                    PhoneNumber = "1234567890",
-                    DateOfBirth = new DateTime(1990, 1, 1),
-                    AccountCreationDate = DateTime.UtcNow,
-                    AccountType = AccountTypes.EventOrganizer,
-                    LastLogin = DateTime.UtcNow,
-                    IsActive = true
-                };
-
-                db.UserAccounts.Add(user);
-                db.SaveChanges();
-
-                var eventorg = new EventOrganizer
-                {
-                    UserAccountId = user.Id,
-                    Account = user,
-                    CreatedAt = DateTime.UtcNow,
-                    IsActive = true,
-                };
-                db.EventOrganizers.Add(eventorg);
-                db.SaveChanges();
-
-                var testevent = new Event
-                {
-                    EventName = "test",
-                    EventDescription = "test",
-                    StartTime = DateTime.UtcNow,
-                    Address = "test_address",
-                    City = "test",
-                    Region = "test",
-                    PostalCode = "test",
-                    Country = "test",
-                    Capacity = 15,
-                    EventOrganizerId = eventorg.Id,
-                    CreatedAt = DateTime.Now,
-                    isActive = true,
-                    UpdatedAt = DateTime.Now
-                };
-
-                db.Events.Add(testevent);
-                db.SaveChanges();
-
-                db.Tickets.Add(new Ticket
-                {
-                    EventId = testevent.Id,
-                    Event = testevent,
-                    UserAccountId = user.Id,
-                    Account = user,
-                    TicketType = TicketTypes.Free,
-                    Price = 10,
-                    PurchaseDate = DateTime.UtcNow,
-                    QRCodeText = "test",
-                    CheckedIn = false
-                });
-                db.SaveChanges();
+                Console.WriteLine("[Startup] seedDefaultUser: defaultuser already exists - skipping.");
+                return;
             }
+            
+            var user = new UserAccount
+            {
+                FirstName = "Default",
+                LastName = "User",
+                UserName = "defaultuser",
+                Email = "default@events.com",
+                Password = "hashedpassword",
+                PasswordSalt = "salt",
+                PhoneNumber = "1234567890",
+                DateOfBirth = new DateTime(1990, 1, 1),
+                AccountCreationDate = DateTime.UtcNow,
+                AccountType = AccountTypes.EventOrganizer,
+                LastLogin = DateTime.UtcNow,
+                IsActive = true,
+                SuspensionEndUtc = null,
+                IsBanned = false
+            };
+
+            db.UserAccounts.Add(user);
+            db.SaveChanges();
+
+            var eventorg = new EventOrganizer
+            {
+                UserAccountId = user.Id,
+                Account = user,
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true,
+            };
+            db.EventOrganizers.Add(eventorg);
+            db.SaveChanges();
+
+            var testevent = new Event
+            {
+                EventName = "test",
+                EventDescription = "test",
+                StartTime = DateTime.UtcNow,
+                Address = "test_address",
+                City = "test",
+                Region = "test",
+                PostalCode = "test",
+                Country = "test",
+                Capacity = 15,
+                EventOrganizerId = eventorg.Id,
+                CreatedAt = DateTime.Now,
+                isActive = true,
+                UpdatedAt = DateTime.Now
+            };
+
+            db.Events.Add(testevent);
+            db.SaveChanges();
+
+            db.Tickets.Add(new Ticket
+            {
+                EventId = testevent.Id,
+                Event = testevent,
+                UserAccountId = user.Id,
+                Account = user,
+                TicketType = TicketTypes.Free,
+                Price = 10,
+                PurchaseDate = DateTime.UtcNow,
+                QRCodeText = "test",
+                CheckedIn = false
+            });
+
+            db.SaveChanges();
+            db.Organizations.Add(new Organization
+            {
+                Name = "Default Organization",
+                EventOrganizerId = eventorg.Id,
+                Organizer = eventorg,
+                CurrentUserCount = 10,
+                IsActive = true
+            });
+            db.SaveChanges();            
         }
     }
 }
