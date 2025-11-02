@@ -42,6 +42,63 @@ namespace Lucky_Charm_Event_track.Controllers
             }
         }
 
+        // POST: api/tools/validate-payload
+        [HttpPost("validate-payload")]
+        public IActionResult ValidatePayload([FromBody] PayloadDto dto)
+        {
+            if (dto == null || string.IsNullOrWhiteSpace(dto.Payload))
+                return BadRequest(new { success = false, error = "payload is required in the request body." });
+
+            if (dto.EventId <= 0)
+                return BadRequest(new { success = false, error = "EventId is required in the request body." });
+
+            try
+            {
+                // Validate ticket for the specific event
+                var ticket = _dbContext.Tickets
+                    .FirstOrDefault(t => t.QRCodeText == dto.Payload && t.EventId == dto.EventId);
+
+                if (ticket == null)
+                    return NotFound(new { success = false, error = "Ticket not valid for this event." });
+
+                if (ticket.CheckedIn)
+                    return BadRequest(new { success = false, error = "Ticket has already been checked in." });
+
+                ticket.CheckedIn = true;
+                _dbContext.SaveChanges();
+
+                return Ok(new { success = true, message = "Ticket validated successfully." });
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, new { success = false, error = "Error validating payload", detail = ex.Message });
+            }
+        }
+
+        public class PayloadDto
+        {
+            public string Payload { get; set; }
+            public int EventId { get; set; } 
+        }
+
+        // GET: api/tools/generate-qr?payload=someText
+        [HttpGet("generate-qr")]
+        public IActionResult GenerateQRCode([FromQuery] string payload)
+        {
+            if (string.IsNullOrWhiteSpace(payload))
+                return BadRequest(new { success = false, error = "payload query parameter is required." });
+
+            try
+            {
+                byte[] png = QRCodeGeneratorHelper.GenerateQRCode(payload);
+                return File(png, "image/png");
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, new { success = false, error = "Error generating QR", detail = ex.Message });
+            }
+        }
+
         // POST: api/tools/validate-qr
         [HttpPost("validate-qr")]
         public IActionResult ValidateQRCode([FromForm] IFormFile qrCodeImage)
@@ -61,57 +118,6 @@ namespace Lucky_Charm_Event_track.Controllers
             catch (System.Exception ex)
             {
                 return StatusCode(500, new { success = false, error = "Error validating QR", detail = ex.Message });
-            }
-        }
-
-        // POST: api/tools/validate-payload
-        [HttpPost("validate-payload")]
-        public IActionResult ValidatePayload([FromBody] PayloadDto dto)
-        {
-            if (dto == null || string.IsNullOrWhiteSpace(dto.Payload))
-                return BadRequest(new { success = false, error = "payload is required in the request body." });
-
-            try
-            {
-                var ticket = _dbContext.Tickets.FirstOrDefault(t => t.QRCodeText == dto.Payload);
-                if (ticket == null)
-                    return NotFound(new { success = false, error = "Ticket not found." });
-
-                if (ticket.CheckedIn)
-                    return BadRequest(new { success = false, error = "Ticket has already been checked in." });
-
-                ticket.CheckedIn = true;
-                _dbContext.Tickets.Update(ticket);
-                _dbContext.SaveChanges();
-
-                return Ok(new { success = true, message = "Ticket validated successfully." });
-            }
-            catch (System.Exception ex)
-            {
-                return StatusCode(500, new { success = false, error = "Error validating payload", detail = ex.Message });
-            }
-        }
-
-        public class PayloadDto
-        {
-            public string Payload { get; set; }
-        }
-
-        // GET: api/tools/generate-qr?payload=someText
-        [HttpGet("generate-qr")]
-        public IActionResult GenerateQRCode([FromQuery] string payload)
-        {
-            if (string.IsNullOrWhiteSpace(payload))
-                return BadRequest(new { success = false, error = "payload query parameter is required." });
-
-            try
-            {
-                byte[] png = QRCodeGeneratorHelper.GenerateQRCode(payload);
-                return File(png, "image/png");
-            }
-            catch (System.Exception ex)
-            {
-                return StatusCode(500, new { success = false, error = "Error generating QR", detail = ex.Message });
             }
         }
     }
