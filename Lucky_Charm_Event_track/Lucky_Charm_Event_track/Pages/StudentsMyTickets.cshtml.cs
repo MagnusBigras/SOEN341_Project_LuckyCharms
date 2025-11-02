@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace Lucky_Charm_Event_track.Pages
 {
@@ -12,8 +13,8 @@ namespace Lucky_Charm_Event_track.Pages
         private readonly WebAppDBContext _dbContext;
 
         public List<TicketView> Tickets { get; set; } = new();
-
-        public int UserId { get; set; } = 1; // temporary hard-code
+        public string FirstName { get; set; } = "Guest"; 
+        public int UserId { get; set; }
 
         public StudentsMyTicketsModel(WebAppDBContext context)
         {
@@ -22,6 +23,25 @@ namespace Lucky_Charm_Event_track.Pages
 
         public async Task OnGetAsync()
         {
+            // Get the currently logged-in user's ID from claims
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userIdClaim))
+            {
+                // User is not logged in
+                return;
+            }
+
+            UserId = int.Parse(userIdClaim);
+
+            // Fetch the user from the database
+            var user = await _dbContext.UserAccounts.FirstOrDefaultAsync(u => u.Id == UserId);
+            if (user != null)
+            {
+                FirstName = user.FirstName; // display first name in navbar
+            }
+
+            // Fetch tickets for this user
             var tickets = await _dbContext.Tickets
                 .Where(t => t.UserAccountId == UserId)
                 .Include(t => t.Event)

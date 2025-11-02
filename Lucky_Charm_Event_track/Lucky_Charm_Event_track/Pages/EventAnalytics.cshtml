@@ -60,16 +60,16 @@
         </div>
     </div>
 
-    <!-- Top navigation bar -->
+        <!-- Top Navbar -->
     <div class="top-navbar">
         <div class="navbar-left">
             <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
         </div>
         <div class="navbar-right">
-            <a class="create-btn" asp-page="/EventForm"> + Create </a>
+            <img src="https://icons.veryicon.com/png/o/miscellaneous/250-thick-line-icon-of-website-and-app/6-bell.png" alt="Notifications" class="bell-icon">
             <button class="account-btn">
                 <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
-                <span class="account-name">Alex</span>
+                    <span class="account-name">@Model.FirstName</span>
             </button>
         </div>
     </div>
@@ -78,7 +78,6 @@
     <div class="main-content">
         <div class="main-content-header">
         <h1>Analytics • <span id="eventName">@Model.EventMetric?.Event?.EventName</span></h1>
-            <input type="date" id="analyticsDate" value="2025-10-07">
         </div>
 
         <div class="analytics-container top-row">

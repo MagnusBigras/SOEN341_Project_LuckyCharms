@@ -24,13 +24,17 @@ body{
   padding:20px;
   width:100%;
   max-width:1050px;
-  margin:0 auto;
+  margin-left: 192px;
+  margin-top: 100px;
 }
 
 .page-header h1{
-  margin:0 0 6px;
-  font-size:28px;
-  color:var(--brand);
+    font-size: 2.3rem; 
+    font-weight: 700;
+    color: #912338;  
+    font-family: arial, sans-serif;
+    margin-top: 1.2rem;
+    margin-bottom: 2rem;
 }
 .page-header .sub{
   margin:0 0 18px;
