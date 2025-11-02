@@ -1,3 +1,4 @@
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Lucky_Charm_Event_track.Models;
@@ -17,7 +18,6 @@ namespace Lucky_Charm_Event_track.Pages
             _dbContext = dbContext;
         }
 
-        // Logged-in admin first name
         public string FirstName { get; set; } = "Admin";
 
         [BindProperty(SupportsGet = true)]
@@ -35,9 +35,12 @@ namespace Lucky_Charm_Event_track.Pages
         public int LastMonthTicketsRedeemed { get; set; }
         public string TicketsRedeemedPercentChange { get; set; }
 
-        public List<string> Categories { get; set; }
-        public List<int> TicketsPerCategory { get; set; }
-        public List<int> AttendancePerMonth { get; set; }
+        
+        public int TotalActiveOrganizers { get; set; }
+
+        public List<string> Categories { get; set; } = new();
+        public List<int> TicketsPerCategory { get; set; } = new();
+        public List<int> AttendancePerMonth { get; set; } = new();
 
         private readonly Dictionary<string, (int Events, int TicketsIssued, int TicketsRedeemed)> MonthlyData
             = new()
@@ -66,7 +69,6 @@ namespace Lucky_Charm_Event_track.Pages
 
         public void OnGet()
         {
-            // --- Load logged-in admin first name ---
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!string.IsNullOrEmpty(userIdClaim))
             {
@@ -98,6 +100,9 @@ namespace Lucky_Charm_Event_track.Pages
             EventsPercentChange = GetPercentChange(previous.Events, current.Events);
             TicketsIssuedPercentChange = GetPercentChange(previous.TicketsIssued, current.TicketsIssued);
             TicketsRedeemedPercentChange = GetPercentChange(previous.TicketsRedeemed, current.TicketsRedeemed);
+
+            // ✅ Added by A_Eskaf — Task 31
+            TotalActiveOrganizers = _dbContext.EventOrganizers.Count(o => o.IsActive);
 
             if (!CategoryData.TryGetValue(currentKey, out var category))
                 category = (new List<string>(), new List<int>());
