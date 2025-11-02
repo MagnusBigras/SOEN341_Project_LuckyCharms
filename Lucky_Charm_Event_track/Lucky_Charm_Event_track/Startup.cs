@@ -86,7 +86,9 @@ namespace Lucky_Charm_Event_track
                 AccountCreationDate = DateTime.UtcNow,
                 AccountType = AccountTypes.EventOrganizer,
                 LastLogin = DateTime.UtcNow,
-                IsActive = true
+                IsActive = true,
+                SuspensionEndUtc = null,
+                IsBanned = false
             };
 
             db.UserAccounts.Add(user);

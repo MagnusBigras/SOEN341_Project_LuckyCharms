@@ -48,7 +48,16 @@ namespace Lucky_Charm_Event_track.Controllers
         public async Task<ActionResult<IEnumerable<object>>> GetAccountsSummary()
         {
             var list = await _dbContext.UserAccounts
-                .Select(u => new { u.Id, u.Email, u.AccountType })
+                .Select(u => new { u.Id, u.Email, u.AccountType,u.IsBanned, u.SuspensionEndUtc})
+                .ToListAsync();
+            return Ok(list);
+        }
+        // Return only restriction-related fields to avoid serialization surprises
+        [HttpGet("restrictions")]
+        public async Task<ActionResult<IEnumerable<object>>> GetAccountsRestrictions()
+        {
+            var list = await _dbContext.UserAccounts
+                .Select(u => new { u.Id, u.Email, u.IsBanned, u.SuspensionEndUtc })
                 .ToListAsync();
             return Ok(list);
         }
@@ -114,6 +123,27 @@ namespace Lucky_Charm_Event_track.Controllers
             {
                 return BadRequest("Invalid credentials");
             }
+            // Check ban / suspension
+            if (account.IsBanned)
+            {
+                return Forbid("Account is banned");
+            }
+            if (account.SuspensionEndUtc.HasValue)
+            {
+                if (account.SuspensionEndUtc.Value > DateTime.UtcNow)
+                {
+                    return Forbid($"Account suspended until {account.SuspensionEndUtc.Value.ToUniversalTime():u}");
+                }
+                else
+                {
+                    // suspension expired -> clear it and reactivate account
+                    account.SuspensionEndUtc = null;
+                    account.IsActive = true;
+                    _dbContext.UserAccounts.Update(account);
+                    _dbContext.SaveChanges();
+                }
+            }
+
             Globals.Globals.SessionManager.InitializeSession((UserAccount)account, "login");
             return Ok(account);
         }
@@ -215,7 +245,6 @@ namespace Lucky_Charm_Event_track.Controllers
             public string Action { get; set; } // "ban" | "unban" | "suspend"
             public DateTime? UntilUtc { get; set; } // used for suspend
         }
-        /*
         [HttpPost("restrict")]
         public async Task<IActionResult> RestrictAccount([FromBody] RestrictRequest req)
         {
@@ -223,34 +252,74 @@ namespace Lucky_Charm_Event_track.Controllers
             var user = await _dbContext.UserAccounts.FindAsync(req.UserId);
             if (user == null) return NotFound();
 
-            switch(req.Action?.ToLowerInvariant())
+            var action = (req.Action ?? string.Empty).ToLowerInvariant().Trim();
+            // Treat "suspend permanently" (or any suspend + perman* variant) as a ban
+            if (action.Contains("suspend") && action.Contains("perman"))
+            {
+                action = "ban";
+            }
+            // If action is plain "suspend" but no UntilUtc provided, treat as ban (admin intended permanent suspend)
+            if (action == "suspend" && req.UntilUtc == null)
+            {
+                action = "ban";
+            }
+            switch (action)
             {
                 case "ban":
-                    user.AccountStatus = AccountStatus.Banned;
+                    // Permanent ban: mark banned and deactivate
+                    user.IsBanned = true;
                     user.SuspensionEndUtc = null;
-                    user.IsActive = false; // optional, if you use IsActive across app
+                    user.IsActive = false;
                     // cascade: if user is an EventOrganizer, deactivate organizer and their events
-                    var organizer = await _dbContext.EventOrganizers.FirstOrDefaultAsync(o => o.UserAccountId == user.Id);
-                    if(organizer != null)
+                    var organizer = await _dbContext.EventOrganizers.Include(o => o.Events).FirstOrDefaultAsync(o => o.UserAccountId == user.Id);
+                    if (organizer != null)
                     {
                         organizer.IsActive = false;
-                        var events = _dbContext.Events.Where(e => e.EventOrganizerId == organizer.Id);
-                        await events.ForEachAsync(ev => ev.isActive = false);
+                        foreach (var ev in organizer.Events ?? new List<Event>())
+                        {
+                            ev.isActive = false;
+                            _dbContext.Events.Update(ev);
+                        }
+                        _dbContext.EventOrganizers.Update(organizer);
                     }
                     break;
 
                 case "unban":
-                    user.AccountStatus = AccountStatus.Active;
+                    // Remove ban/suspension
+                    user.IsBanned = false;
                     user.SuspensionEndUtc = null;
                     user.IsActive = true;
-                    // you may choose to NOT reactivate events automatically — make a policy decision
+                    // reactivate organizer & their events if present
+                    var existingOrgToReactivate = await _dbContext.EventOrganizers.Include(o => o.Events).FirstOrDefaultAsync(o => o.UserAccountId == user.Id);
+                    if (existingOrgToReactivate != null)
+                    {
+                        existingOrgToReactivate.IsActive = true;
+                        foreach (var ev in existingOrgToReactivate.Events ?? new List<Event>())
+                        {
+                            ev.isActive = true;
+                            _dbContext.Events.Update(ev);
+                        }
+                        _dbContext.EventOrganizers.Update(existingOrgToReactivate);
+                    }
                     break;
 
                 case "suspend":
                     if (req.UntilUtc == null) return BadRequest("Missing UntilUtc for suspend");
-                    user.AccountStatus = AccountStatus.Suspended;
+                    user.IsBanned = false;
                     user.SuspensionEndUtc = req.UntilUtc;
                     user.IsActive = false;
+                    // deactivate organizer & their events while suspended
+                    var orgToSuspend = await _dbContext.EventOrganizers.Include(o => o.Events).FirstOrDefaultAsync(o => o.UserAccountId == user.Id);
+                    if (orgToSuspend != null)
+                    {
+                        orgToSuspend.IsActive = false;
+                        foreach (var ev in orgToSuspend.Events ?? new List<Event>())
+                        {
+                            ev.isActive = false;
+                            _dbContext.Events.Update(ev);
+                        }
+                        _dbContext.EventOrganizers.Update(orgToSuspend);
+                    }
                     break;
 
                 default:
@@ -258,7 +327,7 @@ namespace Lucky_Charm_Event_track.Controllers
             }
 
             await _dbContext.SaveChangesAsync();
-            return Ok();
-        }*/
+            return Ok(new { message = "Restriction applied", userId = user.Id, isBanned = user.IsBanned, suspensionEndUtc = user.SuspensionEndUtc });
+        }
     }
 }

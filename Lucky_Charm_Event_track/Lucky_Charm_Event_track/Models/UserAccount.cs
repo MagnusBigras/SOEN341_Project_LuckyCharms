@@ -20,6 +20,10 @@ namespace Lucky_Charm_Event_track.Models
         public List<Ticket> Tickets { get; set; }
         public DateTime LastLogin { get; set; }
         public bool IsActive { get; set; }
+    // Suspension end (UTC). When set, account is suspended until this time. Null means not suspended.
+    public DateTime? SuspensionEndUtc { get; set; }
+    // If true the account is permanently banned. Use sparingly.
+    public bool IsBanned { get; set; }
 
     }
 }
