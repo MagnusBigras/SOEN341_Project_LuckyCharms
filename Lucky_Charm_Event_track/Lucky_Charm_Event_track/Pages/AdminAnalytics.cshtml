@@ -11,8 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/css/site.css">
-        <link rel="stylesheet" href="~/css/adminportal.css">
-
+    <link rel="stylesheet" href="~/css/adminportal.css">
 </head>
 <body>
 
@@ -82,18 +81,26 @@
                 <h3>@Model.TotalEvents</h3>
                 <p>@Model.EventsPercentChange</p>
             </div>
+
             <div class="analytics-card">
                 <h2>Total Tickets Issued</h2>
                 <h3>@Model.TotalTicketsIssued</h3>
                 <p>@Model.TicketsIssuedPercentChange</p>
             </div>
+
             <div class="analytics-card">
                 <h2>Total Tickets Redeemed</h2>
                 <h3>@Model.TotalTicketsRedeemed</h3>
                 <p>@Model.TicketsRedeemedPercentChange</p>
             </div>
-         </div>
 
+            
+            <div class="analytics-card">
+                <h2>Total Active Organizers</h2>
+                <h3>@Model.TotalActiveOrganizers</h3>
+                <p>Currently active on the platform</p>
+            </div>
+        </div>
 
         <!-- Charts -->
         <div class="analytics-container bottom-row">
@@ -120,17 +127,14 @@
         data: {
             labels: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
             datasets: [{
-                
                 label: "Attendance",
                 data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.AttendancePerMonth)),
                 borderColor: "#912338",
                 backgroundColor: "rgba(145, 35, 56, 0.2)",
-                tension: 0.4, // makes the line curved
+                tension: 0.4,
                 fill: true
             }]
         },
-
-
         options: {
             responsive: true,
             plugins: { legend: { display: false } }
@@ -142,13 +146,11 @@
     const categoryChart = new Chart(ctxCategory, {
         type: 'bar',
         data: {
-
             labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Categories)),
             datasets: [{
                 label: "Tickets",
                 data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.TicketsPerCategory)),
                 backgroundColor: "#912338"
-
             }]
         },
         options: {
@@ -158,6 +160,5 @@
         }
     });
 </script>
-
 
 </html>
