@@ -62,7 +62,7 @@ namespace Lucky_Charm_Event_track.Pages
                 title = t.Event.EventName,
                 start = t.Event.StartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
                 end = null,
-                status = t.Event.isActive ? "active" : "cancelled",
+                status = t.Event.IsActive ? "active" : "cancelled",
                 description = t.Event.EventDescription,
                 location = $"{t.Event.Address}, {t.Event.City}",
                 organizer = t.Event.Organizer != null && t.Event.Organizer.Account != null

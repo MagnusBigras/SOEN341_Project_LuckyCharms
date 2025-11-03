@@ -64,7 +64,7 @@ namespace Lucky_Charm_Event_track.Pages
                 .Include(e => e.Tickets)
                 .Include(e => e.Organizer)
                 .Include(e => e.Metric)
-                .Where(e => e.isActive)
+                .Where(e => e.IsActive)
                 .AsEnumerable()
                 .Select(e =>
                 {
@@ -87,7 +87,7 @@ namespace Lucky_Charm_Event_track.Pages
                             ? $"{e.Organizer.Account.FirstName} {e.Organizer.Account.LastName}"
                             : "Unknown",
                         Popularity = e.Tickets?.Count ?? 0,
-                        isActive = e.isActive
+                        isActive = e.IsActive
                     };
                 }).ToList();
 

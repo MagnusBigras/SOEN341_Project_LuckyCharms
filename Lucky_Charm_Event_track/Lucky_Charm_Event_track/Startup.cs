@@ -126,7 +126,7 @@ namespace Lucky_Charm_Event_track
                 Capacity = 15,
                 EventOrganizerId = eventorg.Id,
                 CreatedAt = DateTime.Now,
-                isActive = true,
+                IsActive = true,
                 UpdatedAt = DateTime.Now
             };
 

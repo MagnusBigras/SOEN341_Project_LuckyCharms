@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LuckyCharmEventtrack.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitClean : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -28,7 +28,11 @@ namespace LuckyCharmEventtrack.Migrations
                     AccountCreationDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     AccountType = table.Column<int>(type: "INTEGER", nullable: false),
                     LastLogin = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false)
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Points = table.Column<int>(type: "INTEGER", nullable: false),
+                    PaymentDetailID = table.Column<int>(type: "INTEGER", nullable: false),
+                    SuspensionEndUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    IsBanned = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,6 +61,29 @@ namespace LuckyCharmEventtrack.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PaymentDetails",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    CardHolderName = table.Column<string>(type: "TEXT", nullable: true),
+                    CardNumber = table.Column<int>(type: "INTEGER", nullable: false),
+                    ExpiryDate = table.Column<string>(type: "TEXT", nullable: true),
+                    CVV = table.Column<string>(type: "TEXT", nullable: true),
+                    UserID = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PaymentDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PaymentDetails_UserAccounts_UserID",
+                        column: x => x.UserID,
+                        principalTable: "UserAccounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Events",
                 columns: table => new
                 {
@@ -64,6 +91,7 @@ namespace LuckyCharmEventtrack.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     EventName = table.Column<string>(type: "TEXT", nullable: true),
                     EventDescription = table.Column<string>(type: "TEXT", nullable: true),
+                    Category = table.Column<string>(type: "TEXT", nullable: true),
                     StartTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Address = table.Column<string>(type: "TEXT", nullable: true),
                     City = table.Column<string>(type: "TEXT", nullable: true),
@@ -73,7 +101,7 @@ namespace LuckyCharmEventtrack.Migrations
                     Capacity = table.Column<int>(type: "INTEGER", nullable: false),
                     EventOrganizerId = table.Column<int>(type: "INTEGER", nullable: false),
                     TicketType = table.Column<int>(type: "INTEGER", nullable: false),
-                    isActive = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
@@ -82,6 +110,30 @@ namespace LuckyCharmEventtrack.Migrations
                     table.PrimaryKey("PK_Events", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Events_EventOrganizers_EventOrganizerId",
+                        column: x => x.EventOrganizerId,
+                        principalTable: "EventOrganizers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Organizations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    EventOrganizerId = table.Column<int>(type: "INTEGER", nullable: false),
+                    CurrentUserCount = table.Column<int>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Organizations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Organizations_EventOrganizers_EventOrganizerId",
                         column: x => x.EventOrganizerId,
                         principalTable: "EventOrganizers",
                         principalColumn: "Id",
@@ -145,12 +197,15 @@ namespace LuckyCharmEventtrack.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     EventId = table.Column<int>(type: "INTEGER", nullable: false),
-                    UserAccountId = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserAccountId = table.Column<int>(type: "INTEGER", nullable: true),
                     TicketType = table.Column<int>(type: "INTEGER", nullable: false),
                     Price = table.Column<double>(type: "REAL", nullable: false),
                     PurchaseDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     QRCodeText = table.Column<string>(type: "TEXT", nullable: true),
-                    CheckedIn = table.Column<bool>(type: "INTEGER", nullable: false)
+                    QRCode = table.Column<byte[]>(type: "BLOB", nullable: true),
+                    CheckedIn = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsHiddenInCalendar = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Paid = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -165,8 +220,7 @@ namespace LuckyCharmEventtrack.Migrations
                         name: "FK_Tickets_UserAccounts_UserAccountId",
                         column: x => x.UserAccountId,
                         principalTable: "UserAccounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -184,6 +238,17 @@ namespace LuckyCharmEventtrack.Migrations
                 name: "IX_Metrics_EventId",
                 table: "Metrics",
                 column: "EventId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Organizations_EventOrganizerId",
+                table: "Organizations",
+                column: "EventOrganizerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentDetails_UserID",
+                table: "PaymentDetails",
+                column: "UserID",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -207,6 +272,12 @@ namespace LuckyCharmEventtrack.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Metrics");
+
+            migrationBuilder.DropTable(
+                name: "Organizations");
+
+            migrationBuilder.DropTable(
+                name: "PaymentDetails");
 
             migrationBuilder.DropTable(
                 name: "PriceTiers");

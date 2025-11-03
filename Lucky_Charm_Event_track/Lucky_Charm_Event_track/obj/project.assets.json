@@ -1600,24 +1600,35 @@
     ]
   },
   "packageFolders": {
-    "/Users/sa7g/.nuget/packages/": {}
+    "C:\\Users\\magnu\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
+    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Lucky_Charm_Event_track.csproj",
+      "projectUniqueName": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj",
       "projectName": "Lucky_Charm_Event_track",
-      "projectPath": "/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/Lucky_Charm_Event_track.csproj",
-      "packagesPath": "/Users/sa7g/.nuget/packages/",
-      "outputPath": "/Users/sa7g/Desktop/SOEN341_Project_LuckyCharms/SOEN341_Project_LuckyCharms/Lucky_Charm_Event_track/Lucky_Charm_Event_track/obj/",
+      "projectPath": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj",
+      "packagesPath": "C:\\Users\\magnu\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+      ],
       "configFilePaths": [
-        "/Users/sa7g/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\magnu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1635,7 +1646,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net7.0": {
@@ -1685,20 +1697,6 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[7.0.20, 7.0.20]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Host.osx-arm64",
-            "version": "[7.0.20, 7.0.20]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[7.0.20, 7.0.20]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -1707,7 +1705,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.414/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -50,6 +50,9 @@ namespace LuckyCharmEventtrack.Migrations
                     b.Property<int>("EventOrganizerId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("PostalCode")
                         .HasColumnType("TEXT");
 
@@ -64,9 +67,6 @@ namespace LuckyCharmEventtrack.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("isActive")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -135,6 +135,7 @@ namespace LuckyCharmEventtrack.Migrations
 
                     b.ToTable("Metrics");
                 });
+
             modelBuilder.Entity("Lucky_Charm_Event_track.Models.Organization", b =>
                 {
                     b.Property<int>("Id")
@@ -165,6 +166,7 @@ namespace LuckyCharmEventtrack.Migrations
 
                     b.ToTable("Organizations");
                 });
+
             modelBuilder.Entity("Lucky_Charm_Event_track.Models.PaymentDetail", b =>
                 {
                     b.Property<int>("Id")
@@ -294,6 +296,9 @@ namespace LuckyCharmEventtrack.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsBanned")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("LastLogin")
                         .HasColumnType("TEXT");
 
@@ -315,13 +320,10 @@ namespace LuckyCharmEventtrack.Migrations
                     b.Property<int>("Points")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsBanned")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime?>("SuspensionEndUtc")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UserName")  
+                    b.Property<string>("UserName")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -362,6 +364,17 @@ namespace LuckyCharmEventtrack.Migrations
                     b.Navigation("Event");
                 });
 
+            modelBuilder.Entity("Lucky_Charm_Event_track.Models.Organization", b =>
+                {
+                    b.HasOne("Lucky_Charm_Event_track.Models.EventOrganizer", "Organizer")
+                        .WithMany("Organizations")
+                        .HasForeignKey("EventOrganizerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Organizer");
+                });
+
             modelBuilder.Entity("Lucky_Charm_Event_track.Models.PaymentDetail", b =>
                 {
                     b.HasOne("Lucky_Charm_Event_track.Models.UserAccount", "Account")
@@ -371,16 +384,6 @@ namespace LuckyCharmEventtrack.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
-                });
-                        modelBuilder.Entity("Lucky_Charm_Event_track.Models.Organization", b =>
-                {
-                    b.HasOne("Lucky_Charm_Event_track.Models.EventOrganizer", "Organizer")
-                        .WithMany("Organizations")
-                        .HasForeignKey("EventOrganizerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Organizer");
                 });
 
             modelBuilder.Entity("Lucky_Charm_Event_track.Models.PriceTier", b =>
@@ -423,7 +426,7 @@ namespace LuckyCharmEventtrack.Migrations
             modelBuilder.Entity("Lucky_Charm_Event_track.Models.EventOrganizer", b =>
                 {
                     b.Navigation("Events");
-                    
+
                     b.Navigation("Organizations");
                 });
 
