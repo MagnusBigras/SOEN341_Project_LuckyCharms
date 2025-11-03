@@ -36,16 +36,21 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task GetEventById_ReturnsOk_WhenIdExists()
+        public async Task GetEventOrganizerById_ReturnsOk_WhenIdExists()
         {
-            var testEventId = 1;
-            var response = await _client.GetAsync($"/api/events/{testEventId}");
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<WebAppDBContext>();
+                var existingEvent = await db.Events.FirstOrDefaultAsync();
+                Assert.NotNull(existingEvent); // Ensure we have data
 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                var response = await _client.GetAsync($"/api/events/{existingEvent.Id}");
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            var eventData = await response.Content.ReadFromJsonAsync<Event>();
-            Assert.NotNull(eventData);
-            Assert.Equal(testEventId, eventData.Id);
+                var eventData = await response.Content.ReadFromJsonAsync<EventOrganizer>();
+                Assert.NotNull(eventData);
+                Assert.Equal(existingEvent.Id, eventData.Id);
+            }
         }
 
         [Fact]
