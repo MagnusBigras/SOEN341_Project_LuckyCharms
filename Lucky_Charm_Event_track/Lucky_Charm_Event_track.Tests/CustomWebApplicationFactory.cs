@@ -1,22 +1,40 @@
 using Lucky_Charm_Event_track;
+using Lucky_Charm_Event_track.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 using System.Linq;
-using Lucky_Charm_Event_track.Models;
 
 namespace Lucky_Charm_Event_track.Tests
 {
-    public class CustomWebApplicationFactory : WebApplicationFactory<Program>
+    public class CustomWebApplicationFactory : WebApplicationFactory<Startup>
     {
+        private readonly string _dbPath;
+
+        public CustomWebApplicationFactory()
+        {
+            // Define the test DB path
+            var folder = Environment.SpecialFolder.LocalApplicationData;
+            var path = Environment.GetFolderPath(folder);
+            _dbPath = Path.Combine(path, "eventtracker_test.db");
+
+            // Ensure the file exists (EF Core will create it on migration if needed)
+            if (!File.Exists(_dbPath))
+            {
+                using var fs = File.Create(_dbPath);
+            }
+        }
+
         protected override IHost CreateHost(IHostBuilder builder)
         {
-            // Add a custom service configuration for testing
             builder.ConfigureServices(services =>
             {
-                // Remove the app’s real DbContext registration
+                // Remove the real DbContext registration
                 var descriptor = services.SingleOrDefault(
                     d => d.ServiceType == typeof(DbContextOptions<WebAppDBContext>));
 
@@ -24,28 +42,39 @@ namespace Lucky_Charm_Event_track.Tests
                 {
                     services.Remove(descriptor);
                 }
+                
+                builder.UseEnvironment("Test");
 
-                // Add a new in-memory database for testing
+                // Add DbContext pointing to test DB
                 services.AddDbContext<WebAppDBContext>(options =>
                 {
-                    options.UseInMemoryDatabase("InMemoryDbForTesting");
+                    options.UseSqlite($"Data Source={_dbPath}");
+                });
+
+                // Configure controllers JSON to handle cycles
+                services.AddControllers().AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 });
 
                 // Build the service provider
                 var sp = services.BuildServiceProvider();
 
-                // Create a scope to get the DB context and seed data
                 using (var scope = sp.CreateScope())
                 {
-                    var scopedServices = scope.ServiceProvider;
-                    var db = scopedServices.GetRequiredService<WebAppDBContext>();
+                    var db = scope.ServiceProvider.GetRequiredService<WebAppDBContext>();
 
-                    // Ensure the database is created
-                    db.Database.EnsureCreated();
+                    // Apply migrations (creates tables if they don't exist)
+                    db.Database.Migrate();
 
-                    // Seed data for tests, still need to add the other fields
-                    db.Events.Add(new Event { EventName = "Test Event", EventDescription = "Seeded event for testing",EventOrganizerId=12345});
-                    db.SaveChanges();
+                    // Seed default data using your Startup logic
+                    var startup = new Startup(new ConfigurationBuilder().Build());
+                    startup.seedDefaultUser(db);
+                     var seededUser = db.UserAccounts.FirstOrDefault(u => u.UserName == "defaultuser");
+                    if (seededUser != null)
+                    {
+                        Globals.Globals.SessionManager.CurrentLoggedInUser = seededUser;
+                    }
                 }
             });
 
