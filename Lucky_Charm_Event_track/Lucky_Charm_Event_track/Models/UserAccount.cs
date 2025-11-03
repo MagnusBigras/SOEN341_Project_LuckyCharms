@@ -23,6 +23,9 @@ namespace Lucky_Charm_Event_track.Models
         public int Points { get; set; }
         public PaymentDetail PaymentDetail { get; set; }
         public int PaymentDetailID { get; set; }
+        public DateTime? SuspensionEndUtc { get; set; }
+        public bool IsBanned { get; set; }
+        public bool isBanned { get => IsBanned; set => IsBanned = value; }
 
     }
 }

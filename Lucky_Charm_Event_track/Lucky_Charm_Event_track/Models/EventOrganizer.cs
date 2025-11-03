@@ -11,5 +11,6 @@ namespace Lucky_Charm_Event_track.Models
         public UserAccount Account { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool IsActive { get; set; }
+        public List<Organization> Organizations { get; set; }
     }
 }

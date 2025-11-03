@@ -11,8 +11,11 @@ namespace Lucky_Charm_Event_track.Services
         public static void Seed(WebAppDBContext db)
         {
             // Only seed if no events exist
-            if (db.Events.Any()) return;
-
+            if (db.UserAccounts.Any(u => u.UserName == "seeduser"))
+            {
+                Console.WriteLine("[DatabaseSeeder] Seed data already present (seeduser). Skipping.");
+                return;
+            }
             var rnd = new Random();
 
             var user = new UserAccount
@@ -28,7 +31,9 @@ namespace Lucky_Charm_Event_track.Services
                 AccountCreationDate = DateTime.Now.AddYears(-1),
                 AccountType = AccountTypes.EventOrganizer,
                 LastLogin = DateTime.Now,
-                IsActive = true
+                IsActive = true,
+                SuspensionEndUtc = null,
+                IsBanned = false
             };
             db.UserAccounts.Add(user);
             db.SaveChanges();

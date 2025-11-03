@@ -14,6 +14,7 @@ namespace Lucky_Charm_Event_track.Models
         public DbSet<UserAccount> UserAccounts { get; set; }
         public DbSet<Metric> Metrics { get; set; }
         public DbSet<PaymentDetail> PaymentDetails { get; set; }
+        public DbSet<Organization> Organizations { get; set; }
         public string DbPath { get; set; }
 
         public WebAppDBContext(DbContextOptions<WebAppDBContext> options): base(options)
@@ -43,6 +44,12 @@ namespace Lucky_Charm_Event_track.Models
                     .HasMany(eo => eo.Events)
                     .WithOne(e => e.Organizer)
                     .HasForeignKey(e => e.EventOrganizerId);
+                    
+                // EventOrganizer → Organizations (One-to-Many)
+                modelBuilder.Entity<EventOrganizer>()
+                    .HasMany(eo => eo.Organizations)
+                    .WithOne(o => o.Organizer)
+                    .HasForeignKey(o => o.EventOrganizerId);
 
                 // Event → Tickets (One-to-Many)
                 modelBuilder.Entity<Event>()
