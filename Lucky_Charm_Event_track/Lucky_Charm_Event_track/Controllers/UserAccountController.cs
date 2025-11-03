@@ -150,9 +150,22 @@ namespace Lucky_Charm_Event_track.Controllers
 
             // Sign in the user
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-            string redirectUrl = loginCreds.IsAdmin ? "/AdminPlatformOversight" : "/StudentsEventsOffered";
-
+            string redirectUrl;
+            if (loginCreds.IsAdmin)
+            {
+                redirectUrl = "/AdminManagement";
+            }
+            else 
+            {
+                if(Globals.Globals.SessionManager.CurrentLoggedInUser.AccountType == AccountTypes.EventOrganizer) 
+                {
+                    redirectUrl = "/Events";
+                }
+                else 
+                {
+                    redirectUrl = "/StudentsEventsOffered";
+                }
+            }
             return Ok(new LoginResponse
             {
                 Message = "Login Successful",
@@ -235,7 +248,7 @@ namespace Lucky_Charm_Event_track.Controllers
                 {
                     foreach (var ev in organizer.Events ?? new System.Collections.Generic.List<Event>())
                     {
-                        ev.isActive = false;
+                        ev.IsActive = false;
                         _dbContext.Events.Update(ev);
                     }
                     _dbContext.EventOrganizers.Remove(organizer);
@@ -286,7 +299,7 @@ namespace Lucky_Charm_Event_track.Controllers
                         organizer.IsActive = false;
                         foreach (var ev in organizer.Events ?? new List<Event>())
                         {
-                            ev.isActive = false;
+                            ev.IsActive = false;
                             _dbContext.Events.Update(ev);
                         }
                         _dbContext.EventOrganizers.Update(organizer);
@@ -305,7 +318,7 @@ namespace Lucky_Charm_Event_track.Controllers
                         existingOrgToReactivate.IsActive = true;
                         foreach (var ev in existingOrgToReactivate.Events ?? new List<Event>())
                         {
-                            ev.isActive = true;
+                            ev.IsActive = true;
                             _dbContext.Events.Update(ev);
                         }
                         _dbContext.EventOrganizers.Update(existingOrgToReactivate);
@@ -324,7 +337,7 @@ namespace Lucky_Charm_Event_track.Controllers
                         orgToSuspend.IsActive = false;
                         foreach (var ev in orgToSuspend.Events ?? new List<Event>())
                         {
-                            ev.isActive = false;
+                            ev.IsActive = false;
                             _dbContext.Events.Update(ev);
                         }
                         _dbContext.EventOrganizers.Update(orgToSuspend);

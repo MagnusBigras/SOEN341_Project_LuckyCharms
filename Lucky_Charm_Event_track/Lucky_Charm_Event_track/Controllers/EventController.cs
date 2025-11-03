@@ -48,7 +48,7 @@ namespace Lucky_Charm_Event_track.Controllers
         [HttpGet("active")]
         public async Task<ActionResult<IEnumerable<Event>>> GetActiveEvents()
         {
-            var active_events = _dbContext.Events.Where(e => e.isActive).ToList();
+            var active_events = _dbContext.Events.Where(e => e.IsActive).ToList();
             return active_events;
         }
 
@@ -168,7 +168,7 @@ namespace Lucky_Charm_Event_track.Controllers
             existingEvent.Country = updatedEvent.Country;
             existingEvent.Capacity = updatedEvent.Capacity;
             existingEvent.TicketType = updatedEvent.TicketType;
-            existingEvent.isActive = updatedEvent.isActive;
+            existingEvent.IsActive = updatedEvent.IsActive;
             existingEvent.UpdatedAt = updatedEvent.UpdatedAt;
             existingEvent.Category = updatedEvent.Category;
 
@@ -233,7 +233,7 @@ namespace Lucky_Charm_Event_track.Controllers
             var ev = _dbContext.Events.Find(request.Id);
             if (ev == null) return NotFound();
 
-            ev.isActive = request.IsActive;
+            ev.IsActive = request.IsActive;
             _dbContext.SaveChanges();
             return Ok();
         }

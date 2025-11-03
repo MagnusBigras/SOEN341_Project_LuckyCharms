@@ -77,7 +77,7 @@ namespace Lucky_Charm_Event_track.Controllers
         {
             var rows = await _db.Events
                 .AsNoTracking()
-                .Where(e => !e.isActive)
+                .Where(e => !e.IsActive)
                 .OrderBy(e => e.CreatedAt)
                 .Select(e => new { e.Id, e.EventName, e.StartTime, e.Category, e.City, e.Region, e.Country, e.EventOrganizerId })
                 .ToListAsync();
@@ -90,9 +90,9 @@ namespace Lucky_Charm_Event_track.Controllers
         {
             var ev = await _db.Events.FirstOrDefaultAsync(e => e.Id == eventId);
             if (ev == null) return NotFound();
-            if (!ev.isActive)
+            if (!ev.IsActive)
             {
-                ev.isActive = true;
+                ev.IsActive = true;
                 ev.UpdatedAt = System.DateTime.UtcNow;
                 await _db.SaveChangesAsync();
             }
@@ -104,9 +104,9 @@ namespace Lucky_Charm_Event_track.Controllers
         {
             var ev = await _db.Events.FirstOrDefaultAsync(e => e.Id == eventId);
             if (ev == null) return NotFound();
-            if (ev.isActive)
+            if (ev.IsActive)
             {
-                ev.isActive = false;
+                ev.IsActive = false;
                 ev.UpdatedAt = System.DateTime.UtcNow;
                 await _db.SaveChangesAsync();
             }
