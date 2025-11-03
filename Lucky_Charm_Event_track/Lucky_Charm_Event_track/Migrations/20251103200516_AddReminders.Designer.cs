@@ -3,6 +3,7 @@ using System;
 using Lucky_Charm_Event_track.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LuckyCharmEventtrack.Migrations
 {
     [DbContext(typeof(WebAppDBContext))]
-    partial class WebAppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20251103200516_AddReminders")]
+    partial class AddReminders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -269,54 +272,6 @@ namespace LuckyCharmEventtrack.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("Lucky_Charm_Event_track.Models.Review", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("AdditionalComments")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("DidTheEventMeetExpectations")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("EaseOfCheckinRanking")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("EventID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("LikehoodToRecommendTheEvent")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("OverallExperience")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("SatisfactionRankingForVenue")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("StaffRankingScore")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("UserAccountID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("WasTheEventWorthTheCost")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("WhatCanBeImproved")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventID");
-
-                    b.HasIndex("UserAccountID");
-
-                    b.ToTable("Reviews");
-                });
-
             modelBuilder.Entity("Lucky_Charm_Event_track.Models.Ticket", b =>
                 {
                     b.Property<int>("Id")
@@ -510,25 +465,6 @@ namespace LuckyCharmEventtrack.Migrations
                     b.Navigation("Event");
                 });
 
-            modelBuilder.Entity("Lucky_Charm_Event_track.Models.Review", b =>
-                {
-                    b.HasOne("Lucky_Charm_Event_track.Models.Event", "Event")
-                        .WithMany("Reviews")
-                        .HasForeignKey("EventID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Lucky_Charm_Event_track.Models.UserAccount", "UserAccount")
-                        .WithMany("SubmittedReviews")
-                        .HasForeignKey("UserAccountID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Event");
-
-                    b.Navigation("UserAccount");
-                });
-
             modelBuilder.Entity("Lucky_Charm_Event_track.Models.Ticket", b =>
                 {
                     b.HasOne("Lucky_Charm_Event_track.Models.Event", "Event")
@@ -565,8 +501,6 @@ namespace LuckyCharmEventtrack.Migrations
 
                     b.Navigation("Reminders");
 
-                    b.Navigation("Reviews");
-
                     b.Navigation("Tickets");
                 });
 
@@ -580,8 +514,6 @@ namespace LuckyCharmEventtrack.Migrations
             modelBuilder.Entity("Lucky_Charm_Event_track.Models.UserAccount", b =>
                 {
                     b.Navigation("PaymentDetail");
-
-                    b.Navigation("SubmittedReviews");
 
                     b.Navigation("Tickets");
 

@@ -13,7 +13,7 @@ namespace Lucky_Charm_Event_track.Models
         public string Email { get; set; }
         public string Password { get; set; }
         public string PasswordSalt { get; set; }
-        public string PhoneNumber {get; set; }
+        public string PhoneNumber { get; set; }
         public DateTime DateOfBirth { get; set; }
         public DateTime AccountCreationDate { get; set; }
         public AccountTypes AccountType { get; set; }
@@ -25,6 +25,8 @@ namespace Lucky_Charm_Event_track.Models
         public int PaymentDetailID { get; set; }
         public DateTime? SuspensionEndUtc { get; set; }
         public bool IsBanned { get; set; }
+        public List<UserSpecificReminder> UserSpecificReminders {get; set;}
+        public List<Review> SubmittedReviews { get; set; }
 
     }
 }
