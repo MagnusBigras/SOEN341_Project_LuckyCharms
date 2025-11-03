@@ -39,7 +39,6 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
         public async Task GetEventById_ReturnsOk_WhenIdExists()
         {
             var testEventId = 1;
-            // Fix: Use string interpolation correctly
             var response = await _client.GetAsync($"/api/events/{testEventId}");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -64,17 +63,16 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
         [Fact]
         public async Task CreateEvent_ReturnsSuccess_WhenValid()
         {
-            // Get seeded user's EventOrganizerId
             int organizerId;
             using (var scope = _factory.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<WebAppDBContext>();
                 var user = await db.UserAccounts.FirstOrDefaultAsync(u => u.UserName == "defaultuser");
-                Assert.NotNull(user); // Ensure user exists
+                Assert.NotNull(user);
                 
                 var organizer = await db.EventOrganizers.FirstOrDefaultAsync(o => o.UserAccountId == user.Id);
-                Assert.NotNull(organizer); // Ensure organizer exists
-                
+                Assert.NotNull(organizer); 
+
                 organizerId = organizer.Id;
             }
 
@@ -98,13 +96,6 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
             };
 
             var response = await _client.PostAsJsonAsync("/api/events/create", newEvent);
-            
-            // If it fails, read the error message
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                var error = await response.Content.ReadAsStringAsync();
-                Assert.Fail($"Create failed: {error}");
-            }
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
@@ -112,7 +103,7 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
         [Fact]
         public async Task DeleteEvent_ReturnsSuccess_WhenValid()
         {
-            // First create an event to delete
+            // event to delete
             int eventIdToDelete;
             using (var scope = _factory.Services.CreateScope())
             {
@@ -145,7 +136,6 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
                 eventIdToDelete = testEvent.Id;
             }
 
-            // Fix: Send just the ID as an integer, not the whole Event object
             var response = await _client.PostAsJsonAsync("/api/events/delete", eventIdToDelete);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
@@ -153,7 +143,7 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
         [Fact]
         public async Task UpdateEvent_ReturnsSuccess_WhenValid()
         {
-            // First create an event to update
+            //event to update
             int eventIdToUpdate;
             using (var scope = _factory.Services.CreateScope())
             {
@@ -188,7 +178,6 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
                 eventIdToUpdate = testEvent.Id;
             }
 
-            // Fix: Include the ID and all required fields
             var updatedEvent = new Event
             {
                 Id = eventIdToUpdate,
@@ -214,7 +203,6 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
         [Fact]
         public async Task UpdateEventVisibility_ReturnsSuccess_WhenValid()
         {
-            // First create an event
             int eventId;
             using (var scope = _factory.Services.CreateScope())
             {
@@ -247,7 +235,6 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
                 eventId = testEvent.Id;
             }
 
-            // Fix: Use the correct DTO type
             var visibilityUpdate = new 
             {
                 Id = eventId,
@@ -257,7 +244,6 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
             var response = await _client.PostAsJsonAsync("/api/events/update-visibility", visibilityUpdate);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            // Verify the update worked
             using (var scope = _factory.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<WebAppDBContext>();
