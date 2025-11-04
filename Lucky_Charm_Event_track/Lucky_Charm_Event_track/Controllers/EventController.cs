@@ -191,16 +191,18 @@ namespace Lucky_Charm_Event_track.Controllers
             return Ok(new { message = "Event deleted successfully." });
         }
 
-        // --- Update event ---
+       // --- Update event ---
         [HttpPost("update")]
         public async Task<IActionResult> UpdateEvent([FromBody] Event updatedEvent)
         {
             var existingEvent = await _dbContext.Events
                 .Include(e => e.Prices)
+                .Include(e => e.Tickets)
                 .FirstOrDefaultAsync(e => e.Id == updatedEvent.Id);
 
             if (existingEvent == null) return NotFound("Event not found.");
 
+            // Update basic event info
             existingEvent.EventName = updatedEvent.EventName;
             existingEvent.EventDescription = updatedEvent.EventDescription;
             existingEvent.StartTime = updatedEvent.StartTime;
@@ -215,54 +217,63 @@ namespace Lucky_Charm_Event_track.Controllers
             existingEvent.UpdatedAt = DateTime.Now;
             existingEvent.Category = updatedEvent.Category;
 
-            existingEvent.Prices.Clear();
-            if (updatedEvent.Prices != null && updatedEvent.Prices.Count > 0)
+            // Update or add price tiers
+            foreach (var updatedPrice in updatedEvent.Prices)
             {
-                foreach (var price in updatedEvent.Prices)
+                var existingPrice = existingEvent.Prices
+                    .FirstOrDefault(p => p.TicketType == updatedPrice.TicketType && p.Label == updatedPrice.Label);
+
+                if (existingPrice != null)
                 {
+                    // Update price tier info
+                    existingPrice.Price = updatedPrice.Price;
+                    existingPrice.MaxQuantity = updatedPrice.MaxQuantity;
+                    existingPrice.isAvailable = updatedPrice.isAvailable;
+                }
+                else
+                {
+                    // New price tier
                     existingEvent.Prices.Add(new PriceTier
                     {
-                        Price = price.Price,
-                        TicketType = price.TicketType,
-                        Label = price.Label ?? "Default",
-                        MaxQuantity = price.MaxQuantity,
-                        isAvailable = price.isAvailable
+                        Price = updatedPrice.Price,
+                        TicketType = updatedPrice.TicketType,
+                        Label = updatedPrice.Label ?? "Default",
+                        MaxQuantity = updatedPrice.MaxQuantity,
+                        isAvailable = updatedPrice.isAvailable
                     });
                 }
             }
 
             await _dbContext.SaveChangesAsync();
 
-            var oldTickets = await _dbContext.Tickets
-                .Where(t => t.EventId == updatedEvent.Id)
-                .ToListAsync();
-            _dbContext.Tickets.RemoveRange(oldTickets);
-            await _dbContext.SaveChangesAsync();
-
-            if (updatedEvent.Prices != null && updatedEvent.Prices.Count > 0)
+            // Handle tickets: only add new ones if needed
+            foreach (var tier in existingEvent.Prices)
             {
-                foreach (var tier in updatedEvent.Prices)
+                // Count existing tickets for this tier
+                int currentCount = existingEvent.Tickets.Count(t => t.TicketType == tier.TicketType);
+
+                // Add tickets if updated MaxQuantity is greater
+                int ticketsToAdd = tier.MaxQuantity - currentCount;
+                for (int i = 0; i < ticketsToAdd; i++)
                 {
-                    for (int i = 0; i < tier.MaxQuantity; i++)
+                    var ticket = new Ticket
                     {
-                        var ticket = new Ticket
-                        {
-                            EventId = existingEvent.Id,
-                            UserAccountId = null,
-                            TicketType = tier.TicketType,
-                            Price = tier.Price,
-                            PurchaseDate = DateTime.MinValue,
-                            QRCodeText = Guid.NewGuid().ToString(),
-                            CheckedIn = false
-                        };
-                        _dbContext.Tickets.Add(ticket);
-                    }
+                        EventId = existingEvent.Id,
+                        UserAccountId = null,
+                        TicketType = tier.TicketType,
+                        Price = tier.Price,
+                        PurchaseDate = DateTime.MinValue,
+                        QRCodeText = Guid.NewGuid().ToString(),
+                        CheckedIn = false
+                    };
+                    _dbContext.Tickets.Add(ticket);
                 }
             }
 
             await _dbContext.SaveChangesAsync();
-            return Ok(new { message = "Event and tickets updated successfully" });
+            return Ok(new { message = "Event updated and tickets adjusted successfully" });
         }
+
 
         // --- Update visibility ---
         [HttpPost("update-visibility")]
