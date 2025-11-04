@@ -3,6 +3,7 @@ using System;
 using Lucky_Charm_Event_track.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LuckyCharmEventtrack.Migrations
 {
     [DbContext(typeof(WebAppDBContext))]
-    partial class WebAppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20251103193322_CardNumberFloat")]
+    partial class CardNumberFloat
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -227,96 +230,6 @@ namespace LuckyCharmEventtrack.Migrations
                     b.ToTable("PriceTiers");
                 });
 
-            modelBuilder.Entity("Lucky_Charm_Event_track.Models.Reminder", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("EventID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Frequency")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("ReminderDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ReminderName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("isActive")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("isSent")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("EventID");
-
-                    b.ToTable("Reminders");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Reminder");
-
-                    b.UseTphMappingStrategy();
-                });
-
-            modelBuilder.Entity("Lucky_Charm_Event_track.Models.Review", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("AdditionalComments")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("DidTheEventMeetExpectations")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("EaseOfCheckinRanking")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("EventID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("LikehoodToRecommendTheEvent")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("OverallExperience")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("SatisfactionRankingForVenue")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("StaffRankingScore")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("UserAccountID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("WasTheEventWorthTheCost")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("WhatCanBeImproved")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventID");
-
-                    b.HasIndex("UserAccountID");
-
-                    b.ToTable("Reviews");
-                });
-
             modelBuilder.Entity("Lucky_Charm_Event_track.Models.Ticket", b =>
                 {
                     b.Property<int>("Id")
@@ -421,18 +334,6 @@ namespace LuckyCharmEventtrack.Migrations
                     b.ToTable("UserAccounts");
                 });
 
-            modelBuilder.Entity("Lucky_Charm_Event_track.Models.UserSpecificReminder", b =>
-                {
-                    b.HasBaseType("Lucky_Charm_Event_track.Models.Reminder");
-
-                    b.Property<int>("UserAccountId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasIndex("UserAccountId");
-
-                    b.HasDiscriminator().HasValue("UserSpecificReminder");
-                });
-
             modelBuilder.Entity("Lucky_Charm_Event_track.Models.Event", b =>
                 {
                     b.HasOne("Lucky_Charm_Event_track.Models.EventOrganizer", "Organizer")
@@ -499,36 +400,6 @@ namespace LuckyCharmEventtrack.Migrations
                     b.Navigation("Event");
                 });
 
-            modelBuilder.Entity("Lucky_Charm_Event_track.Models.Reminder", b =>
-                {
-                    b.HasOne("Lucky_Charm_Event_track.Models.Event", "Event")
-                        .WithMany("Reminders")
-                        .HasForeignKey("EventID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Event");
-                });
-
-            modelBuilder.Entity("Lucky_Charm_Event_track.Models.Review", b =>
-                {
-                    b.HasOne("Lucky_Charm_Event_track.Models.Event", "Event")
-                        .WithMany("Reviews")
-                        .HasForeignKey("EventID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Lucky_Charm_Event_track.Models.UserAccount", "UserAccount")
-                        .WithMany("SubmittedReviews")
-                        .HasForeignKey("UserAccountID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Event");
-
-                    b.Navigation("UserAccount");
-                });
-
             modelBuilder.Entity("Lucky_Charm_Event_track.Models.Ticket", b =>
                 {
                     b.HasOne("Lucky_Charm_Event_track.Models.Event", "Event")
@@ -546,26 +417,11 @@ namespace LuckyCharmEventtrack.Migrations
                     b.Navigation("Event");
                 });
 
-            modelBuilder.Entity("Lucky_Charm_Event_track.Models.UserSpecificReminder", b =>
-                {
-                    b.HasOne("Lucky_Charm_Event_track.Models.UserAccount", "UserAccount")
-                        .WithMany("UserSpecificReminders")
-                        .HasForeignKey("UserAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("UserAccount");
-                });
-
             modelBuilder.Entity("Lucky_Charm_Event_track.Models.Event", b =>
                 {
                     b.Navigation("Metric");
 
                     b.Navigation("Prices");
-
-                    b.Navigation("Reminders");
-
-                    b.Navigation("Reviews");
 
                     b.Navigation("Tickets");
                 });
@@ -581,11 +437,7 @@ namespace LuckyCharmEventtrack.Migrations
                 {
                     b.Navigation("PaymentDetail");
 
-                    b.Navigation("SubmittedReviews");
-
                     b.Navigation("Tickets");
-
-                    b.Navigation("UserSpecificReminders");
                 });
 #pragma warning restore 612, 618
         }

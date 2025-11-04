@@ -3,6 +3,7 @@
   "WorkspaceRootPath": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\",
   "Documents": [
     {
+<<<<<<< HEAD
       "AbsoluteMoniker": "D:0:0:{1B9DB2F8-A8EA-4E06-8FF0-3D8575D91084}|Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj|c:\\users\\magnu\\onedrive\\documents\\github\\soen341_project_luckycharms\\lucky_charm_event_track\\lucky_charm_event_track\\migrations\\20251103202923_addreview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1B9DB2F8-A8EA-4E06-8FF0-3D8575D91084}|Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj|solutionrelative:lucky_charm_event_track\\migrations\\20251103202923_addreview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -37,6 +38,18 @@
     {
       "AbsoluteMoniker": "D:0:0:{1B9DB2F8-A8EA-4E06-8FF0-3D8575D91084}|Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj|c:\\users\\magnu\\onedrive\\documents\\github\\soen341_project_luckycharms\\lucky_charm_event_track\\lucky_charm_event_track\\models\\logincreds.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1B9DB2F8-A8EA-4E06-8FF0-3D8575D91084}|Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj|solutionrelative:lucky_charm_event_track\\models\\logincreds.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+=======
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Migrations\\20251103193322_CardNumberFloat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Lucky_Charm_Event_track\\Migrations\\20251103193322_CardNumberFloat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1B9DB2F8-A8EA-4E06-8FF0-3D8575D91084}|Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj|c:\\users\\magnu\\onedrive\\documents\\github\\soen341_project_luckycharms\\lucky_charm_event_track\\lucky_charm_event_track\\models\\paymentdetail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1B9DB2F8-A8EA-4E06-8FF0-3D8575D91084}|Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj|solutionrelative:lucky_charm_event_track\\models\\paymentdetail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1B9DB2F8-A8EA-4E06-8FF0-3D8575D91084}|Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj|c:\\users\\magnu\\onedrive\\documents\\github\\soen341_project_luckycharms\\lucky_charm_event_track\\lucky_charm_event_track\\controllers\\eventcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1B9DB2F8-A8EA-4E06-8FF0-3D8575D91084}|Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj|solutionrelative:lucky_charm_event_track\\controllers\\eventcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+>>>>>>> main
     },
     {
       "AbsoluteMoniker": "D:0:0:{1B9DB2F8-A8EA-4E06-8FF0-3D8575D91084}|Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj|c:\\users\\magnu\\onedrive\\documents\\github\\soen341_project_luckycharms\\lucky_charm_event_track\\lucky_charm_event_track\\controllers\\useraccountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -99,8 +112,13 @@
       "RelativeMoniker": "D:0:0:{1B9DB2F8-A8EA-4E06-8FF0-3D8575D91084}|Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj|solutionrelative:lucky_charm_event_track\\models\\organization.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+<<<<<<< HEAD
       "AbsoluteMoniker": "D:0:0:{1B9DB2F8-A8EA-4E06-8FF0-3D8575D91084}|Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj|c:\\users\\magnu\\onedrive\\documents\\github\\soen341_project_luckycharms\\lucky_charm_event_track\\lucky_charm_event_track\\models\\paymentdetail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1B9DB2F8-A8EA-4E06-8FF0-3D8575D91084}|Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj|solutionrelative:lucky_charm_event_track\\models\\paymentdetail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+=======
+      "AbsoluteMoniker": "D:0:0:{1B9DB2F8-A8EA-4E06-8FF0-3D8575D91084}|Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj|c:\\users\\magnu\\onedrive\\documents\\github\\soen341_project_luckycharms\\lucky_charm_event_track\\lucky_charm_event_track\\models\\event.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1B9DB2F8-A8EA-4E06-8FF0-3D8575D91084}|Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj|solutionrelative:lucky_charm_event_track\\models\\event.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+>>>>>>> main
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Migrations\\20251103173731_InitClean.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -158,10 +176,6 @@
       "RelativeMoniker": "D:0:0:{1B9DB2F8-A8EA-4E06-8FF0-3D8575D91084}|Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj|solutionrelative:lucky_charm_event_track\\pages\\studentseventsoffered.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1B9DB2F8-A8EA-4E06-8FF0-3D8575D91084}|Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj|c:\\users\\magnu\\onedrive\\documents\\github\\soen341_project_luckycharms\\lucky_charm_event_track\\lucky_charm_event_track\\controllers\\eventcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1B9DB2F8-A8EA-4E06-8FF0-3D8575D91084}|Lucky_Charm_Event_track\\Lucky_Charm_Event_track.csproj|solutionrelative:lucky_charm_event_track\\controllers\\eventcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Migrations\\20251103172621_RemoveDoubleIsBanned.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Lucky_Charm_Event_track\\Migrations\\20251103172621_RemoveDoubleIsBanned.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -196,22 +210,89 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
+<<<<<<< HEAD
           "SelectedChildIndex": 0,
+=======
+          "SelectedChildIndex": 1,
+>>>>>>> main
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
+<<<<<<< HEAD
               "Title": "20251103202923_AddReview.cs",
               "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Migrations\\20251103202923_AddReview.cs",
               "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Migrations\\20251103202923_AddReview.cs",
               "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Migrations\\20251103202923_AddReview.cs",
               "RelativeToolTip": "Lucky_Charm_Event_track\\Migrations\\20251103202923_AddReview.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAAAAAA==",
+=======
+              "Title": "20251103193322_CardNumberFloat.cs",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Migrations\\20251103193322_CardNumberFloat.cs",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Migrations\\20251103193322_CardNumberFloat.cs",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Migrations\\20251103193322_CardNumberFloat.cs",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Migrations\\20251103193322_CardNumberFloat.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAAABAAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T19:33:22.658Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "events.cshtml",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\events.cshtml",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Pages\\events.cshtml",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\events.cshtml",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Pages\\events.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-03T17:16:17.728Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "EventConfirmation.cshtml",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\EventConfirmation.cshtml",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Pages\\EventConfirmation.cshtml",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\EventConfirmation.cshtml",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Pages\\EventConfirmation.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-03T17:16:17.709Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "EventForm.cshtml",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\EventForm.cshtml",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Pages\\EventForm.cshtml",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\EventForm.cshtml",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Pages\\EventForm.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAIsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-03T17:16:17.724Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "UserAccountController.cs",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Controllers\\UserAccountController.cs",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Controllers\\UserAccountController.cs",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Controllers\\UserAccountController.cs",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Controllers\\UserAccountController.cs",
+              "ViewState": "AgIAAJsAAAAAAAAAAAAAAJsAAAAJAAAAAAAAAA==",
+>>>>>>> main
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-03T20:29:23.311Z",
               "EditorCaption": ""
             },
             {
+<<<<<<< HEAD
               "$type": "Document",
               "DocumentIndex": 6,
               "Title": "BasicFeedbackAnswers.cs",
@@ -243,12 +324,72 @@
               "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Migrations\\20251103200516_AddReminders.cs",
               "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Migrations\\20251103200516_AddReminders.cs",
               "RelativeToolTip": "Lucky_Charm_Event_track\\Migrations\\20251103200516_AddReminders.cs",
+=======
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "EventController.cs",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Controllers\\EventController.cs",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Controllers\\EventController.cs",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Controllers\\EventController.cs",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Controllers\\EventController.cs",
+              "ViewState": "AgIAAOMAAAAAAAAAAAAkwOsAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T17:28:41.286Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PaymentDetail.cs",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\PaymentDetail.cs",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Models\\PaymentDetail.cs",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\PaymentDetail.cs",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Models\\PaymentDetail.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T17:34:46.203Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AdminPlatformOversight.cshtml",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\AdminPlatformOversight.cshtml",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Pages\\AdminPlatformOversight.cshtml",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\AdminPlatformOversight.cshtml",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Pages\\AdminPlatformOversight.cshtml",
+              "ViewState": "AgIAABUAAAAAAAAAAAAcwCUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-03T18:05:27.235Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AdminManagement.cshtml",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\AdminManagement.cshtml",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Pages\\AdminManagement.cshtml",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\AdminManagement.cshtml",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Pages\\AdminManagement.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-03T18:05:36.879Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "EventOrganizerController.cs",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Controllers\\EventOrganizerController.cs",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Controllers\\EventOrganizerController.cs",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Controllers\\EventOrganizerController.cs",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Controllers\\EventOrganizerController.cs",
+>>>>>>> main
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-03T20:05:16.596Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 5,
               "Title": "Reminder.cs",
               "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\Reminder.cs",
@@ -256,12 +397,193 @@
               "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\Reminder.cs",
               "RelativeToolTip": "Lucky_Charm_Event_track\\Models\\Reminder.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAA5wA0AAAAXAAAAAAAAAA==",
+=======
+              "DocumentIndex": 8,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Controllers\\AdminController.cs",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Controllers\\AdminController.cs",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Controllers\\AdminController.cs",
+              "ViewState": "AgIAAGIAAAAAAAAAAAAkwGwAAAAUAAAAAAAAAA==",
+>>>>>>> main
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-03T19:46:36.924Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 1,
+=======
+              "DocumentIndex": 7,
+              "Title": "Startup.cs",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Startup.cs",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Startup.cs",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Startup.cs",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Startup.cs",
+              "ViewState": "AgIAAFQAAAAAAAAAAAAcwGQAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T17:30:09.58Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "EventAnalytics.cshtml",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\EventAnalytics.cshtml",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Pages\\EventAnalytics.cshtml",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\EventAnalytics.cshtml",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Pages\\EventAnalytics.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-03T17:16:17.706Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "OrganizerTools.cshtml",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\OrganizerTools.cshtml",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Pages\\OrganizerTools.cshtml",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\OrganizerTools.cshtml",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Pages\\OrganizerTools.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-03T17:55:28.011Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "AdminAnalytics.cshtml",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\AdminAnalytics.cshtml",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Pages\\AdminAnalytics.cshtml",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\AdminAnalytics.cshtml",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Pages\\AdminAnalytics.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-03T17:16:17.662Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "StudentsEventsOffered.cshtml",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\StudentsEventsOffered.cshtml",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Pages\\StudentsEventsOffered.cshtml",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\StudentsEventsOffered.cshtml",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Pages\\StudentsEventsOffered.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-03T17:54:18.597Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Organization.cs",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\Organization.cs",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Models\\Organization.cs",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\Organization.cs",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Models\\Organization.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAA7wBQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T17:34:37.251Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "LoginResponse.cs",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\LoginResponse.cs",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Models\\LoginResponse.cs",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\LoginResponse.cs",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Models\\LoginResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T17:34:30.701Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "Metric.cs",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\Metric.cs",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Models\\Metric.cs",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\Metric.cs",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Models\\Metric.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAA5wBUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T17:34:32.024Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "20251103173609_CleanEvents2.cs",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Migrations\\20251103173609_CleanEvents2.cs",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Migrations\\20251103173609_CleanEvents2.cs",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Migrations\\20251103173609_CleanEvents2.cs",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Migrations\\20251103173609_CleanEvents2.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAIwBYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T17:36:09.889Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "20251103174300_InitClean.cs",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Migrations\\20251103174300_InitClean.cs",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Migrations\\20251103174300_InitClean.cs",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Migrations\\20251103174300_InitClean.cs",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Migrations\\20251103174300_InitClean.cs",
+              "ViewState": "AgIAAFoAAAAAAAAAAAAcwGkAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T17:43:01.001Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "20251103173731_InitClean.cs",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Migrations\\20251103173731_InitClean.cs",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Migrations\\20251103173731_InitClean.cs",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Migrations\\20251103173731_InitClean.cs",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Migrations\\20251103173731_InitClean.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAIwBUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T17:37:31.147Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Event.cs",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\Event.cs",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Models\\Event.cs",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\Event.cs",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Models\\Event.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAA5wCIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T17:16:17.742Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "PriceTier.cs",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\PriceTier.cs",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Models\\PriceTier.cs",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\PriceTier.cs",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Models\\PriceTier.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T17:34:47.36Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "UserAccount.cs",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\UserAccount.cs",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Models\\UserAccount.cs",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\UserAccount.cs",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Models\\UserAccount.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAkwBkAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T17:20:59.896Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+>>>>>>> main
               "Title": "WebAppDBContext.cs",
               "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\WebAppDBContext.cs",
               "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Models\\WebAppDBContext.cs",
@@ -273,6 +595,7 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 4,
               "Title": "Event.cs",
               "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\Event.cs",
@@ -280,11 +603,21 @@
               "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\Event.cs",
               "RelativeToolTip": "Lucky_Charm_Event_track\\Models\\Event.cs",
               "ViewState": "AgIAABkAAAAAAAAAAAAkwB8AAAAHAAAAAAAAAA==",
+=======
+              "DocumentIndex": 22,
+              "Title": "Ticket.cs",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\Ticket.cs",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Models\\Ticket.cs",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\Ticket.cs",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Models\\Ticket.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAA==",
+>>>>>>> main
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-03T17:16:17.742Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 3,
               "Title": "UserAccount.cs",
               "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\UserAccount.cs",
@@ -292,11 +625,21 @@
               "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\UserAccount.cs",
               "RelativeToolTip": "Lucky_Charm_Event_track\\Models\\UserAccount.cs",
               "ViewState": "AgIAABUAAAAAAAAAAAAkwBwAAAAlAAAAAAAAAA==",
+=======
+              "DocumentIndex": 27,
+              "Title": "EventOrganizer.cs",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\EventOrganizer.cs",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Models\\EventOrganizer.cs",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\EventOrganizer.cs",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Models\\EventOrganizer.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAkwBAAAAAAAAAAAAAAAA==",
+>>>>>>> main
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-03T17:20:59.896Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 7,
               "Title": "UserSpecificReminder.cs",
               "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\UserSpecificReminder.cs",
@@ -304,11 +647,21 @@
               "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\UserSpecificReminder.cs",
               "RelativeToolTip": "Lucky_Charm_Event_track\\Models\\UserSpecificReminder.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAcAAAAAAAAAA==",
+=======
+              "DocumentIndex": 28,
+              "Title": "20251103173222_CleanEvents.cs",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Migrations\\20251103173222_CleanEvents.cs",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Migrations\\20251103173222_CleanEvents.cs",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Migrations\\20251103173222_CleanEvents.cs",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Migrations\\20251103173222_CleanEvents.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+>>>>>>> main
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-03T19:53:30.436Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 9,
               "Title": "UserAccountController.cs",
               "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Controllers\\UserAccountController.cs",
@@ -316,12 +669,37 @@
               "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Controllers\\UserAccountController.cs",
               "RelativeToolTip": "Lucky_Charm_Event_track\\Controllers\\UserAccountController.cs",
               "ViewState": "AgIAAHIAAAAAAAAAAAAAAHIAAAARAAAAAAAAAA==",
+=======
+              "DocumentIndex": 29,
+              "Title": "20251103173108_FixDoubleIsActive2.cs",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Migrations\\20251103173108_FixDoubleIsActive2.cs",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Migrations\\20251103173108_FixDoubleIsActive2.cs",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Migrations\\20251103173108_FixDoubleIsActive2.cs",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Migrations\\20251103173108_FixDoubleIsActive2.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+>>>>>>> main
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-03T17:16:17.718Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 8,
+=======
+              "DocumentIndex": 30,
+              "Title": "20251103173029_FixDoubleIsActive.cs",
+              "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Migrations\\20251103173029_FixDoubleIsActive.cs",
+              "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Migrations\\20251103173029_FixDoubleIsActive.cs",
+              "ToolTip": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Migrations\\20251103173029_FixDoubleIsActive.cs",
+              "RelativeToolTip": "Lucky_Charm_Event_track\\Migrations\\20251103173029_FixDoubleIsActive.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T17:30:29.496Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+>>>>>>> main
               "Title": "LoginCreds.cs",
               "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Models\\LoginCreds.cs",
               "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Models\\LoginCreds.cs",
@@ -333,6 +711,7 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 10,
               "Title": "ReminderFrequency.cs",
               "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Enums\\ReminderFrequency.cs",
@@ -646,6 +1025,9 @@
             {
               "$type": "Document",
               "DocumentIndex": 35,
+=======
+              "DocumentIndex": 31,
+>>>>>>> main
               "Title": "Microsoft.NET.EolTargetFrameworks.targets",
               "DocumentMoniker": "C:\\Program Files\\dotnet\\sdk\\9.0.306\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.EolTargetFrameworks.targets",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\..\\Program Files\\dotnet\\sdk\\9.0.306\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.EolTargetFrameworks.targets",
@@ -657,7 +1039,11 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 36,
+=======
+              "DocumentIndex": 32,
+>>>>>>> main
               "Title": "DatabaseSeeder.cs",
               "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Services\\DatabaseSeeder.cs",
               "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Services\\DatabaseSeeder.cs",
@@ -669,7 +1055,11 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 37,
+=======
+              "DocumentIndex": 33,
+>>>>>>> main
               "Title": "StudentsMyCalendar.cshtml.cs",
               "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\StudentsMyCalendar.cshtml.cs",
               "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Pages\\StudentsMyCalendar.cshtml.cs",
@@ -681,6 +1071,7 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 39,
               "Title": "EventController.cs",
               "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Controllers\\EventController.cs",
@@ -694,6 +1085,9 @@
             {
               "$type": "Document",
               "DocumentIndex": 40,
+=======
+              "DocumentIndex": 35,
+>>>>>>> main
               "Title": "20251103172621_RemoveDoubleIsBanned.cs",
               "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Migrations\\20251103172621_RemoveDoubleIsBanned.cs",
               "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Migrations\\20251103172621_RemoveDoubleIsBanned.cs",
@@ -705,7 +1099,11 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 38,
+=======
+              "DocumentIndex": 34,
+>>>>>>> main
               "Title": "StudentsEventsOffered.cshtml.cs",
               "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\StudentsEventsOffered.cshtml.cs",
               "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Pages\\StudentsEventsOffered.cshtml.cs",
@@ -717,7 +1115,11 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 44,
+=======
+              "DocumentIndex": 39,
+>>>>>>> main
               "Title": "Admin_Role\u0026Org_Portal.cshtml",
               "DocumentMoniker": "C:\\Users\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\Admin_Role\u0026Org_Portal.cshtml",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Magnus\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\Admin_Role\u0026Org_Portal.cshtml",
@@ -729,7 +1131,11 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 43,
+=======
+              "DocumentIndex": 38,
+>>>>>>> main
               "Title": "SessionManager.cs",
               "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Services\\SessionManager.cs",
               "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Services\\SessionManager.cs",
@@ -741,7 +1147,11 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 41,
+=======
+              "DocumentIndex": 36,
+>>>>>>> main
               "Title": "login_script.js",
               "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\wwwroot\\js\\login_script.js",
               "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\wwwroot\\js\\login_script.js",
@@ -753,7 +1163,11 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 42,
+=======
+              "DocumentIndex": 37,
+>>>>>>> main
               "Title": "Login.cshtml.cs",
               "DocumentMoniker": "C:\\Users\\magnu\\OneDrive\\Documents\\GitHub\\SOEN341_Project_LuckyCharms\\Lucky_Charm_Event_track\\Lucky_Charm_Event_track\\Pages\\Login.cshtml.cs",
               "RelativeDocumentMoniker": "Lucky_Charm_Event_track\\Pages\\Login.cshtml.cs",

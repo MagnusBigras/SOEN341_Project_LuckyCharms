@@ -4,7 +4,7 @@
     {
         public int Id { get; set; } 
         public string CardHolderName { get; set; }
-        public int CardNumber { get; set; }
+        public float CardNumber { get; set; }
         public string ExpiryDate { get; set; }
         public string CVV { get; set; }
         public int UserID { get; set; }
