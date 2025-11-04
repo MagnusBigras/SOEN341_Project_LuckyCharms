@@ -28,7 +28,8 @@ namespace Lucky_Charm_Event_track.Models
         public DateTime UpdatedAt { get; set;}
         public List<Ticket> Tickets { get; set; }
         public Metric Metric { get; set; }
-        
+        public List<Reminder> Reminders { get; set; }
+        public List<Review> Reviews { get; set; }
 
     }
 }

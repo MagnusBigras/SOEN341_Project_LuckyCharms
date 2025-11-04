@@ -15,6 +15,10 @@ namespace Lucky_Charm_Event_track.Models
         public DbSet<Metric> Metrics { get; set; }
         public DbSet<PaymentDetail> PaymentDetails { get; set; }
         public DbSet<Organization> Organizations { get; set; }
+
+        public DbSet<Reminder> Reminders { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<UserSpecificReminder> UserSpecificReminders { get; set; }
         public string DbPath { get; set; }
 
         public WebAppDBContext(DbContextOptions<WebAppDBContext> options): base(options)
@@ -82,6 +86,25 @@ namespace Lucky_Charm_Event_track.Models
                 .HasOne(eo => eo.Account)
                 .WithOne(u => u.PaymentDetail)
                 .HasForeignKey<PaymentDetail>(eo => eo.UserID);
+
+           modelBuilder.Entity<Event>()
+                .HasMany(e => e.Reminders)
+                .WithOne(r => r.Event)
+                .HasForeignKey(r => r.EventID);
+
+            modelBuilder.Entity<UserAccount>()
+                .HasMany(e => e.UserSpecificReminders)
+                .WithOne(r => r.UserAccount)
+                .HasForeignKey(r => r.UserAccountId);
+            modelBuilder.Entity<UserAccount>()
+                  .HasMany(e => e.SubmittedReviews)
+                  .WithOne(r => r.UserAccount)
+                  .HasForeignKey(r => r.UserAccountID);
+            modelBuilder.Entity<Event>()
+                .HasMany(e => e.Reviews)
+                .WithOne(r => r.Event)
+                .HasForeignKey (r => r.EventID);
+
         }
     }
 }
