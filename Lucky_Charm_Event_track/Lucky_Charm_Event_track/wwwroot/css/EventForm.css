@@ -136,3 +136,21 @@ button[type="button"]:hover {
     color: #912338;
     transform: translateY(-2px);
 }
+
+/* Highlight empty required fields */
+.form-group input:invalid,
+.form-group select:invalid,
+.form-group textarea:invalid {
+    border: 2px solid #cc0000 !important;
+    background-color: #ffe6e6;
+}
+
+/* Highlight label when field invalid */
+.form-group input:invalid + label,
+.form-group select:invalid + label,
+.form-group textarea:invalid + label {
+    color: #cc0000 !important;
+}
+.form-group.invalid label {
+    color: #cc0000 !important;
+}

@@ -64,9 +64,99 @@
 
     <!-- Main content -->
     <div class="main-content">
+        <!-- EVENTS LIST -->
+        <h1 class="mb-2">Events – Platform Oversight</h1>
+        <div class="card">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Organizer</th>
+                        <th>Date</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var e in Model.Events)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@e.EventName</strong><br />
+                                <small>@e.Description</small>
+                            </td>
+                            <td>@e.StartTime?.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>@e.Location</td>
+                            <td>
+                                @(e.IsActive ? "Active" : "Disabled")
+                            </td>
+                            <td class="text-right">
+                                <form method="post" asp-page-handler="ApproveEvent" style="display:inline">
+                                    <input type="hidden" name="eventId" value="@e.Id" />
+                                    <button class="btn btn-primary" @(e.IsActive ? "disabled" : null)>Approve</button>
+                                </form>
+                                <form method="post" asp-page-handler="DisableEvent" style="display:inline;margin-left:.5rem">
+                                    <input type="hidden" name="eventId" value="@e.Id" />
+                                    <button class="btn btn-danger" @(e.IsActive ? null : "disabled")>Disable</button>
+                                </form>
+                                <form method="post" asp-page-handler="FlagEvent" style="display:inline;margin-left:.5rem">
+                                    <input type="hidden" name="eventId" value="@e.Id" />
+                                    <button class="btn btn-warning">Flag</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
-
-      </div>
+        <!-- ORGANIZER ACCOUNTS -->
+        <h2 class="mt-3">Organizer Accounts</h2>
+        <div class="card">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name / Email</th>
+                        <th>Phone</th>
+                        <th>Account Type</th>
+                        <th>Active</th>
+                        <th>Banned</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var u in Model.Organizers)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@u.FullName</strong><br />
+                                <small>@u.Email</small>
+                            </td>
+                            <td>@u.PhoneNumber</td>
+                            <td>@u.AccountType</td>
+                            <td>@(u.IsActive ? "Yes" : "No")</td>
+                            <td>@(u.IsBanned ? "Yes" : "No")</td>
+                            <td class="text-right">
+                                <form method="post" asp-page-handler="ApproveOrganizer" style="display:inline">
+                                    <input type="hidden" name="userId" value="@u.Id" />
+                                    <button class="btn btn-primary" @(u.IsActive ? "disabled" : null)>Approve</button>
+                                </form>
+                                <form method="post" asp-page-handler="BanOrganizer" style="display:inline;margin-left:.5rem">
+                                    <input type="hidden" name="userId" value="@u.Id" />
+                                    <button class="btn btn-danger" @(u.IsBanned ? "disabled" : null)>Ban</button>
+                                </form>
+                                <form method="post" asp-page-handler="UnbanOrganizer" style="display:inline;margin-left:.5rem">
+                                    <input type="hidden" name="userId" value="@u.Id" />
+                                    <button class="btn btn-secondary" @(!u.IsBanned ? "disabled" : null)>Unban</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 </body>
 </html>
