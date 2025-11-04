@@ -127,6 +127,9 @@ namespace Lucky_Charm_Event_track.Pages
                 filtered = SortByPopularity == "asc" ? filtered.OrderBy(e => e.Popularity) : filtered.OrderByDescending(e => e.Popularity);
 
             FilteredEvents = filtered.ToList();
+
+            // Check if sold-out events now have tickets ---
+            CheckNewTickets(events);
         }
 
         // Purchase free ticket
@@ -210,6 +213,27 @@ namespace Lucky_Charm_Event_track.Pages
 
             _context.SaveChanges();
         }
+
+        private void CheckNewTickets(List<EventItem> events)
+        {
+            foreach (var e in events)
+            {
+                if (e.TicketsLeft > 0 && e.RemainingCapacity > 0)
+                {
+                    var metric = _context.Metrics.FirstOrDefault(m => m.EventId == e.Id);
+                    if (metric != null && metric.LastRemaining == 0)
+                    {
+                        TempData["SuccessMessage"] = $"New tickets are now available for '{e.Name}'!";
+
+                        // Update metric to prevent showing again
+                        metric.LastRemaining = e.RemainingCapacity;
+                        _context.SaveChanges();
+                        break;
+                    }
+                }
+            }
+        }
+
 
         public class EventItem
         {
