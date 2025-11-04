@@ -24,53 +24,47 @@ namespace Lucky_Charm_Event_track.Pages
 
         public async Task OnGetAsync()
         {
-            // Get the currently logged-in user's ID from claims
+            // Get currently logged-in user's ID from claims
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userIdClaim))
-            {
-                // User is not logged in
-                return;
-            }
+            if (string.IsNullOrEmpty(userIdClaim)) return;
 
             UserId = int.Parse(userIdClaim);
 
-            // Fetch the user from the database
+            // Get logged-in user's info
             var user = await _dbContext.UserAccounts.FirstOrDefaultAsync(u => u.Id == UserId);
-            if (user != null)
-            {
-                FirstName = user.FirstName; 
-            }
+            if (user != null) FirstName = user.FirstName;
 
             // Fetch tickets for this user where the event is not hidden
-            var userTickets = await _dbContext.Tickets
+            var tickets = await _dbContext.Tickets
                 .Where(t => t.UserAccountId == UserId && !t.IsHiddenInCalendar)
                 .Include(t => t.Event)
-                .ThenInclude(e => e.Organizer)
-                .ThenInclude(o => o.Account)
+                    .ThenInclude(e => e.Organizer)
+                        .ThenInclude(o => o.Account)
                 .ToListAsync();
 
-            // Group by EventId so we only display one event per event
-            var uniqueEvents = userTickets
+            // Only keep unique events
+            var uniqueEvents = tickets
                 .GroupBy(t => t.EventId)
                 .Select(g => g.First())
                 .ToList();
 
-            Events = uniqueEvents.Select(t => new CalendarEvent
-            {
-                id = t.Id,
-                title = t.Event.EventName,
-                start = t.Event.StartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
-                end = null,
-                status = t.Event.IsActive ? "active" : "cancelled",
-                description = t.Event.EventDescription,
-                location = $"{t.Event.Address}, {t.Event.City}",
-                organizer = t.Event.Organizer != null && t.Event.Organizer.Account != null
-                    ? $"{t.Event.Organizer.Account.FirstName} {t.Event.Organizer.Account.LastName}"
-                    : "Unknown",
-                category = t.Event.Category,
-                eventId = t.Event.Id
-            }).ToList();
+            // Filter out events that have no valid organizer (Seeder or null)
+            Events = uniqueEvents
+                .Where(t => t.Event.Organizer != null && t.Event.Organizer.Account != null)
+                .Select(t => new CalendarEvent
+                {
+                    id = t.Id,
+                    title = t.Event.EventName,
+                    start = t.Event.StartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+                    end = null,
+                    status = t.Event.IsActive ? "active" : "cancelled",
+                    description = t.Event.EventDescription,
+                    location = $"{t.Event.Address}, {t.Event.City}",
+                    organizer = $"{t.Event.Organizer.Account.FirstName} {t.Event.Organizer.Account.LastName}",
+                    category = t.Event.Category,
+                    eventId = t.Event.Id
+                })
+                .ToList();
         }
 
         public string GetEventsJson() => JsonSerializer.Serialize(Events);

@@ -143,7 +143,7 @@
                 document.getElementById('eventPopup').style.display = 'block';
 
                 document.getElementById('removeEventBtn').onclick = async function() {
-                    const userId = 1; // hardcoded for now
+                    const userId = @Model.UserId; 
                     const response = await fetch(`/api/tickets/hide-by-event?eventId=${info.event.extendedProps.eventId}&userId=${userId}`, { method: 'POST' });
                     const data = await response.json();
                     if(data.success) {

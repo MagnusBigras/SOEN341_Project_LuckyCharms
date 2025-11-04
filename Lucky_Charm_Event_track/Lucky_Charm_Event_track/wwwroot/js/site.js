@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fetch all events (basic info)
     async function fetchEvents() {
         try {
-            const res = await fetch('/api/events/all');
+            const res = await fetch('/api/events/my');
             if (!res.ok) throw new Error('Network response was not ok');
             let events = await res.json();
 
@@ -215,7 +215,6 @@ function getEventPriceAndType(event) {
         }
 
         for (const event of events) {
-            // Fetch full event details if prices is null
             const fullEvent = event.prices ? event : await fetchEventDetails(event.id);
             if (!fullEvent) continue; 
 
@@ -329,5 +328,5 @@ function getEventPriceAndType(event) {
         fetchEvents();
     });
 
-    } // end guard: only initialize site.js once
+    } 
 
