@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System;
-using Lucky_Charm_Event_track.Helpers;
 
 namespace Lucky_Charm_Event_track.Controllers
 {
@@ -25,51 +24,99 @@ namespace Lucky_Charm_Event_track.Controllers
             public bool IsActive { get; set; }
         }
 
+        // --- Return all events ---
         [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<Event>>> GetEvents()
         {
-            return await _dbContext.Events.ToListAsync();
+            return await _dbContext.Events
+                .Include(e => e.Prices)
+                .Include(e => e.Tickets)
+                .Include(e => e.Organizer)
+                .ThenInclude(o => o.Account)
+                .ToListAsync();
         }
 
+      [HttpGet("my")]
+    public async Task<ActionResult<IEnumerable<Event>>> GetMyEvents()
+    {
+        try
+        {
+            var currentUser = Globals.Globals.SessionManager.CurrentLoggedInUser;
+
+            if (currentUser == null)
+            {
+                currentUser = await _dbContext.UserAccounts.FirstOrDefaultAsync();
+                if (currentUser == null)
+                    return Ok(new List<Event>());
+            }
+
+            var organizer = await _dbContext.EventOrganizers
+                .Include(o => o.Events)
+                    .ThenInclude(e => e.Prices)
+                .Include(o => o.Events)
+                    .ThenInclude(e => e.Tickets)
+                .Include(o => o.Account)
+                .FirstOrDefaultAsync(o => o.UserAccountId == currentUser.Id);
+
+            if (organizer == null)
+            {
+                var fallbackEvents = await _dbContext.Events
+                    .Include(e => e.Prices)
+                    .Include(e => e.Organizer)
+                    .ThenInclude(o => o.Account)
+                    .ToListAsync();
+                return Ok(fallbackEvents);
+            }
+
+            return Ok(organizer.Events);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading events: {ex.Message}");
+            return Ok(new List<Event>());
+        }
+    }
+
+
+        // --- Get event by ID ---
         [HttpGet("{id}")]
         public async Task<ActionResult<Event>> GetEventById(int id)
         {
             var temp_event = await _dbContext.Events
-                .Include(e => e.Tickets)  
+                .Include(e => e.Tickets)
                 .Include(e => e.Prices)
                 .Include(e => e.Metric)
+                .Include(e => e.Organizer)
+                .ThenInclude(o => o.Account)
                 .FirstOrDefaultAsync(e => e.Id == id);
 
             if (temp_event == null) return NotFound();
             return temp_event;
         }
 
-
-        [HttpGet("active")]
-        public async Task<ActionResult<IEnumerable<Event>>> GetActiveEvents()
-        {
-            var active_events = _dbContext.Events.Where(e => e.IsActive).ToList();
-            return active_events;
-        }
-
+        // --- Create new event ---
         [HttpPost("create")]
-        public ActionResult<Event> CreateEvent([FromBody] Event newEvent)
+        public async Task<ActionResult<Event>> CreateEvent([FromBody] Event newEvent)
         {
-            if(Globals.Globals.SessionManager.CurrentLoggedInUser == null) 
-            {
-                return BadRequest(new { message = "Error! User Not Not Logged In!" });
-            }
-            if (newEvent == null) 
-                return BadRequest("Event cannot be null");
-            if (!EventVerificationHelper.PerformEventVerification(_dbContext, newEvent))
-            {
-                return BadRequest(new { message = "Event Verification Failed" });
-            }
-            // Add the event to the database
-            _dbContext.Events.Add(newEvent);
-            _dbContext.SaveChanges(); 
+            var currentUser = Globals.Globals.SessionManager.CurrentLoggedInUser;
+            if (currentUser == null)
+                return BadRequest(new { message = "Error! User not logged in!" });
 
-            // Create metric entry
+            var organizer = await _dbContext.EventOrganizers
+                .FirstOrDefaultAsync(o => o.UserAccountId == currentUser.Id);
+
+            if (organizer == null)
+                return BadRequest(new { message = "Current user is not an organizer!" });
+
+            // Link event to organizer
+            newEvent.EventOrganizerId = organizer.Id;
+            newEvent.IsActive = true;
+            newEvent.CreatedAt = DateTime.Now;
+
+            _dbContext.Events.Add(newEvent);
+            await _dbContext.SaveChangesAsync();
+
+            // Create metric
             var metric = new Metric
             {
                 EventId = newEvent.Id,
@@ -84,14 +131,13 @@ namespace Lucky_Charm_Event_track.Controllers
                 AttendanceByMonth = new List<int>()
             };
             _dbContext.Metrics.Add(metric);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             // Generate tickets
             newEvent.Tickets = new List<Ticket>();
-
             if (newEvent.Prices != null && newEvent.Prices.Count > 0)
-            {
-                // Use PriceTiers to generate tickets
+            {               
+                 // Use PriceTiers to generate tickets
                 foreach (var tier in newEvent.Prices)
                 {
                     for (int i = 0; i < tier.MaxQuantity; i++)
@@ -101,7 +147,7 @@ namespace Lucky_Charm_Event_track.Controllers
                             EventId = newEvent.Id,
                             TicketType = tier.TicketType,
                             Price = tier.Price,
-                            PurchaseDate = DateTime.MinValue, 
+                            PurchaseDate = DateTime.MinValue,
                             CheckedIn = false,
                             QRCodeText = Guid.NewGuid().ToString()
                         };
@@ -119,7 +165,7 @@ namespace Lucky_Charm_Event_track.Controllers
                     {
                         EventId = newEvent.Id,
                         TicketType = newEvent.TicketType,
-                        Price = 0, 
+                        Price = 0,
                         PurchaseDate = DateTime.MinValue,
                         CheckedIn = false,
                         QRCodeText = Guid.NewGuid().ToString()
@@ -129,35 +175,34 @@ namespace Lucky_Charm_Event_track.Controllers
                 }
             }
 
-            _dbContext.SaveChanges();
-
+            await _dbContext.SaveChangesAsync();
             return Ok(new { message = "Event and tickets created successfully", eventId = newEvent.Id });
         }
 
-
+        // --- Delete event ---
         [HttpPost("delete")]
-        public ActionResult DeleteEvent([FromBody] int id)
+        public async Task<ActionResult> DeleteEvent([FromBody] int id)
         {
-            var deleted_event = _dbContext.Events.Find(id);
+            var deleted_event = await _dbContext.Events.FindAsync(id);
             if (deleted_event == null) return BadRequest("Event not found.");
 
             _dbContext.Events.Remove(deleted_event);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
             return Ok(new { message = "Event deleted successfully." });
         }
 
-
+       // --- Update event ---
         [HttpPost("update")]
         public async Task<IActionResult> UpdateEvent([FromBody] Event updatedEvent)
         {
-            // Load the existing event with prices
             var existingEvent = await _dbContext.Events
                 .Include(e => e.Prices)
+                .Include(e => e.Tickets)
                 .FirstOrDefaultAsync(e => e.Id == updatedEvent.Id);
 
             if (existingEvent == null) return NotFound("Event not found.");
 
-            // Update basic event fields
+            // Update basic event info
             existingEvent.EventName = updatedEvent.EventName;
             existingEvent.EventDescription = updatedEvent.EventDescription;
             existingEvent.StartTime = updatedEvent.StartTime;
@@ -169,72 +214,76 @@ namespace Lucky_Charm_Event_track.Controllers
             existingEvent.Capacity = updatedEvent.Capacity;
             existingEvent.TicketType = updatedEvent.TicketType;
             existingEvent.IsActive = updatedEvent.IsActive;
-            existingEvent.UpdatedAt = updatedEvent.UpdatedAt;
+            existingEvent.UpdatedAt = DateTime.Now;
             existingEvent.Category = updatedEvent.Category;
 
-
-            // Replace price tiers
-            existingEvent.Prices.Clear();
-            if (updatedEvent.Prices != null && updatedEvent.Prices.Count > 0)
+            // Update or add price tiers
+            foreach (var updatedPrice in updatedEvent.Prices)
             {
-                foreach (var price in updatedEvent.Prices)
+                var existingPrice = existingEvent.Prices
+                    .FirstOrDefault(p => p.TicketType == updatedPrice.TicketType && p.Label == updatedPrice.Label);
+
+                if (existingPrice != null)
                 {
+                    // Update price tier info
+                    existingPrice.Price = updatedPrice.Price;
+                    existingPrice.MaxQuantity = updatedPrice.MaxQuantity;
+                    existingPrice.isAvailable = updatedPrice.isAvailable;
+                }
+                else
+                {
+                    // New price tier
                     existingEvent.Prices.Add(new PriceTier
                     {
-                        Price = price.Price,
-                        TicketType = price.TicketType,
-                        Label = price.Label ?? "Default",
-                        MaxQuantity = price.MaxQuantity,
-                        isAvailable = price.isAvailable
+                        Price = updatedPrice.Price,
+                        TicketType = updatedPrice.TicketType,
+                        Label = updatedPrice.Label ?? "Default",
+                        MaxQuantity = updatedPrice.MaxQuantity,
+                        isAvailable = updatedPrice.isAvailable
                     });
                 }
             }
 
             await _dbContext.SaveChangesAsync();
 
-            // Delete old tickets
-            var oldTickets = await _dbContext.Tickets
-                .Where(t => t.EventId == updatedEvent.Id)
-                .ToListAsync();
-            _dbContext.Tickets.RemoveRange(oldTickets);
-            await _dbContext.SaveChangesAsync();
-
-            // Generate new tickets
-            if (updatedEvent.Prices != null && updatedEvent.Prices.Count > 0)
+            // Handle tickets: only add new ones if needed
+            foreach (var tier in existingEvent.Prices)
             {
-                foreach (var tier in updatedEvent.Prices)
+                // Count existing tickets for this tier
+                int currentCount = existingEvent.Tickets.Count(t => t.TicketType == tier.TicketType);
+
+                // Add tickets if updated MaxQuantity is greater
+                int ticketsToAdd = tier.MaxQuantity - currentCount;
+                for (int i = 0; i < ticketsToAdd; i++)
                 {
-                    for (int i = 0; i < tier.MaxQuantity; i++)
+                    var ticket = new Ticket
                     {
-                        var ticket = new Ticket
-                        {
-                            EventId = existingEvent.Id,
-                            UserAccountId = null,
-                            TicketType = tier.TicketType,
-                            Price = tier.Price,
-                            PurchaseDate = DateTime.MinValue,
-                            QRCodeText = Guid.NewGuid().ToString(),
-                            CheckedIn = false
-                        };
-                        _dbContext.Tickets.Add(ticket);
-                    }
+                        EventId = existingEvent.Id,
+                        UserAccountId = null,
+                        TicketType = tier.TicketType,
+                        Price = tier.Price,
+                        PurchaseDate = DateTime.MinValue,
+                        QRCodeText = Guid.NewGuid().ToString(),
+                        CheckedIn = false
+                    };
+                    _dbContext.Tickets.Add(ticket);
                 }
             }
 
             await _dbContext.SaveChangesAsync();
-
-        return Ok(new { message = "Event and tickets updated successfully" });
+            return Ok(new { message = "Event updated and tickets adjusted successfully" });
         }
 
 
+        // --- Update visibility ---
         [HttpPost("update-visibility")]
-        public IActionResult UpdateVisibility([FromBody] EventVisibilityUpdate request)
+        public async Task<IActionResult> UpdateVisibility([FromBody] EventVisibilityUpdate request)
         {
-            var ev = _dbContext.Events.Find(request.Id);
+            var ev = await _dbContext.Events.FindAsync(request.Id);
             if (ev == null) return NotFound();
 
             ev.IsActive = request.IsActive;
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
             return Ok();
         }
     }

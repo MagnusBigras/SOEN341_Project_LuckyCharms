@@ -138,9 +138,9 @@ async function loadEvent() {
     loadedEvent = event;
 
     document.getElementById('eventName').value = event.eventName || '';
-    const dt = new Date(event.startTime);
-    document.getElementById('eventDate').value = dt.toISOString().slice(0,10);
-    document.getElementById('eventTime').value = dt.toISOString().slice(11,16);
+      const dt = new Date(event.startTime);
+    document.getElementById('eventDate').value = dt.toLocaleDateString('en-CA'); 
+    document.getElementById('eventTime').value = dt.toTimeString().slice(0,5); 
     document.getElementById('eventLocation').value = event.address || '';
     document.getElementById('city').value = event.city || '';
     document.getElementById('region').value = event.region || '';
