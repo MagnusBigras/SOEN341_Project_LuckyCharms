@@ -1,0 +1,144 @@
+@page
+@model Lucky_Charm_Event_track.Pages.StudentFeedbackModel
+@{
+    ViewData["Title"] = "Feedback Confirmation";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/studentportal.css">
+    <link rel="stylesheet" href="~/css/site.css">
+  <style>
+    .main-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .confirmation-form {
+        max-width: 600px;
+        width: 100%;
+        background-color: #fff;
+        padding: 30px 40px;
+        border-radius: 12px;
+        text-align: center; 
+        margin-left: 3rem;
+    }
+
+    .confirmation-form h2 {
+        margin-bottom: 15px;
+        color: #912338;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .confirmation-form p {
+        margin-bottom: 25px;
+        font-size: 16px;
+        color: #333;
+    }
+
+    .confirmation-form button[type="submit"],
+    .confirmation-form button[type="button"],
+    .confirmation-form .dashboard-btn {
+        padding: 12px 30px;
+        border: 2px solid #912338;
+        border-radius: 20px;
+        background-color: #912338;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600 !important;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .confirmation-form button[type="submit"]:hover,
+    .confirmation-form button[type="button"]:hover,
+    .confirmation-form .dashboard-btn:hover {
+        background-color: white;
+        color: #912338;
+        transform: translateY(-2px);
+    }
+    </style>
+
+</head>
+<body>
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="sidebar-menu">
+        <div class="sidebar-item">
+            <a asp-page="/StudentsEventsOffered" class="sidebar-link">
+                <img src="~/Images/Untitled design (1)-Photoroom.png" class="sidebar-icon" alt="EventsOffered">
+                <span class="sidebar-text">Events Offered</span>
+            </a>
+        </div>
+        <div class="sidebar-item">
+            <a asp-page="/StudentsMyTickets" class="sidebar-link">
+                <img src="~/Images/86c1865905340afb06ee2948873e0be24974cff4.png" class="sidebar-icon" alt="Events">
+                <span class="sidebar-text">Tickets</span>
+            </a>
+        </div>
+        <div class="sidebar-item">
+            <a asp-page="/StudentFeedback" class="sidebar-link active">
+                <img src="~/Images/2508862806f0dced98f9ab1e25e74ce54c4711b2.png" class="sidebar-icon" alt="Feedback">
+                <span class="sidebar-text">Feedback</span>
+            </a>
+        </div>
+        <div class="sidebar-item" id="sidebarCreate">
+            <a asp-page="/StudentsMyCalendar" class="sidebar-link">
+                <img src="~/Images/Untitled design-Photoroom.png" class="sidebar-icon" alt="Calendar">
+                <span class="sidebar-text">Calendar</span>
+            </a>
+        </div>
+        <div class="sidebar-bar"></div>
+        <div class="sidebar-extra">
+            <div class="sidebar-item">
+                <img src="~/Images/7965593328e6cb27ffb10553f680443da25fad1a.png" class="sidebar-icon" alt="Organization Settings">
+                <span class="sidebar-text">Organization Settings</span>
+            </div>
+            <div class="sidebar-item">
+                <img src="~/Images/af7e2a95556abcf8c3cc0c41fedea581cd0f43af.png" class="sidebar-icon" alt="Sign out">
+                <span class="sidebar-text">Sign out</span>
+            </div>
+        </div>
+        <div class="sidebar-contact">
+            <div class="sidebar-item">
+                <img src="~/Images/Untitled%20design.png" class="sidebar-icon" alt="Contact">
+                <span class="sidebar-text">Contact</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Top Navbar -->
+<div class="top-navbar">
+    <div class="navbar-left">
+        <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
+    </div>
+    <div class="navbar-right">
+        <img src="https://icons.veryicon.com/png/o/miscellaneous/250-thick-line-icon-of-website-and-app/6-bell.png" alt="Notifications" class="bell-icon">
+        <button class="account-btn">
+            <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
+            <span class="account-name">@Model.FirstName</span>
+        </button>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="confirmation-form">
+        <h2>Thank You for Your Feedback!</h2>
+        <p>Your feedback has been submitted successfully and helps us improve future events.</p>
+
+        <div class="button-container">
+            <a asp-page="/StudentsEventsOffered" class="dashboard-btn">Go to Dashboard</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
