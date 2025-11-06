@@ -41,9 +41,11 @@
 
             <!-- Feedback -->
             <div class="sidebar-item">
-                <img src="~/Images/2508862806f0dced98f9ab1e25e74ce54c4711b2.png" class="sidebar-icon" alt="Feedback">
-                <span class="sidebar-text">Feedback</span>
-            </div>
+                    <a asp-page="/StudentFeedback" class="sidebar-link">
+                    <img src="~/Images/2508862806f0dced98f9ab1e25e74ce54c4711b2.png" class="sidebar-icon" alt="Feedback">
+                    <span class="sidebar-text">Feedback</span>
+                    </a>
+                </div>
 
             <!-- Calendar -->
             <div class="sidebar-item" id="sidebarCreate">
@@ -94,7 +96,7 @@
     </div>
 
     <!-- ================= Main Content ================= -->
-    <div class="main-content">
+     <div class="main-content">
         <div class="main-content-header">
             <h1>My Calendar</h1>
         </div>
@@ -107,7 +109,6 @@
             <h2 id="popupTitle"></h2>
             <p><strong>Status:</strong> <span id="popupStatus"></span></p>
             <p><strong>Start:</strong> <span id="popupStart"></span></p>
-            <p><strong>End:</strong> <span id="popupEnd"></span></p>
             <p><strong>Location:</strong> <span id="popupLocation"></span></p>
             <p><strong>Description:</strong> <span id="popupDescription"></span></p>
             <p><strong>Organizer:</strong> <span id="popupOrganizer"></span></p>
@@ -117,11 +118,10 @@
         </div>
     </div>
 
-    <!-- ================= Scripts ================= -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
     <script src="~/js/studentportal.js"></script>
 
-<script>
+    <script>
     document.addEventListener('DOMContentLoaded', function () {
         const calendarEl = document.getElementById('calendar');
         const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -129,13 +129,13 @@
             editable: false,
             eventClick: function(info) {
                 const now = new Date();
-                let status = info.event.extendedProps.status === 'cancelled' ? 'Cancelled' : 'Active';
-                if (!info.event.end && new Date(info.event.start) < now) status = 'Finished';
+                let status = info.event.extendedProps.status;
+
+                status = status.charAt(0).toUpperCase() + status.slice(1);
 
                 document.getElementById('popupTitle').innerText = info.event.title;
                 document.getElementById('popupStatus').innerText = status;
                 document.getElementById('popupStart').innerText = info.event.start?.toLocaleString() || 'N/A';
-                document.getElementById('popupEnd').innerText = info.event.end?.toLocaleString() || 'N/A';
                 document.getElementById('popupLocation').innerText = info.event.extendedProps.location || 'N/A';
                 document.getElementById('popupDescription').innerText = info.event.extendedProps.description || 'N/A';
                 document.getElementById('popupOrganizer').innerText = info.event.extendedProps.organizer || 'N/A';
@@ -154,29 +154,39 @@
                     }
                 };
             }
+
         });
 
-        const events = @Html.Raw(Model.GetEventsJson());
-        const eventIds = new Set();
-        events.forEach(e => {
-            if (!eventIds.has(e.id)) {
-                let color = e.status === 'cancelled' ? '#d3d3d3' : '';
-                calendar.addEvent({
-                    id: e.id,
-                    title: e.title,
-                    start: e.start,
-                    end: e.end,
-                    description: e.description,
-                    location: e.location,
-                    organizer: e.organizer,
-                    category: e.category,
-                    status: e.status,
-                    color: color,
-                    eventId: e.eventId
-                });
-                eventIds.add(e.id);
-            }
+const events = @Html.Raw(Model.GetEventsJson());
+const eventIds = new Set();
+
+events.forEach(e => {
+    if (!eventIds.has(e.id)) {
+        let color = e.status === 'finished' ? '#d3d3d3' : '';
+
+        // Convert start to Date objects
+        let startDate = new Date(e.start);
+        let endDate = e.end ? new Date(e.end) : new Date(startDate.getTime() + 60*60*1000);
+
+        calendar.addEvent({
+            id: e.id,
+            title: e.title,
+            start: startDate,
+            end: endDate,
+            allDay: e.allDay, 
+            description: e.description,
+            location: e.location,
+            organizer: e.organizer,
+            category: e.category,
+            status: e.status,
+            color: color,
+            eventId: e.eventId
         });
+
+        eventIds.add(e.id);
+    }
+});
+
 
         calendar.render();
     });

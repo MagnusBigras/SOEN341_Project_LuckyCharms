@@ -40,12 +40,16 @@ namespace Lucky_Charm_Event_track.Pages
         [BindProperty(SupportsGet = true)]
         public double? MaxPrice { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public bool ShowInterestedOnly { get; set; }
+
         public List<string> AllOrganizations { get; set; } = new();
         public List<string> AllLocations { get; set; } = new();
         public List<EventItem> FilteredEvents { get; set; } = new();
 
         public void OnGet()
         {
+            
             // Get logged-in user ID from claims
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!string.IsNullOrEmpty(userIdClaim))
@@ -87,7 +91,8 @@ namespace Lucky_Charm_Event_track.Pages
                             ? $"{e.Organizer.Account.FirstName} {e.Organizer.Account.LastName}"
                             : "Unknown",
                         Popularity = e.Tickets?.Count ?? 0,
-                        isActive = e.IsActive
+                        isActive = e.IsActive,
+                        IsInterested = e.IsInterested 
                     };
                 }).ToList();
 
@@ -125,6 +130,12 @@ namespace Lucky_Charm_Event_track.Pages
 
             if (!string.IsNullOrEmpty(SortByPopularity))
                 filtered = SortByPopularity == "asc" ? filtered.OrderBy(e => e.Popularity) : filtered.OrderByDescending(e => e.Popularity);
+
+
+            if (ShowInterestedOnly && UserId != 0)
+            {
+                filtered = filtered.Where(e => e.IsInterested);
+            }
 
             FilteredEvents = filtered.ToList();
 
@@ -179,6 +190,36 @@ namespace Lucky_Charm_Event_track.Pages
             UpdateMetric(eventId, ticket.Price);
 
             TempData["SuccessMessage"] = "Ticket purchased successfully!";
+            return RedirectToPage();
+        }
+
+
+        public IActionResult OnPostToggleInterest(int eventId)
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdClaim))
+            {
+                TempData["ErrorMessage"] = "You must be logged in to mark interest.";
+                return RedirectToPage();
+            }
+
+            var userId = int.Parse(userIdClaim);
+            var evnt = _context.Events.FirstOrDefault(e => e.Id == eventId);
+
+            if (evnt == null)
+            {
+                TempData["ErrorMessage"] = "Event not found.";
+                return RedirectToPage();
+            }
+
+            // Toggle interest 
+            evnt.IsInterested = !evnt.IsInterested;
+            _context.SaveChanges();
+
+            TempData["SuccessMessage"] = evnt.IsInterested
+                ? "Event marked as interested!"
+                : "Event removed from interested list.";
+
             return RedirectToPage();
         }
 
@@ -251,6 +292,8 @@ namespace Lucky_Charm_Event_track.Pages
             public string Organization { get; set; }
             public int Popularity { get; set; }
             public bool isActive { get; set; }
+
+            public bool IsInterested { get; set; } 
         }
     }
 }
