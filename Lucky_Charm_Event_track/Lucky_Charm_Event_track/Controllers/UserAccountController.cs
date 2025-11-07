@@ -129,11 +129,17 @@ namespace Lucky_Charm_Event_track.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> Login([FromBody]LoginCreds loginCreds) 
+        public async Task<ActionResult> Login([FromBody] LoginCreds loginCreds)
         {
             var account = _dbContext.UserAccounts.FirstOrDefault(e => e.UserName == loginCreds.Username);
             if (account == null)
                 return BadRequest("Invalid credentials");
+
+            if (account.IsBanned)
+                return BadRequest("Your account has been banned. Please contact support.");
+
+            if (!account.IsActive)
+                return BadRequest("Your account is not approved yet or has been suspended. Please wait for admin approval or contact support.");
 
             // Initialize global session
             Globals.Globals.SessionManager.InitializeSession(account, "login");
@@ -145,27 +151,31 @@ namespace Lucky_Charm_Event_track.Controllers
                 new Claim(ClaimTypes.Name, account.UserName),
                 new Claim(ClaimTypes.Email, account.Email ?? "")
             };
+
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
 
             // Sign in the user
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+            // Redirect based on account type
             string redirectUrl;
             if (loginCreds.IsAdmin)
             {
                 redirectUrl = "/AdminManagement";
             }
-            else 
+            else
             {
-                if(Globals.Globals.SessionManager.CurrentLoggedInUser.AccountType == AccountTypes.EventOrganizer) 
+                if (Globals.Globals.SessionManager.CurrentLoggedInUser.AccountType == AccountTypes.EventOrganizer)
                 {
                     redirectUrl = "/Events";
                 }
-                else 
+                else
                 {
                     redirectUrl = "/StudentsEventsOffered";
                 }
             }
+
             return Ok(new LoginResponse
             {
                 Message = "Login Successful",
