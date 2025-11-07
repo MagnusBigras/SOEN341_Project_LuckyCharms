@@ -1,0 +1,244 @@
+@page
+@model Lucky_Charm_Event_track.Pages.OrganizerFeedbackModel
+@{
+    ViewData["Title"] = "Organizer Feedback";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css">
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="sidebar-menu">
+        <div class="sidebar-item">
+            <a asp-page="/Events" class="sidebar-link">
+                <img src="~/Images/86c1865905340afb06ee2948873e0be24974cff4.png" class="sidebar-icon" alt="Events">
+                <span class="sidebar-text">Events</span>
+            </a>
+        </div>
+        <div class="sidebar-item">
+            <a asp-page="/OrganizerFeedback" class="sidebar-link active">
+                <img src="~/Images/2508862806f0dced98f9ab1e25e74ce54c4711b2.png" class="sidebar-icon" alt="Feedback">
+                <span class="sidebar-text">Feedback</span>
+            </a>
+        </div>
+        <div class="sidebar-item" id="sidebarCreate">
+            <a asp-page="/EventForm" class="sidebar-link">
+                <img src="~/Images/758ad898c74a67305bc208032ee5f2ed40d10d8d.png" class="sidebar-icon" alt="Create Event">
+                <span class="sidebar-text">Create Event</span>
+            </a>
+        </div>
+        <div class="sidebar-bar"></div>
+        <div class="sidebar-extra">
+            <div class="sidebar-item">
+                <img src="~/Images/7965593328e6cb27ffb10553f680443da25fad1a.png" class="sidebar-icon" alt="Settings">
+                <span class="sidebar-text">Organization Settings</span>
+            </div>
+            <div class="sidebar-item" id="logoutBtn" style="cursor:pointer;">
+                <img src="~/Images/af7e2a95556abcf8c3cc0c41fedea581cd0f43af.png" class="sidebar-icon" alt="Sign out">
+                <span class="sidebar-text">Sign out</span>
+            </div>
+        </div>
+        <div class="sidebar-contact">
+            <div class="sidebar-item">
+                <img src="~/Images/Untitled%20design.png" class="sidebar-icon" alt="Contact">
+                <span class="sidebar-text">Contact</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Top Navbar -->
+<div class="top-navbar">
+    <div class="navbar-left">
+        <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
+    </div>
+    <div class="navbar-right">
+        <button class="account-btn">
+            <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
+            <span class="account-name">@Model.FirstName</span>
+        </button>
+    </div>
+</div>
+
+<!-- Main content -->
+<div class="main-content">
+    <div class="main-content-header">
+        <h1>Feedback for Your Events</h1>
+    </div>
+
+        <form method="get" class="search-sort-bar">
+            <input type="text" name="EventNameFilter" placeholder="Event Name" value="@Model.EventNameFilter" />
+
+            <select name="RatingFilter">
+                <option value="">All Ratings</option>
+                @for (int i = 1; i <= 5; i++)
+                {
+                    if (Model.RatingFilter == i)
+                    {
+                        <option value="@i" selected>@i</option>
+                    }
+                    else
+                    {
+                        <option value="@i">@i</option>
+                    }
+                }
+            </select>
+
+            <input type="date" name="DateFilter" value="@(Model.DateFilter?.ToString("yyyy-MM-dd"))" />
+
+            <button type="submit">Apply Filters</button>
+    </form>
+
+    @foreach (var ev in Model.MyEvents)
+    {
+        <div class="event-feedback">
+            <h2>@ev.EventName (@ev.StartTime.ToString("MM/dd/yyyy HH:mm"))</h2>
+            <p><strong>Average Rating:</strong> @(Model.GetAverageRating(ev.Id).ToString("F1"))</p>
+            <p><strong>Description:</strong> @ev.EventDescription</p>
+            <p><strong>Location:</strong> @ev.Address, @ev.City, @ev.Region</p>
+
+            @if (Model.EventFeedbacks.ContainsKey(ev.Id) && Model.EventFeedbacks[ev.Id].Count > 0)
+            {
+                <table border="1" cellpadding="5" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Overall Experience</th>
+                            <th>Recommend</th>
+                            <th>Event Met Expectations</th>
+                            <th>Event Worth Cost</th>
+                            <th>Comments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var review in Model.EventFeedbacks[ev.Id])
+                        {
+                            <tr>
+                                <td>@review.UserAccount.FirstName</td>
+                                <td>@review.OverallExperience</td>
+                                <td>@review.LikehoodToRecommendTheEvent</td>
+                                <td>@review.DidTheEventMeetExpectations</td>
+                                <td>@review.WasTheEventWorthTheCost</td>
+                                <td>
+                                    <strong>What can be improved:</strong> @review.WhatCanBeImproved <br />
+                                    <strong>Additional Comments:</strong> @review.AdditionalComments
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>No feedback has been submitted for this event yet.</p>
+            }
+        </div>
+    }
+</div>
+
+
+</body>
+<style>
+    /* Event feedback section */
+.event-feedback {
+    background: #fff;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    margin-left: 2rem;
+    
+}
+
+.event-feedback h2 {
+    margin-bottom: 8px;
+    color: #912338;
+    font-weight: bold;
+}
+
+.event-feedback p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.event-feedback table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.event-feedback table th,
+.event-feedback table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+    font-size: 13px;
+}
+
+.event-feedback table th {
+    background-color: #912338;
+    color: #fff;
+}
+
+.search-sort-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    width: 97%;
+    margin-left: 2rem;
+}
+
+.search-sort-bar input, 
+.search-sort-bar select {
+    flex: 1 1 110px;
+    padding: 8px;
+    border-radius: 10px;
+    border: 2px solid white;
+    font-size: 1rem;
+}
+
+.search-sort-bar button {
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: none;
+    background-color: #912338;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.search-sort-bar button:hover {
+    opacity: 0.9;
+}
+
+</style>
+
+<script>
+        document.getElementById("logoutBtn")?.addEventListener("click", async () => {
+            try {
+                const response = await fetch("/api/accounts/logout", { method: "POST" });
+                if (response.ok) {
+                    const result = await response.json();
+                    alert(result.message);
+                    window.location.href = result.redirectUrl; 
+                } else {
+                    alert("Failed to sign out. Please try again.");
+                }
+            } catch (err) {
+                console.error("Logout error:", err);
+                alert("An error occurred during sign out.");
+            }
+        });
+</script>
+
+</html>

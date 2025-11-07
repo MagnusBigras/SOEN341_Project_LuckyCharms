@@ -121,9 +121,11 @@
                     <span class="sidebar-text">Tickets</span>
                 </a>
             </div>
-            <div class="sidebar-item">
+        <div class="sidebar-item">
+                <a asp-page="/StudentFeedback" class="sidebar-link">
                 <img src="~/Images/2508862806f0dced98f9ab1e25e74ce54c4711b2.png" class="sidebar-icon" alt="Feedback">
                 <span class="sidebar-text">Feedback</span>
+                </a>
             </div>
             <div class="sidebar-item" id="sidebarCreate">
                 <a asp-page="/StudentsMyCalendar" class="sidebar-link">
@@ -137,7 +139,7 @@
                     <img src="~/Images/7965593328e6cb27ffb10553f680443da25fad1a.png" class="sidebar-icon" alt="Organization Settings">
                     <span class="sidebar-text">Organization Settings</span>
                 </div>
-                <div class="sidebar-item">
+                 <div class="sidebar-item" id="logoutBtn" style="cursor:pointer;">
                     <img src="~/Images/af7e2a95556abcf8c3cc0c41fedea581cd0f43af.png" class="sidebar-icon" alt="Sign out">
                     <span class="sidebar-text">Sign out</span>
                 </div>
@@ -238,6 +240,25 @@
             if (response.ok) location.reload();
             else alert("Error unhiding event.");
         }
+
+
+
+        document.getElementById("logoutBtn")?.addEventListener("click", async () => {
+            try {
+                const response = await fetch("/api/accounts/logout", { method: "POST" });
+                if (response.ok) {
+                    const result = await response.json();
+                    alert(result.message);
+                    window.location.href = result.redirectUrl; 
+                } else {
+                    alert("Failed to sign out. Please try again.");
+                }
+            } catch (err) {
+                console.error("Logout error:", err);
+                alert("An error occurred during sign out.");
+            }
+        });
+
     </script>
 
 </body>

@@ -128,17 +128,17 @@ namespace Lucky_Charm_Event_track.Controllers
             return Ok(updated_account);
         }
 
-        [HttpPost("login")]
-        public async Task<ActionResult> Login([FromBody]LoginCreds loginCreds) 
+       [HttpPost("login")]
+        public async Task<ActionResult> Login([FromBody] LoginCreds loginCreds)
         {
             var account = _dbContext.UserAccounts.FirstOrDefault(e => e.UserName == loginCreds.Username);
-            if (account == null)
+
+            if (account == null || account.Password != loginCreds.Password)
                 return BadRequest("Invalid credentials");
 
             // Initialize global session
             Globals.Globals.SessionManager.InitializeSession(account, "login");
 
-            // Create claims for authentication
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()),
@@ -150,22 +150,11 @@ namespace Lucky_Charm_Event_track.Controllers
 
             // Sign in the user
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-            string redirectUrl;
-            if (loginCreds.IsAdmin)
-            {
-                redirectUrl = "/AdminManagement";
-            }
-            else 
-            {
-                if(Globals.Globals.SessionManager.CurrentLoggedInUser.AccountType == AccountTypes.EventOrganizer) 
-                {
-                    redirectUrl = "/Events";
-                }
-                else 
-                {
-                    redirectUrl = "/StudentsEventsOffered";
-                }
-            }
+
+            string redirectUrl = loginCreds.IsAdmin
+                ? "/AdminManagement"
+                : (account.AccountType == AccountTypes.EventOrganizer ? "/Events" : "/StudentsEventsOffered");
+
             return Ok(new LoginResponse
             {
                 Message = "Login Successful",
@@ -353,9 +342,9 @@ namespace Lucky_Charm_Event_track.Controllers
         }
 
         [HttpPost("savepaymentdetails")]
-        public ActionResult<UserAccount> SavePaymentDetails([FromBody]PaymentDetail paymentDetail) 
+        public ActionResult<UserAccount> SavePaymentDetails([FromBody] PaymentDetail paymentDetail)
         {
-            if (paymentDetail == null) 
+            if (paymentDetail == null)
                 return BadRequest(new { message = "Error! Invalid Payment Details" });
 
             paymentDetail.UserID = Globals.Globals.SessionManager.CurrentLoggedInUser.Id;
@@ -363,5 +352,19 @@ namespace Lucky_Charm_Event_track.Controllers
             _dbContext.SaveChanges();
             return Ok(paymentDetail);
         }
+        
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            // End authentication session
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            // Clear global session as well
+            Globals.Globals.SessionManager.ClearSession();
+
+            return Ok(new { message = "Sign out successful", redirectUrl = "/Index" });
+        }
+
     }
 }
