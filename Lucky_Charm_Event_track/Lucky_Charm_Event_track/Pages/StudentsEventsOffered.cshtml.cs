@@ -47,6 +47,8 @@ namespace Lucky_Charm_Event_track.Pages
         public List<string> AllLocations { get; set; } = new();
         public List<EventItem> FilteredEvents { get; set; } = new();
 
+        public int PointBalance { get; set; } = 0;
+
         public void OnGet()
         {
             
@@ -141,6 +143,9 @@ namespace Lucky_Charm_Event_track.Pages
 
             // Check if sold-out events now have tickets ---
             CheckNewTickets(events);
+
+            //Get user's point balance
+            PointBalance = Globals.Globals.SessionManager.CurrentLoggedInUser.Points;
         }
 
         // Purchase free ticket
@@ -185,8 +190,11 @@ namespace Lucky_Charm_Event_track.Pages
             ticket.UserAccountId = userId;
             ticket.PurchaseDate = DateTime.Now;
             ticket.QRCodeText = Guid.NewGuid().ToString();
-            _context.SaveChanges();
 
+            var current_user = _context.UserAccounts.Find(userId);
+            current_user.Points += (int)ticket.Price / 10;
+            Globals.Globals.SessionManager.CurrentLoggedInUser.Points = current_user.Points;
+            _context.SaveChanges();
             UpdateMetric(eventId, ticket.Price);
 
             TempData["SuccessMessage"] = "Ticket purchased successfully!";
