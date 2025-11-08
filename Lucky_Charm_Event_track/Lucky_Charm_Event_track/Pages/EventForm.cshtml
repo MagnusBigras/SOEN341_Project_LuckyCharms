@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"] - Event Form</title>
     <link rel="stylesheet" href="~/css/EventForm.css">
+    <script src="~/js/event-form.js" defer></script>
 </head>
 
 <body>
@@ -187,10 +188,12 @@ document.getElementById('eventForm').addEventListener('submit', async function (
             console.log("Event created:", result);
             window.location.href = "/EventConfirmation";
         } else {
-            const error = await response.text();
-            console.error("Failed to create event:", error);
-            alert("Error creating event.");
+            const error = await response.json().catch(() => ({}));
+            const message = error.message || "Error creating event.";
+            console.error("Failed to create event:", message);
+            alert(message);
         }
+
     } catch (err) {
         console.error("Network error:", err);
         alert("Network error. Please try again.");

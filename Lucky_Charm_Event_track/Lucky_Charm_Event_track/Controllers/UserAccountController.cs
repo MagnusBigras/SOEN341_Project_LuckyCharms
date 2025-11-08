@@ -136,6 +136,12 @@ namespace Lucky_Charm_Event_track.Controllers
             if (account == null || account.Password != loginCreds.Password)
                 return BadRequest("Invalid credentials");
 
+            if (account.IsBanned)
+                return BadRequest("Your account has been banned. Please contact support.");
+
+            if (!account.IsActive)
+                return BadRequest("Your account is not approved yet or has been suspended. Please wait for admin approval or contact support.");
+
             // Initialize global session
             Globals.Globals.SessionManager.InitializeSession(account, "login");
 
@@ -145,6 +151,7 @@ namespace Lucky_Charm_Event_track.Controllers
                 new Claim(ClaimTypes.Name, account.UserName),
                 new Claim(ClaimTypes.Email, account.Email ?? "")
             };
+
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
 
