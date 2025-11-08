@@ -71,6 +71,85 @@
             font-weight: 600;
             transition: 0.2s ease;
         }
+
+        .interest-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #eee;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .interest-btn:hover {
+            background-color: #f5f5f5;
+        }
+
+        .interest-btn.interested {
+            background-color: #ff5252;
+            color: #fff;
+        }
+
+        .toggle-wrapper {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 10px;
+            font-size: 1rem; 
+            cursor: pointer;
+        }
+
+        .toggle-wrapper input[type="checkbox"] {
+            display: none;
+        }
+
+        .toggle-label {
+            margin-top: 4px;
+            position: relative;
+            display: inline-block;
+            width: 70px;   
+            height: 34px; 
+            margin-right: 12px; 
+        }
+
+        .toggle-inner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            border-radius: 34px; 
+            transition: 0.3s;
+        }
+
+        .toggle-switch {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 30px; 
+            height: 30px;  
+            background-color: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .toggle-wrapper input[type="checkbox"]:checked + .toggle-label .toggle-inner {
+            background-color: #912338;
+        }
+
+        .toggle-wrapper input[type="checkbox"]:checked + .toggle-label .toggle-switch {
+            transform: translateX(36px); 
+        }
+
+        .toggle-text {
+            font-weight: 700;
+            color: #333;
+        }
+
     </style>
 </head>
 <body>
@@ -195,8 +274,20 @@
         </select>
         <input type="number" name="MinPrice" placeholder="Min Price" value="@(Model.MinPrice?.ToString() ?? "")" min="0" />
         <input type="number" name="MaxPrice" placeholder="Max Price" value="@(Model.MaxPrice?.ToString() ?? "")" min="0" />
-        <button type="submit">Apply</button>
-    </form>
+   
+        <button type="submit" formaction="?handler=ApplyFilter">Apply</button>
+
+               <div class="toggle-wrapper">
+            <input type="checkbox" id="showFavourites" name="ShowInterestedOnly" value="true" @(Model.ShowInterestedOnly ? "checked" : "") />
+            <label for="showFavourites" class="toggle-label">
+                <span class="toggle-inner"></span>
+                <span class="toggle-switch"></span>
+            </label>
+                <span class="toggle-text" id="toggleText">@((Model.ShowInterestedOnly) ? "Unfavourites" : "Favourites")</span>
+        </div>
+
+        </form>
+    
 
     <!-- Events Grid -->
     @if (!Model.FilteredEvents.Any())
@@ -234,6 +325,21 @@
                                 Pay Ticket
                             </button>
                         }
+
+                        <form method="post">
+                            <input type="hidden" name="eventId" value="@e.Id" />
+                            <button type="submit" formaction="?handler=ToggleInterest" class="interest-btn">
+                                @if (e.IsInterested)
+                                {
+                                    <text>Unfavourite</text>
+                                }
+                                else
+                                {
+                                    <text>Favourite</text>
+                                }
+                            </button>
+                        </form>
+
                     </div>
                 </div>
             }
@@ -432,6 +538,16 @@ if (alertBox) {
         setTimeout(() => alertBox.remove(), 400);
     }, 4000);
 }
+
+const favToggle = document.getElementById("showFavourites");
+const toggleText = document.getElementById("toggleText");
+
+favToggle.addEventListener("change", () => {
+    toggleText.textContent = favToggle.checked ? "Unfavourites" : "Favourites";
+    favToggle.closest("form").submit();
+});
+
+
 </script>
 
 </body>

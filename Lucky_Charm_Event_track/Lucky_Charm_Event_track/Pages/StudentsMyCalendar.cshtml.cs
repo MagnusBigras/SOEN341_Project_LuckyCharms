@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using System;
+
 
 namespace Lucky_Charm_Event_track.Pages
 {
@@ -24,6 +26,8 @@ namespace Lucky_Charm_Event_track.Pages
 
         public async Task OnGetAsync()
         {
+            var now = DateTime.Now;
+
             // Get currently logged-in user's ID from claims
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userIdClaim)) return;
@@ -51,14 +55,19 @@ namespace Lucky_Charm_Event_track.Pages
 
             // Filter out events that have no valid organizer (Seeder or null)
             Events = uniqueEvents
+            
+            
             .Select(t => new CalendarEvent
             {
                 id = t.Id,
                 title = t.Event.EventName,
                 start = t.Event.StartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
-                end = t.Event.StartTime.AddHours(0.1).ToString("yyyy-MM-ddTHH:mm:ss"), 
+                end = t.Event.StartTime.AddHours(0.1).ToString("yyyy-MM-ddTHH:mm:ss"), // assume 1-hour duration
                 allDay = false,
-                status = t.Event.IsActive ? "active" : "cancelled",
+                status = !t.Event.IsActive ? "finished" :
+                        t.Event.StartTime.Date > now.Date ? "active" :
+                        "finished",
+
                 description = t.Event.EventDescription,
                 location = $"{t.Event.Address}, {t.Event.City}",
                 organizer = $"{t.Event.Organizer.Account.FirstName} {t.Event.Organizer.Account.LastName}",

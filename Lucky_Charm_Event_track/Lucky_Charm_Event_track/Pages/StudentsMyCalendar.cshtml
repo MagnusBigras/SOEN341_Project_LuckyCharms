@@ -129,8 +129,9 @@
             editable: false,
             eventClick: function(info) {
                 const now = new Date();
-                let status = info.event.extendedProps.status === 'cancelled' ? 'Cancelled' : 'Active';
-                if (!info.event.end && new Date(info.event.start) < now) status = 'Finished';
+                let status = info.event.extendedProps.status;
+
+                status = status.charAt(0).toUpperCase() + status.slice(1);
 
                 document.getElementById('popupTitle').innerText = info.event.title;
                 document.getElementById('popupStatus').innerText = status;
@@ -153,18 +154,19 @@
                     }
                 };
             }
+
         });
 
-     const events = @Html.Raw(Model.GetEventsJson());
+const events = @Html.Raw(Model.GetEventsJson());
 const eventIds = new Set();
 
 events.forEach(e => {
     if (!eventIds.has(e.id)) {
-        let color = e.status === 'cancelled' ? '#d3d3d3' : '';
+        let color = e.status === 'finished' ? '#d3d3d3' : '';
 
         // Convert start to Date objects
         let startDate = new Date(e.start);
-        let endDate = e.end ? new Date(e.end) : new Date(startDate.getTime() + 60*60*1000); // +1 hour default
+        let endDate = e.end ? new Date(e.end) : new Date(startDate.getTime() + 60*60*1000);
 
         calendar.addEvent({
             id: e.id,
