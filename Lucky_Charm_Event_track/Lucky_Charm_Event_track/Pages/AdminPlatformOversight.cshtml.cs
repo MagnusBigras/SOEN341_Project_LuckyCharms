@@ -7,6 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Claims;
+
+
 
 namespace Lucky_Charm_Event_track.Pages
 {
@@ -31,22 +34,48 @@ namespace Lucky_Charm_Event_track.Pages
         // Optional query param lets you override the filter
         public async Task OnGetAsync(AccountTypes? organizerAccountType)
         {
+
+
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!string.IsNullOrEmpty(userIdClaim))
+            {
+                if (int.TryParse(userIdClaim, out int userId))
+                {
+                    var user = await _dbContext.UserAccounts.FirstOrDefaultAsync(u => u.Id == userId);
+                    if (user != null)
+                    {
+                        FirstName = user.FirstName;
+                    }
+                }
+            }
+
+
+
             var organizerType = organizerAccountType ?? OrganizerAccountTypeDefault;
 
             // EVENTS
             Events = await
                 (from e in _dbContext.Events
-                 join o in _dbContext.EventOrganizers on e.EventOrganizerId equals o.Id into org
-                 from o in org.DefaultIfEmpty()
-                 orderby e.StartTime descending
-                 select new EventDto
-                 {
-                     Id = e.Id,
-                     EventName = e.EventName,
-                     StartTime = e.StartTime,
-                     IsActive = e.IsActive
-                 })
+                join eo in _dbContext.EventOrganizers on e.EventOrganizerId equals eo.Id into org
+                from eo in org.DefaultIfEmpty()
+                join u in _dbContext.UserAccounts on eo.UserAccountId equals u.Id into users
+                from u in users.DefaultIfEmpty()
+                orderby e.StartTime descending
+                select new EventDto
+                {
+                    Id = e.Id,
+                    EventName = e.EventName,
+                    StartTime = e.StartTime,
+                    IsActive = e.IsActive,
+                    OrganizerName = u != null ? $"{u.FirstName} {u.LastName}" : "N/A",
+                    Address = e.Address,
+                    City = e.City,
+                    Region = e.Region,
+                    PostalCode = e.PostalCode,
+                    Country = e.Country
+                })
                 .ToListAsync();
+
 
             // ORGANIZER ACCOUNTS
             var rawOrganizers = await _dbContext.UserAccounts
@@ -84,8 +113,14 @@ namespace Lucky_Charm_Event_track.Pages
             public DateTime? StartTime { get; set; }
             public bool IsActive { get; set; }
             public string? Description { get; set; }
-            public string? Location { get; set; }
-        }
+            public string? OrganizerName { get; set; }
+            public string Location => string.Join(", ", new[] { Address, City, Region, PostalCode, Country }.Where(s => !string.IsNullOrWhiteSpace(s)));
+            public string? Address { get; set; }
+            public string? City { get; set; }
+            public string? Region { get; set; }
+            public string? PostalCode { get; set; }
+            public string? Country { get; set; }
+                }
 
         public class OrganizerDto
         {
@@ -93,7 +128,7 @@ namespace Lucky_Charm_Event_track.Pages
             public string FullName { get; set; } = "";
             public string? Email { get; set; }
             public string? PhoneNumber { get; set; }
-            public int AccountType { get; set; }     // or use AccountTypes if you want
+            public int AccountType { get; set; }     
             public bool IsActive { get; set; }
             public bool IsBanned { get; set; }
         }
@@ -115,30 +150,6 @@ namespace Lucky_Charm_Event_track.Pages
             await _dbContext.SaveChangesAsync();
             return RedirectToPage();
         }
-
-        //public async Task<IActionResult> OnPostFlagEventAsync(int eventId)
-        //{
-        //    // prefer a real IsFlagged column; otherwise:
-        //    await _dbContext.Database.ExecuteSqlRawAsync(
-        //      "UPDATE Events SET Notes = COALESCE(Notes,'') || '[FLAGGED ' || CURRENT_TIMESTAMP || ']' WHERE Id = {0}", eventId);
-        //    return RedirectToPage();
-        //}
-
-        public async Task<IActionResult> OnPostFlagEventAsync(int eventId)
-        {
-            //var ev = await _dbContext.Events.FindAsync(eventId);
-            //if (ev == null) return NotFound();
-
-            //var stamp = $"[FLAGGED {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} UTC]";
-            //if (string.IsNullOrWhiteSpace(ev.EventDescription))
-            //    ev.EventDescription = stamp;
-            //else if (!ev.EventDescription.Contains("[FLAGGED"))
-            //    ev.EventDescription = $"{ev.EventDescription}\n{stamp}";
-
-            //await _dbContext.SaveChangesAsync();
-            return RedirectToPage();
-        }
-
         public async Task<IActionResult> OnPostApproveOrganizerAsync(int userId)
         {
             var u = await _dbContext.UserAccounts.FindAsync(userId);
@@ -147,6 +158,17 @@ namespace Lucky_Charm_Event_track.Pages
             await _dbContext.SaveChangesAsync();
             return RedirectToPage();
         }
+
+
+        public async Task<IActionResult> OnPostUnapproveOrganizerAsync(int userId)
+        {
+            var u = await _dbContext.UserAccounts.FindAsync(userId);
+            if (u == null) return NotFound();
+            u.IsActive = false;  
+            await _dbContext.SaveChangesAsync();
+            return RedirectToPage();
+        }
+
 
         public async Task<IActionResult> OnPostBanOrganizerAsync(int userId)
         {

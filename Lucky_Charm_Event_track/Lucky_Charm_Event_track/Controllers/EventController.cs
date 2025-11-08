@@ -95,12 +95,18 @@ namespace Lucky_Charm_Event_track.Controllers
         }
 
         // --- Create new event ---
-        [HttpPost("create")]
+       [HttpPost("create")]
         public async Task<ActionResult<Event>> CreateEvent([FromBody] Event newEvent)
         {
             var currentUser = Globals.Globals.SessionManager.CurrentLoggedInUser;
             if (currentUser == null)
                 return BadRequest(new { message = "Error! User not logged in!" });
+
+            if (currentUser.IsBanned)
+                return BadRequest(new { message = "Your account is banned. You cannot create events." });
+
+            if (currentUser.SuspensionEndUtc != null && currentUser.SuspensionEndUtc > DateTime.UtcNow)
+                return BadRequest(new { message = $"Your account is suspended until {currentUser.SuspensionEndUtc.Value:u}. You cannot create events until suspension ends." });
 
             var organizer = await _dbContext.EventOrganizers
                 .FirstOrDefaultAsync(o => o.UserAccountId == currentUser.Id);
@@ -136,8 +142,8 @@ namespace Lucky_Charm_Event_track.Controllers
             // Generate tickets
             newEvent.Tickets = new List<Ticket>();
             if (newEvent.Prices != null && newEvent.Prices.Count > 0)
-            {               
-                 // Use PriceTiers to generate tickets
+            {                 
+                // Use PriceTiers to generate tickets
                 foreach (var tier in newEvent.Prices)
                 {
                     for (int i = 0; i < tier.MaxQuantity; i++)
@@ -158,7 +164,6 @@ namespace Lucky_Charm_Event_track.Controllers
             }
             else
             {
-                // No PriceTiers: generate default tickets according to capacity
                 for (int i = 0; i < newEvent.Capacity; i++)
                 {
                     var ticket = new Ticket
@@ -178,6 +183,7 @@ namespace Lucky_Charm_Event_track.Controllers
             await _dbContext.SaveChangesAsync();
             return Ok(new { message = "Event and tickets created successfully", eventId = newEvent.Id });
         }
+
 
         // --- Delete event ---
         [HttpPost("delete")]
