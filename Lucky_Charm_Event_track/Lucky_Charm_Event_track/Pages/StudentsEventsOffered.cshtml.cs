@@ -200,6 +200,33 @@ namespace Lucky_Charm_Event_track.Pages
             TempData["SuccessMessage"] = "Ticket purchased successfully!";
             return RedirectToPage();
         }
+        public IActionResult OnPostMockPointPay(int eventId) 
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            int userId = !string.IsNullOrEmpty(userIdClaim) ? int.Parse(userIdClaim) : 0;
+            var ticket = _context.Tickets.FirstOrDefault(t => t.EventId == eventId && t.UserAccountId == null);
+            if (ticket == null || userId == 0)
+            {
+                TempData["ErrorMessage"] = "No tickets available or user not logged in.";
+                return RedirectToPage();
+            }
+            var current_user = _context.UserAccounts.Find(userId);
+            if(current_user.Points < ticket.Price * 10) 
+            {
+                TempData["ErrorMessage"] = "Not Enough Points! Insufficient Funds";
+                return RedirectToPage();
+            }
+            ticket.UserAccountId = userId;
+            ticket.PurchaseDate = DateTime.Now;
+            ticket.QRCodeText = Guid.NewGuid().ToString();
+            current_user.Points -= (int)ticket.Price *  10;
+            Globals.Globals.SessionManager.CurrentLoggedInUser.Points = current_user.Points;
+            _context.SaveChanges();
+            UpdateMetric(eventId, ticket.Price);
+            TempData["SuccessMessage"] = "Ticket purchased successfully!";
+            return RedirectToPage();
+
+        }
 
 
         public IActionResult OnPostToggleInterest(int eventId)

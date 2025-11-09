@@ -399,7 +399,7 @@
                 Or you can pay with points! $10 = 1 point.
             </p>
 
-                <button type="submit" formaction="?handler=MockPay" id="pointsBtn" style="width:100%; background-color:#28a745; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:600; cursor:pointer; margin-bottom:12px;">
+                <button type="submit" formaction="?handler=MockPointPay" id="pointsBtn" style="width:100%; background-color:#28a745; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:600; cursor:pointer; margin-bottom:12px;">
                 Pay with Points
             </button>
             <label>Save My Payment Details for Easy Checkout Next Time </label>
@@ -515,9 +515,6 @@ function closePaymentModal() {
     paymentModal.style.display = "none";
 }
 
-document.getElementById("pointsBtn").addEventListener("click", () => {
-    alert("Pay with points clicked! Functionality will be added later.");
-});
 
 window.onclick = function(event) {
     const popup = document.getElementById('eventsOfferedPopup');
