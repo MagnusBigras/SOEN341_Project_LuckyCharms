@@ -12,6 +12,21 @@
     <link rel="stylesheet" href="~/css/EventForm.css">
 </head>
 <body>
+
+    <!-- Top Navbar -->
+    <div class="top-navbar">
+        <div class="navbar-left">
+            <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
+        </div>
+        <div class="navbar-right">
+            <img src="https://icons.veryicon.com/png/o/miscellaneous/250-thick-line-icon-of-website-and-app/6-bell.png" alt="Notifications" class="bell-icon">
+            <button class="account-btn">
+                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
+                    <span class="account-name">@Model.FirstName</span>
+            </button>
+        </div>
+    </div>
+
     <div class="main-content">
         <form id="eventForm" class="event-form">
             <h2>Edit Event</h2>
@@ -123,9 +138,9 @@ async function loadEvent() {
     loadedEvent = event;
 
     document.getElementById('eventName').value = event.eventName || '';
-    const dt = new Date(event.startTime);
-    document.getElementById('eventDate').value = dt.toISOString().slice(0,10);
-    document.getElementById('eventTime').value = dt.toISOString().slice(11,16);
+      const dt = new Date(event.startTime);
+    document.getElementById('eventDate').value = dt.toLocaleDateString('en-CA'); 
+    document.getElementById('eventTime').value = dt.toTimeString().slice(0,5); 
     document.getElementById('eventLocation').value = event.address || '';
     document.getElementById('city').value = event.city || '';
     document.getElementById('region').value = event.region || '';

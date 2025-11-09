@@ -3,8 +3,8 @@ body {
     margin: 0;
     padding: 0;
     background-color: #E9D3D7;
-    display: block; /* remove flex */
-    overflow-y: auto; /* allow full page scrolling */
+    display: block; 
+    overflow-y: auto; 
 }
 
 /* Event form */
@@ -13,7 +13,7 @@ body {
     padding: 40px 30px;
     border-radius: 12px;
     width: 60%;
-    margin: 120px auto 80px auto; /* centers form with top and bottom spacing */
+    margin: 120px auto 80px auto; 
 }
 
 /* Keep everything else the same */
@@ -44,11 +44,11 @@ body {
         padding: 10px;
         border: 1px solid #ddd;
         border-radius: 4px;
-        box-sizing: border-box; /* Ensures padding doesn't increase width */
+        box-sizing: border-box; 
     }
 
     .form-group textarea {
-        resize: vertical; /* Allows vertical resizing of textarea */
+        resize: vertical; 
     }
 
 
@@ -135,4 +135,22 @@ button[type="button"]:hover {
     background-color: white;
     color: #912338;
     transform: translateY(-2px);
+}
+
+/* Highlight empty required fields */
+.form-group input:invalid,
+.form-group select:invalid,
+.form-group textarea:invalid {
+    border: 2px solid #cc0000 !important;
+    background-color: #ffe6e6;
+}
+
+/* Highlight label when field invalid */
+.form-group input:invalid + label,
+.form-group select:invalid + label,
+.form-group textarea:invalid + label {
+    color: #cc0000 !important;
+}
+.form-group.invalid label {
+    color: #cc0000 !important;
 }

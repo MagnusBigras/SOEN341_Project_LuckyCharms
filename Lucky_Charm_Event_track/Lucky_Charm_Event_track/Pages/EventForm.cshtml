@@ -10,9 +10,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"] - Event Form</title>
     <link rel="stylesheet" href="~/css/EventForm.css">
+    <script src="~/js/event-form.js" defer></script>
 </head>
 
 <body>
+
+
+    <!-- Top Navbar -->
+    <div class="top-navbar">
+        <div class="navbar-left">
+            <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
+        </div>
+        <div class="navbar-right">
+            <img src="https://icons.veryicon.com/png/o/miscellaneous/250-thick-line-icon-of-website-and-app/6-bell.png" alt="Notifications" class="bell-icon">
+            <button class="account-btn">
+                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
+                    <span class="account-name">@Model.FirstName</span>
+            </button>
+        </div>
+    </div>
 
     <form id="eventForm" class="event-form">
         <h2>Create New Event</h2>
@@ -172,10 +188,12 @@ document.getElementById('eventForm').addEventListener('submit', async function (
             console.log("Event created:", result);
             window.location.href = "/EventConfirmation";
         } else {
-            const error = await response.text();
-            console.error("Failed to create event:", error);
-            alert("Error creating event.");
+            const error = await response.json().catch(() => ({}));
+            const message = error.message || "Error creating event.";
+            console.error("Failed to create event:", message);
+            alert(message);
         }
+
     } catch (err) {
         console.error("Network error:", err);
         alert("Network error. Please try again.");

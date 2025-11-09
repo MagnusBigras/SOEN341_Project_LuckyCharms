@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fetch all events (basic info)
     async function fetchEvents() {
         try {
-            const res = await fetch('/api/events/all');
+            const res = await fetch('/api/events/my');
             if (!res.ok) throw new Error('Network response was not ok');
             let events = await res.json();
 
@@ -215,7 +215,6 @@ function getEventPriceAndType(event) {
         }
 
         for (const event of events) {
-            // Fetch full event details if prices is null
             const fullEvent = event.prices ? event : await fetchEventDetails(event.id);
             if (!fullEvent) continue; 
 
@@ -225,6 +224,23 @@ function getEventPriceAndType(event) {
             card.classList.add('event-card');
 
             const startDate = new Date(fullEvent.startTime);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); 
+
+            // --- Auto-hide finished events ---
+            if (startDate < today) {
+                fullEvent.isActive = false;
+                try {
+                    await fetch('/api/events/update-visibility', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: fullEvent.id, isActive: false })
+                    });
+                } catch (err) {
+                    console.error('Failed to auto-hide finished event:', err);
+                }
+            }
+
             const formattedDate = startDate.toLocaleDateString([], { year: 'numeric', month: 'long', day: 'numeric' });
             const formattedTime = startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -274,37 +290,37 @@ function getEventPriceAndType(event) {
                 }
             });
 
-        const visibilityBtn = card.querySelector('.visibility-btn');
-        const visibilityText = visibilityBtn.querySelector('.visibility-text');
+            // --- Visibility button ---
+            const visibilityBtn = card.querySelector('.visibility-btn');
+            const visibilityText = visibilityBtn.querySelector('.visibility-text');
 
-        card.style.opacity = fullEvent.isActive ? 1 : 0.5;
-        visibilityBtn.style.backgroundColor = fullEvent.isActive ? '#4dbb4dff' : '#912338';
-
-        visibilityBtn.addEventListener('click', async () => {
-            fullEvent.isActive = !fullEvent.isActive;
-
-            visibilityText.textContent = fullEvent.isActive ? 'Visible' : 'Hidden';
             card.style.opacity = fullEvent.isActive ? 1 : 0.5;
             visibilityBtn.style.backgroundColor = fullEvent.isActive ? '#4dbb4dff' : '#912338';
 
-            try {
-                const res = await fetch('/api/events/update-visibility', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: fullEvent.id, isActive: fullEvent.isActive })
-                });
-                if (!res.ok) throw new Error('Failed to update visibility');
-            } catch (err) {
-                console.error('Error updating visibility:', err);
-
+            visibilityBtn.addEventListener('click', async () => {
                 fullEvent.isActive = !fullEvent.isActive;
+
                 visibilityText.textContent = fullEvent.isActive ? 'Visible' : 'Hidden';
                 card.style.opacity = fullEvent.isActive ? 1 : 0.5;
                 visibilityBtn.style.backgroundColor = fullEvent.isActive ? '#4dbb4dff' : '#912338';
-                alert('Failed to update visibility. Check console for details.');
-            }
-        });
 
+                try {
+                    const res = await fetch('/api/events/update-visibility', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: fullEvent.id, isActive: fullEvent.isActive })
+                    });
+                    if (!res.ok) throw new Error('Failed to update visibility');
+                } catch (err) {
+                    console.error('Error updating visibility:', err);
+
+                    fullEvent.isActive = !fullEvent.isActive;
+                    visibilityText.textContent = fullEvent.isActive ? 'Visible' : 'Hidden';
+                    card.style.opacity = fullEvent.isActive ? 1 : 0.5;
+                    visibilityBtn.style.backgroundColor = fullEvent.isActive ? '#4dbb4dff' : '#912338';
+                    alert('Failed to update visibility. Check console for details.');
+                }
+            });
 
             // --- Analytics button ---
             card.querySelector('.analytics-btn').addEventListener('click', () => {
@@ -316,18 +332,12 @@ function getEventPriceAndType(event) {
                 window.location.href = `/OrganizerTools?eventId=${fullEvent.id}&eventName=${encodeURIComponent(fullEvent.eventName)}`;
             });
 
-            card.querySelector('.tools-btn').addEventListener('click', () => {
-                window.location.href = `/OrganizerTools?eventId=${event.id}&eventName=${encodeURIComponent(event.eventName)}`;
-            });
-
-
             container.appendChild(card);
         }
     }
 
     // Initial fetch from backend
-        fetchEvents();
-    });
+    fetchEvents();
+});
 
-    } // end guard: only initialize site.js once
-
+}

@@ -1,7 +1,8 @@
-﻿@page
+@page
 @model Lucky_Charm_Event_track.Pages.LoginModel
 @{
     ViewData["Title"] = "Login";
+    Layout = null; // render this page without the shared layout so its standalone CSS/HTML centers correctly
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -13,23 +14,29 @@
 </head>
 <body>
     <div class="login-container">
-        <img src="luckycharm-logo.png" alt="Lucky Charm" class="logo">
+    <img src="/Images/Green Classic Four Leaf Clover Geometric Logo.png" alt="Lucky Charm" class="logo" style="width:320px; height:auto;">
 
         <h2>Sign in</h2>
-        <form id="loginForm">
-            <input type="text" placeholder="Username" id="UserNameLogin" name="UserName" required>
-            <input type="password" placeholder="Password" id="PasswordLogin" name="Password" required>
-            <button type="submit">SIGN IN</button>
+<form id="loginForm">
+    <input type="text"  name="Login_UserName" id="Login_UserName" placeholder="Username" required>
+            <input type="password" name="Login_Password" id="Login_Password" placeholder="Password" required>
+    <label style="display:flex; align-items:center; gap:8px; margin-top:10px;">
+        <input type="checkbox" id="isAdmin" />
+        Login as Administrator
+    </label>
 
-            <div class="links">
-                <a href="#" id="showForgot">Forgot password?</a><br>
-                <a href="#" id="showRegister">Create an account</a>
-            </div>
-        </form>
+    <button type="submit">SIGN IN</button>
+
+    <div class="links">
+        <a href="#" id="showForgot">Forgot password?</a><br>
+        <a href="#" id="showRegister">Create an account</a>
+    </div>
+</form>
+
     </div>
 
     <div class="register-container hidden">
-        <img src="luckycharm-logo.png" alt="Lucky Charm" class="logo">
+    <img src="/Images/Green Classic Four Leaf Clover Geometric Logo.png" alt="Lucky Charm" class="logo" style="width:320px; height:auto;">
 
         <h2>Create Account</h2>
         <form id="registerForm">
@@ -50,7 +57,7 @@
 
     <!-- New Forgot Password container -->
     <div class="forgot-container hidden">
-        <img src="luckycharm-logo.png" alt="Lucky Charm" class="logo">
+    <img src="/Images/Green Classic Four Leaf Clover Geometric Logo.png" alt="Lucky Charm" class="logo" style="width:320px; height:auto;">
 
         <h2>Forgot Password</h2>
         <form id="forgotForm">
@@ -63,7 +70,8 @@
         </form>
     </div>
 </body>
-@section Scripts {
-    <script src="/js/login_script.js"></script>
-}
+
+<script src="/js/login_script.js"></script>
+
+
 

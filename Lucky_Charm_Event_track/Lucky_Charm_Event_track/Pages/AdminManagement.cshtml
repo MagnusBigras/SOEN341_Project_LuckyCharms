@@ -10,64 +10,167 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="~/css/Admin_Role&Org.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
 
-    <!-- Sidebar navigation -->
-    <div class="sidebar">
-        <div class="sidebar-menu">
+<div class="page-wrap">
 
-            <a asp-page="/AdminPlatformOversight" class="sidebar-link sidebar-item">
-                <img src="~/Images/Your_paragraph_text-removebg-preview.png" class="sidebar-icon" alt="Platform Oversight">
-                <span class="sidebar-text">Platform Oversight</span>
-            </a>
+  <!-- HEADER -->
+  <header class="page-header">
+    <h1>Admin Portal</h1>
+    <p class="sub">Manage organizations, user roles, and restrictions</p>
+  </header>
 
-            <a asp-page="/AdminAnalytics" class="sidebar-link sidebar-item active">
-                <img src="~/Images/800ce0988c52dc7bded443567346a77035fb8534.png" class="sidebar-icon" alt="Analytics">
-                <span class="sidebar-text">Analytics</span>
-            </a>
+  <!-- Sidebar navigation -->
+  <div class="sidebar">
+      <div class="sidebar-menu">
+          <a asp-page="/AdminPlatformOversight" class="sidebar-link sidebar-item">
+              <img src="~/Images/Your_paragraph_text-removebg-preview.png" class="sidebar-icon" alt="Platform Oversight">
+              <span class="sidebar-text">Platform Oversight</span>
+          </a>
 
-            <a asp-page="/AdminManagement" class="sidebar-link sidebar-item">
-                <img src="~/Images/Untitled_design__2_-removebg-preview.png" class="sidebar-icon" alt="Manage Organizations">
-                <span class="sidebar-text">Manage Organizations</span>
-            </a>
+          <a asp-page="/AdminAnalytics" class="sidebar-link sidebar-item active">
+              <img src="~/Images/800ce0988c52dc7bded443567346a77035fb8534.png" class="sidebar-icon" alt="Analytics">
+              <span class="sidebar-text">Analytics</span>
+          </a>
 
-            <div class="sidebar-bar"></div>
+          <a asp-page="/AdminManagement" class="sidebar-link sidebar-item">
+              <img src="~/Images/Untitled_design__2_-removebg-preview.png" class="sidebar-icon" alt="Manage Organizations">
+              <span class="sidebar-text">Manage Organizations</span>
+          </a>
 
-            <div class="sidebar-extra">
-                <div class="sidebar-item">
-                    <img src="~/Images/7965593328e6cb27ffb10553f680443da25fad1a.png" class="sidebar-icon" alt="Organization Settings">
-                    <span class="sidebar-text">Organization Settings</span>
-                </div>
-                <div class="sidebar-item">
-                    <img src="~/Images/af7e2a95556abcf8c3cc0c41fedea581cd0f43af.png" class="sidebar-icon" alt="Sign out">
-                    <span class="sidebar-text">Sign out</span>
-                </div>
-            </div>
+          <div class="sidebar-bar"></div>
 
-        </div>
+          <div class="sidebar-extra">
+              <div class="sidebar-item">
+                  <img src="~/Images/7965593328e6cb27ffb10553f680443da25fad1a.png" class="sidebar-icon" alt="Organization Settings">
+                  <span class="sidebar-text">Organization Settings</span>
+              </div>
+              <div class="sidebar-item">
+                  <img src="~/Images/af7e2a95556abcf8c3cc0c41fedea581cd0f43af.png" class="sidebar-icon" alt="Sign out">
+                  <span class="sidebar-text">Sign out</span>
+              </div>
+          </div>
+      </div>
+  </div>
+  
+  <!-- Top navigation bar -->
+  <div class="top-navbar">
+      <div class="navbar-left">
+          <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
+      </div>
+      <div class="navbar-right">
+          <button class="account-btn">
+              <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
+              <span class="account-name">@Model.FirstName</span>
+          </button>
+      </div>
+  </div>
+
+  <!-- MANAGE ORGANIZATIONS -->
+  <section class="card">
+    <div class="card-header">
+      <h2>Manage Organizations</h2>
+      <div class="add-org">
+        <input id="orgNameInput" type="text" placeholder="New organization name" />
+        <button id="addOrgBtn" class="btn">Add Organization</button>
+      </div>
     </div>
 
-    <!-- Top navigation bar -->
-    <div class="top-navbar">
-        <div class="navbar-left">
-            <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
-        </div>
-        <div class="navbar-right">
-            <a class="create-btn" asp-page="/OrganizationForm"> + Create </a>
-            <button class="account-btn">
-                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
-                <span class="account-name">Admin</span>
-            </button>
-        </div>
+    <div class="table-wrap">
+      <table class="table" id="orgTable">
+        <thead>
+          <tr>
+            <th style="width:40%">Name</th>
+            <th style="width:20%">Users</th>
+            <th style="width:20%">Status</th>
+            <th style="width:20%">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Filled by JS -->
+        </tbody>
+      </table>
     </div>
+    <div id="orgErrors" class="error hidden"></div>
+  </section>
 
-    <!-- Main content -->
-    <div class="main-content">
-
-
+  <!-- USERS MANAGEMENT -->
+  <section class="grid two">
+    <!-- USERS ROLES -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Users Management — Roles</h2>
       </div>
 
+      <div class="form-row">
+        <input id="roleEmail" type="email" placeholder="user@example.com" />
+        <select id="roleSelect">
+          <option>User</option>
+          <option>Organizator</option>
+          <option>Admin</option>
+        </select>
+        <button id="assignRoleBtn" class="btn">Assign Role</button>
+      </div>
+
+      <div id="roleErrors" class="error hidden"></div>
+
+      <div class="table-wrap">
+        <table class="table" id="rolesTable">
+          <thead>
+            <tr>
+              <th style="width:60%">Email</th>
+              <th style="width:40%">Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Filled by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- USER RESTRICTIONS -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Users Management — Restrictions</h2>
+      </div>
+
+      <div class="form-row wrap">
+        <input id="restrEmail" type="email" placeholder="user@example.com" />
+        <select id="suspendDuration">
+          <option value="1d">Suspend 1 day</option>
+          <option value="7d">Suspend 1 week</option>
+          <option value="30d">Suspend 1 month</option>
+          <option value="perm">Suspend permanently</option>
+        </select>
+        <button id="banBtn" class="btn danger">Ban</button>
+        <button id="unbanBtn" class="btn">Unban</button>
+        <button id="suspendBtn" class="btn warn">Suspend</button>
+      </div>
+
+      <div id="restrErrors" class="error hidden"></div>
+
+      <div class="table-wrap">
+        <table class="table" id="restrictionsTable">
+          <thead>
+            <tr>
+              <th style="width:50%">Email</th>
+              <th style="width:50%">Restriction</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Filled by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="~/js/Admin_Role&Org.js"></script>
 </body>
 </html>

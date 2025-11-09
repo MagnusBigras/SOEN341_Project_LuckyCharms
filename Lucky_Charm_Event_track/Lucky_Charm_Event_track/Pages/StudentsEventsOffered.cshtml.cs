@@ -5,12 +5,16 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 
 namespace Lucky_Charm_Event_track.Pages
 {
     public class StudentsEventsOfferedModel : PageModel
     {
         private readonly WebAppDBContext _context;
+
+        public string FirstName { get; set; } = "Guest"; 
+        public int UserId { get; set; }
 
         public StudentsEventsOfferedModel(WebAppDBContext context)
         {
@@ -19,30 +23,25 @@ namespace Lucky_Charm_Event_track.Pages
 
         [BindProperty(SupportsGet = true)]
         public string SearchQuery { get; set; }
-
         [BindProperty(SupportsGet = true)]
         public string SortByDate { get; set; }
-
         [BindProperty(SupportsGet = true)]
         public string SortByPrice { get; set; }
-
         [BindProperty(SupportsGet = true)]
         public string SortByPopularity { get; set; }
-
         [BindProperty(SupportsGet = true)]
         public string Category { get; set; }
-
         [BindProperty(SupportsGet = true)]
         public string Organization { get; set; }
-
         [BindProperty(SupportsGet = true)]
         public string Location { get; set; }
-
         [BindProperty(SupportsGet = true)]
         public double? MinPrice { get; set; }
-
         [BindProperty(SupportsGet = true)]
         public double? MaxPrice { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public bool ShowInterestedOnly { get; set; }
 
         public List<string> AllOrganizations { get; set; } = new();
         public List<string> AllLocations { get; set; } = new();
@@ -50,27 +49,26 @@ namespace Lucky_Charm_Event_track.Pages
 
         public void OnGet()
         {
-            // Sample events
-            var AllEvents = new List<EventItem> {
-                new EventItem { Id = 7, Name = "Tech Expo 2025", Date = "2025-10-20", Location = "Main Hall", Price = 10, Description = "Tech showcase.", startTime = "09:00", endTime = "17:00", TicketsLeft = 50, Category = "workshop", Organization = "TechOrg", Popularity = 80, isActive = true },
-                new EventItem { Id = 7,  Name = "Career Fair", Date = "2025-10-22", Location = "Conference Room A", Price = 0, Description = "Meet top employers.", startTime = "10:00", endTime = "16:00", TicketsLeft = 100, Category = "conference", Organization = "CareerCenter", Popularity = 120, isActive = true },
-                new EventItem { Id = 7, Name = "AI Workshop", Date = "2025-10-25", Location = "Lab 3", Price = 25, Description = "Learn AI hands-on.", startTime = "13:00", endTime = "16:00", TicketsLeft = 20, Category = "workshop", Organization = "AI Club", Popularity = 60, isActive = true },
-                new EventItem { Id = 7, Name = "Music Night", Date = "2025-11-01", Location = "Auditorium", Price = 15, Description = "Live performances.", startTime = "19:00", endTime = "22:00", TicketsLeft = 200, Category = "social", Organization = "MusicSociety", Popularity = 200, isActive = true }
-            };
+            
+            // Get logged-in user ID from claims
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!string.IsNullOrEmpty(userIdClaim))
+            {
+                UserId = int.Parse(userIdClaim);
+                var user = _context.UserAccounts.FirstOrDefault(u => u.Id == UserId);
+                if (user != null)
+                {
+                    FirstName = user.FirstName;
+                }
+            }
 
-            // Get all unique organizations and locations
-            AllOrganizations = AllEvents.Select(e => e.Organization).Distinct().ToList();
-            AllLocations = AllEvents.Select(e => e.Location).Distinct().ToList();
-
-
-            // Apply search
             // Fetch all active events with related data
             var events = _context.Events
                 .Include(e => e.Prices)
                 .Include(e => e.Tickets)
                 .Include(e => e.Organizer)
                 .Include(e => e.Metric)
-                .Where(e => e.isActive)
+                .Where(e => e.IsActive)
                 .AsEnumerable()
                 .Select(e =>
                 {
@@ -93,11 +91,12 @@ namespace Lucky_Charm_Event_track.Pages
                             ? $"{e.Organizer.Account.FirstName} {e.Organizer.Account.LastName}"
                             : "Unknown",
                         Popularity = e.Tickets?.Count ?? 0,
-                        isActive = e.isActive
+                        isActive = e.IsActive,
+                        IsInterested = e.IsInterested 
                     };
                 }).ToList();
 
-            // Populate filters
+            // Get all unique organizations and locations
             AllOrganizations = events.Select(e => e.Organization).Distinct().ToList();
             AllLocations = events.Select(e => e.Location).Distinct().ToList();
 
@@ -132,19 +131,29 @@ namespace Lucky_Charm_Event_track.Pages
             if (!string.IsNullOrEmpty(SortByPopularity))
                 filtered = SortByPopularity == "asc" ? filtered.OrderBy(e => e.Popularity) : filtered.OrderByDescending(e => e.Popularity);
 
+
+            if (ShowInterestedOnly && UserId != 0)
+            {
+                filtered = filtered.Where(e => e.IsInterested);
+            }
+
             FilteredEvents = filtered.ToList();
+
+            // Check if sold-out events now have tickets ---
+            CheckNewTickets(events);
         }
 
         // Purchase free ticket
         public IActionResult OnPostPurchaseTicket(int eventId)
         {
-            int userId = 1; // mock user
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            int userId = !string.IsNullOrEmpty(userIdClaim) ? int.Parse(userIdClaim) : 0;
 
             var ticket = _context.Tickets.FirstOrDefault(t => t.EventId == eventId && t.UserAccountId == null);
 
-            if (ticket == null)
+            if (ticket == null || userId == 0)
             {
-                TempData["ErrorMessage"] = "No tickets available for this event.";
+                TempData["ErrorMessage"] = "No tickets available or user not logged in.";
                 return RedirectToPage();
             }
 
@@ -162,13 +171,14 @@ namespace Lucky_Charm_Event_track.Pages
         // Mock payment for paid tickets
         public IActionResult OnPostMockPay(int eventId)
         {
-            int userId = 1; // mock user
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            int userId = !string.IsNullOrEmpty(userIdClaim) ? int.Parse(userIdClaim) : 0;
 
             var ticket = _context.Tickets.FirstOrDefault(t => t.EventId == eventId && t.UserAccountId == null);
 
-            if (ticket == null)
+            if (ticket == null || userId == 0)
             {
-                TempData["ErrorMessage"] = "No tickets available for this event.";
+                TempData["ErrorMessage"] = "No tickets available or user not logged in.";
                 return RedirectToPage();
             }
 
@@ -179,7 +189,37 @@ namespace Lucky_Charm_Event_track.Pages
 
             UpdateMetric(eventId, ticket.Price);
 
-            TempData["SuccessMessage"] = "Mock payment successful!";
+            TempData["SuccessMessage"] = "Ticket purchased successfully!";
+            return RedirectToPage();
+        }
+
+
+        public IActionResult OnPostToggleInterest(int eventId)
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdClaim))
+            {
+                TempData["ErrorMessage"] = "You must be logged in to mark interest.";
+                return RedirectToPage();
+            }
+
+            var userId = int.Parse(userIdClaim);
+            var evnt = _context.Events.FirstOrDefault(e => e.Id == eventId);
+
+            if (evnt == null)
+            {
+                TempData["ErrorMessage"] = "Event not found.";
+                return RedirectToPage();
+            }
+
+            // Toggle interest 
+            evnt.IsInterested = !evnt.IsInterested;
+            _context.SaveChanges();
+
+            TempData["SuccessMessage"] = evnt.IsInterested
+                ? "Event marked as interested!"
+                : "Event removed from interested list.";
+
             return RedirectToPage();
         }
 
@@ -208,13 +248,33 @@ namespace Lucky_Charm_Event_track.Pages
             metric.TotalRevenue += ticketPrice;
             metric.NewAttendees += 1;
 
-            // Dynamically update remaining and used capacity
             int used = eventEntity?.Tickets.Count(t => t.UserAccountId != null) ?? 0;
             metric.UsedCapacity = used;
             metric.LastRemaining = (eventEntity?.Capacity ?? 0) - used;
 
             _context.SaveChanges();
         }
+
+        private void CheckNewTickets(List<EventItem> events)
+        {
+            foreach (var e in events)
+            {
+                if (e.TicketsLeft > 0 && e.RemainingCapacity > 0)
+                {
+                    var metric = _context.Metrics.FirstOrDefault(m => m.EventId == e.Id);
+                    if (metric != null && metric.LastRemaining == 0)
+                    {
+                        TempData["SuccessMessage"] = $"New tickets are now available for '{e.Name}'!";
+
+                        // Update metric to prevent showing again
+                        metric.LastRemaining = e.RemainingCapacity;
+                        _context.SaveChanges();
+                        break;
+                    }
+                }
+            }
+        }
+
 
         public class EventItem
         {
@@ -232,6 +292,8 @@ namespace Lucky_Charm_Event_track.Pages
             public string Organization { get; set; }
             public int Popularity { get; set; }
             public bool isActive { get; set; }
+
+            public bool IsInterested { get; set; } 
         }
     }
 }

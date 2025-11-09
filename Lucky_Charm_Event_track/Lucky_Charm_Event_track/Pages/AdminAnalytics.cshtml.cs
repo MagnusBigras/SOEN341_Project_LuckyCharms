@@ -1,12 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Lucky_Charm_Event_track.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 
 namespace Lucky_Charm_Event_track.Pages
 {
     public class AdminEventAnalyticsModel : PageModel
     {
+        private readonly WebAppDBContext _dbContext;
+        public AdminEventAnalyticsModel(WebAppDBContext dbContext) => _dbContext = dbContext;
+
+        public string FirstName { get; set; } = "Admin";
+
         [BindProperty(SupportsGet = true)]
         public DateTime SelectedMonth { get; set; } = DateTime.Today;
 
@@ -22,88 +30,70 @@ namespace Lucky_Charm_Event_track.Pages
         public int LastMonthTicketsRedeemed { get; set; }
         public string TicketsRedeemedPercentChange { get; set; }
 
-        // Tickets per Category
-        public List<string> Categories { get; set; }
-        public List<int> TicketsPerCategory { get; set; }
+        public List<string> Categories { get; set; } = new();
+        public List<int> TicketsPerCategory { get; set; } = new();
+        public List<int> AttendancePerMonth { get; set; } = new();
 
-        // Attendance Trend per month
-        public List<int> AttendancePerMonth { get; set; }
-
-
-        // Hardcoded monthly data
-        private readonly Dictionary<string, (int Events, int TicketsIssued, int TicketsRedeemed)> MonthlyData
-            = new()
-        {
-            { "2025-08", (10, 250, 230) },
-            { "2025-09", (12, 300, 280) },
-            { "2025-10", (15, 340, 310) }
-        };
-
-        // Hardcoded category data per month
-        private readonly Dictionary<string, (List<string> Categories, List<int> Tickets)> CategoryData
-            = new()
-        {
-            { "2025-08", (new List<string>{ "Workshop", "Seminar", "Music", "Art" }, new List<int>{ 55, 75, 40, 30 }) },
-            { "2025-09", (new List<string>{ "Workshop", "Seminar", "Sports", "Music", "Tech" }, new List<int>{ 65, 90, 50, 60, 25 }) },
-            { "2025-10", (new List<string>{ "Workshop", "Seminar", "Sports", "Music" }, new List<int>{ 80, 120, 70, 70 }) },
-            { "2025-11", (new List<string>{ "Seminar", "Music", "Tech", "Art" }, new List<int>{ 90, 110, 60, 40 }) },
-        };
-        
-        // Hardcoded attendance trend (12 data points per month)
-        private readonly Dictionary<string, List<int>> AttendanceData
-            = new()
-        {
-            { "2025-08", new List<int>{ 50, 60, 55, 70, 65, 80, 75, 60, 90, 85, 70, 100 } },
-            { "2025-09", new List<int>{ 55, 65, 60, 75, 70, 85, 80, 65, 95, 90, 75, 105 } },
-            { "2025-10", new List<int>{ 60, 70, 65, 80, 75, 90, 85, 70, 100, 95, 80, 110 } }
-
-        };
+        private const int MonthsToShow = 12;
 
         public void OnGet()
         {
-            string currentKey = SelectedMonth.ToString("yyyy-MM");
-            string previousKey = SelectedMonth.AddMonths(-1).ToString("yyyy-MM");
+            // --- Load logged-in admin first name ---
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!string.IsNullOrEmpty(userIdClaim))
+            {
+                int userId = int.Parse(userIdClaim);
+                var user = _dbContext.UserAccounts.FirstOrDefault(u => u.Id == userId);
+                if (user != null) FirstName = user.FirstName;
+            }
 
-            // Current & previous month metrics
-            if (!MonthlyData.TryGetValue(currentKey, out var current)) 
-                current = (0, 0, 0);
+            // --- Metrics for selected and previous month ---
+            var startCurrentMonth = new DateTime(SelectedMonth.Year, SelectedMonth.Month, 1);
+            var endCurrentMonth = startCurrentMonth.AddMonths(1);
+            var startPreviousMonth = startCurrentMonth.AddMonths(-1);
+            var endPreviousMonth = startCurrentMonth;
 
+            var currentMonthEvents = _dbContext.Events
+                .Where(e => e.StartTime >= startCurrentMonth && e.StartTime < endCurrentMonth)
+                .ToList();
 
-            if (!MonthlyData.TryGetValue(previousKey, out var previous))
-                previous = (0, 0, 0);
+            var previousMonthEvents = _dbContext.Events
+                .Where(e => e.StartTime >= startPreviousMonth && e.StartTime < endPreviousMonth)
+                .ToList();
 
-            TotalEvents = current.Events;
-            TotalTicketsIssued = current.TicketsIssued;
-            TotalTicketsRedeemed = current.TicketsRedeemed;
+            TotalEvents = currentMonthEvents.Count;
+            LastMonthEvents = previousMonthEvents.Count;
 
+            TotalTicketsIssued = _dbContext.Tickets.Count(t => t.Event.StartTime >= startCurrentMonth && t.Event.StartTime < endCurrentMonth);
+            LastMonthTicketsIssued = _dbContext.Tickets.Count(t => t.Event.StartTime >= startPreviousMonth && t.Event.StartTime < endPreviousMonth);
 
-            LastMonthEvents = previous.Events;
-            LastMonthTicketsIssued = previous.TicketsIssued;
-            LastMonthTicketsRedeemed = previous.TicketsRedeemed;
+            TotalTicketsRedeemed = _dbContext.Tickets.Count(t => t.CheckedIn && t.Event.StartTime >= startCurrentMonth && t.Event.StartTime < endCurrentMonth);
+            LastMonthTicketsRedeemed = _dbContext.Tickets.Count(t => t.CheckedIn && t.Event.StartTime >= startPreviousMonth && t.Event.StartTime < endPreviousMonth);
 
-            EventsPercentChange = GetPercentChange(previous.Events, current.Events);
-            TicketsIssuedPercentChange = GetPercentChange(previous.TicketsIssued, current.TicketsIssued);
-            TicketsRedeemedPercentChange = GetPercentChange(previous.TicketsRedeemed, current.TicketsRedeemed);
+            EventsPercentChange = GetPercentChange(LastMonthEvents, TotalEvents);
+            TicketsIssuedPercentChange = GetPercentChange(LastMonthTicketsIssued, TotalTicketsIssued);
+            TicketsRedeemedPercentChange = GetPercentChange(LastMonthTicketsRedeemed, TotalTicketsRedeemed);
 
+            // --- Categories & tickets per category ---
+            Categories = currentMonthEvents.Select(e => e.Category).Distinct().ToList();
+            TicketsPerCategory = Categories.Select(cat => 
+                _dbContext.Tickets.Count(t => t.Event.Category == cat && t.Event.StartTime >= startCurrentMonth && t.Event.StartTime < endCurrentMonth)
+            ).ToList();
 
-            // Tickets per category
-            if (!CategoryData.TryGetValue(currentKey, out var category))
-                category = (new List<string>(), new List<int>());
-
-            Categories = category.Categories;
-            TicketsPerCategory = category.Tickets;
-
-
-            // Attendance trend
-            if (!AttendanceData.TryGetValue(currentKey, out var attendance))
-                attendance = new List<int>(new int[12]);
-
-            AttendancePerMonth = attendance;
+            // --- Attendance per month (Jan → Dec of selected year) ---
+            AttendancePerMonth.Clear();
+            for (int m = 1; m <= 12; m++)
+            {
+                var monthStart = new DateTime(SelectedMonth.Year, m, 1);
+                var monthEnd = monthStart.AddMonths(1);
+                int attended = _dbContext.Tickets.Count(t => t.CheckedIn && t.Event.StartTime >= monthStart && t.Event.StartTime < monthEnd);
+                AttendancePerMonth.Add(attended);
+            }
         }
 
         private string GetPercentChange(int previous, int current)
         {
-            if (previous == 0) return "N/A";
+            if (previous == 0) return current == 0 ? "N/A" : "▲ 100% (new data)";
             double change = ((double)(current - previous) / previous) * 100;
             string arrow = change >= 0 ? "▲" : "▼";
             return $"{arrow} {Math.Abs(change):0.#}% from last month";

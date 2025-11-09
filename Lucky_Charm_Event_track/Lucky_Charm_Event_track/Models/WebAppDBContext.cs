@@ -13,6 +13,12 @@ namespace Lucky_Charm_Event_track.Models
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<UserAccount> UserAccounts { get; set; }
         public DbSet<Metric> Metrics { get; set; }
+        public DbSet<PaymentDetail> PaymentDetails { get; set; }
+        public DbSet<Organization> Organizations { get; set; }
+
+        public DbSet<Reminder> Reminders { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<UserSpecificReminder> UserSpecificReminders { get; set; }
         public string DbPath { get; set; }
 
         public WebAppDBContext(DbContextOptions<WebAppDBContext> options): base(options)
@@ -42,6 +48,12 @@ namespace Lucky_Charm_Event_track.Models
                     .HasMany(eo => eo.Events)
                     .WithOne(e => e.Organizer)
                     .HasForeignKey(e => e.EventOrganizerId);
+                    
+                // EventOrganizer → Organizations (One-to-Many)
+                modelBuilder.Entity<EventOrganizer>()
+                    .HasMany(eo => eo.Organizations)
+                    .WithOne(o => o.Organizer)
+                    .HasForeignKey(o => o.EventOrganizerId);
 
                 // Event → Tickets (One-to-Many)
                 modelBuilder.Entity<Event>()
@@ -68,6 +80,30 @@ namespace Lucky_Charm_Event_track.Models
             modelBuilder.Entity<Metric>()
             .Ignore(m => m.RevenueByMonth)
             .Ignore(m => m.AttendanceByMonth);
+
+           
+            modelBuilder.Entity<PaymentDetail>()
+                .HasOne(eo => eo.Account)
+                .WithOne(u => u.PaymentDetail)
+                .HasForeignKey<PaymentDetail>(eo => eo.UserID);
+
+           modelBuilder.Entity<Event>()
+                .HasMany(e => e.Reminders)
+                .WithOne(r => r.Event)
+                .HasForeignKey(r => r.EventID);
+
+            modelBuilder.Entity<UserAccount>()
+                .HasMany(e => e.UserSpecificReminders)
+                .WithOne(r => r.UserAccount)
+                .HasForeignKey(r => r.UserAccountId);
+            modelBuilder.Entity<UserAccount>()
+                  .HasMany(e => e.SubmittedReviews)
+                  .WithOne(r => r.UserAccount)
+                  .HasForeignKey(r => r.UserAccountID);
+            modelBuilder.Entity<Event>()
+                .HasMany(e => e.Reviews)
+                .WithOne(r => r.Event)
+                .HasForeignKey (r => r.EventID);
 
         }
     }

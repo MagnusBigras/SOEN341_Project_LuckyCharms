@@ -11,15 +11,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/css/site.css">
-        <link rel="stylesheet" href="~/css/adminportal.css">
-
+    <link rel="stylesheet" href="~/css/adminportal.css">
 </head>
 <body>
 
     <!-- Sidebar navigation -->
     <div class="sidebar">
         <div class="sidebar-menu">
-
             <a asp-page="/AdminPlatformOversight" class="sidebar-link sidebar-item">
                 <img src="~/Images/Your_paragraph_text-removebg-preview.png" class="sidebar-icon" alt="Platform Oversight">
                 <span class="sidebar-text">Platform Oversight</span>
@@ -47,7 +45,6 @@
                     <span class="sidebar-text">Sign out</span>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -57,10 +54,9 @@
             <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
         </div>
         <div class="navbar-right">
-            <a class="create-btn" asp-page="/OrganizationForm"> + Create </a>
             <button class="account-btn">
                 <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
-                <span class="account-name">Admin</span>
+                <span class="account-name">@Model.FirstName</span>
             </button>
         </div>
     </div>
@@ -95,7 +91,6 @@
             </div>
          </div>
 
-
         <!-- Charts -->
         <div class="analytics-container bottom-row">
             <div class="analytics-card large">
@@ -116,22 +111,20 @@
 <script>
     // --- Attendance Trend Chart ---
     const ctxAttendance = document.getElementById('attendanceTrendChart').getContext('2d');
+    const monthLabels = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     const attendanceChart = new Chart(ctxAttendance, {
         type: 'line',
         data: {
-            labels: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+            labels: monthLabels,
             datasets: [{
-                
                 label: "Attendance",
                 data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.AttendancePerMonth)),
                 borderColor: "#912338",
                 backgroundColor: "rgba(145, 35, 56, 0.2)",
-                tension: 0.4, // makes the line curved
+                tension: 0.4,
                 fill: true
             }]
         },
-
-
         options: {
             responsive: true,
             plugins: { legend: { display: false } }
@@ -143,13 +136,11 @@
     const categoryChart = new Chart(ctxCategory, {
         type: 'bar',
         data: {
-
             labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Categories)),
             datasets: [{
                 label: "Tickets",
                 data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.TicketsPerCategory)),
                 backgroundColor: "#912338"
-
             }]
         },
         options: {
@@ -159,6 +150,4 @@
         }
     });
 </script>
-
-
 </html>

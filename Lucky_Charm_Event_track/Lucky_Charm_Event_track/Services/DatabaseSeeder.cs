@@ -11,8 +11,11 @@ namespace Lucky_Charm_Event_track.Services
         public static void Seed(WebAppDBContext db)
         {
             // Only seed if no events exist
-            if (db.Events.Any()) return;
-
+            if (db.UserAccounts.Any(u => u.UserName == "seeduser"))
+            {
+                Console.WriteLine("[DatabaseSeeder] Seed data already present (seeduser). Skipping.");
+                return;
+            }
             var rnd = new Random();
 
             var user = new UserAccount
@@ -28,7 +31,9 @@ namespace Lucky_Charm_Event_track.Services
                 AccountCreationDate = DateTime.Now.AddYears(-1),
                 AccountType = AccountTypes.EventOrganizer,
                 LastLogin = DateTime.Now,
-                IsActive = true
+                IsActive = true,
+                SuspensionEndUtc = null,
+                IsBanned = false
             };
             db.UserAccounts.Add(user);
             db.SaveChanges();
@@ -49,7 +54,7 @@ namespace Lucky_Charm_Event_track.Services
                 City = "Montreal",
                 Capacity = 100,
                 EventOrganizerId = organizer.Id,
-                isActive = true,
+                IsActive = true,
                 StartTime = DateTime.Now.AddDays(17),
                 Address = "123 Main St",
                 Region = "QC",
@@ -69,7 +74,7 @@ namespace Lucky_Charm_Event_track.Services
                 City = "quebec",
                 Capacity = 1600,
                 EventOrganizerId = organizer.Id,
-                isActive = true,
+                IsActive = true,
                 StartTime = DateTime.Now.AddDays(-29),
                 Address = "blv st laurier",
                 Region = "maisonneuve",
@@ -88,7 +93,7 @@ namespace Lucky_Charm_Event_track.Services
                 City = "st jean",
                 Capacity = 110,
                 EventOrganizerId = organizer.Id,
-                isActive = true,
+                IsActive = true,
                 StartTime = DateTime.Now.AddDays(-10),
                 Address = "rue des fleurs",
                 Region = "chicoutimi",

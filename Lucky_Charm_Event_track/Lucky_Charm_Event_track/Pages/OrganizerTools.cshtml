@@ -24,8 +24,10 @@
                 </a>
             </div>
             <div class="sidebar-item">
+                <a asp-page="/OrganizerFeedback" class="sidebar-link">
                 <img src="~/Images/2508862806f0dced98f9ab1e25e74ce54c4711b2.png" class="sidebar-icon" alt="Feedback">
                 <span class="sidebar-text">Feedback</span>
+                </a>
             </div>
             <div class="sidebar-item" id="sidebarCreate">
                 <a asp-page="/EventForm" class="sidebar-link">
@@ -44,16 +46,9 @@
                     <span class="sidebar-text">Sign out</span>
                 </div>
             </div>
-            <div class="sidebar-contact">
-                <div class="sidebar-item">
-                    <img src="~/Images/Untitled%20design.png" class="sidebar-icon" alt="Contact">
-                    <span class="sidebar-text">Contact</span>
-                </div>
-            </div>
         </div>
     </div>
-
-    <!-- Top navbar -->
+    <!-- Top navigation bar -->
     <div class="top-navbar">
         <div class="navbar-left">
             <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
@@ -62,10 +57,12 @@
             <a class="create-btn" asp-page="/EventForm"> + Create </a>
             <button class="account-btn">
                 <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
-                <span class="account-name">Alex</span>
+                <span class="account-name">@Model.FirstName</span>
+
             </button>
         </div>
     </div>
+
 
     <!-- Main content -->
     <div class="main-content">
@@ -93,43 +90,42 @@
     </div>
 
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-   <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const qrReaderDiv = document.getElementById("my-qr-reader");
-    const resultDiv = document.getElementById("scan-result");
-    const startBtn = document.getElementById("startScannerBtn");
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const qrReaderDiv = document.getElementById("my-qr-reader");
+        const resultDiv = document.getElementById("scan-result");
+        const startBtn = document.getElementById("startScannerBtn");
 
-    async function validateQRCodeText(decodedText) {
-        resultDiv.textContent = `Ticket Scanned: ${decodedText} ... Validating...`;
-        try {
-            const res = await fetch("/api/tools/validate-payload", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ payload: decodedText })
-            });
-            const data = await res.json();
-            if (data.success) {
-                resultDiv.textContent = `✅ Ticket Validated: ${decodedText}`;
-            } else {
-                resultDiv.textContent = `❌ ${data.error}`;
+        async function validateQRCodeText(decodedText) {
+            resultDiv.textContent = `Ticket Scanned: ${decodedText} ... Validating...`;
+            try {
+                const res = await fetch("/api/tools/validate-payload", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ payload: decodedText, eventId: @Model.EventId })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    resultDiv.textContent = `✅ Ticket Validated: ${decodedText}`;
+                } else {
+                    resultDiv.textContent = `❌ ${data.error}`;
+                }
+            } catch (err) {
+                console.error(err);
+                resultDiv.textContent = `⚠ Error validating ticket: ${decodedText}`;
             }
-        } catch (err) {
-            console.error(err);
-            resultDiv.textContent = `⚠ Error validating ticket: ${decodedText}`;
         }
-    }
 
-    startBtn.addEventListener("click", function () {
-        if (qrReaderDiv.style.display === "block") return;
-        qrReaderDiv.style.display = "block";
+        startBtn.addEventListener("click", function () {
+            if (qrReaderDiv.style.display === "block") return;
+            qrReaderDiv.style.display = "block";
 
-        const htmlScanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbox: 250 });
-        htmlScanner.render(decodedText => {
-            validateQRCodeText(decodedText);
+            const htmlScanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbox: 250 });
+            htmlScanner.render(decodedText => {
+                validateQRCodeText(decodedText);
+            });
         });
     });
-});
-</script>
-
+    </script>
 </body>
 </html>

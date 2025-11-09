@@ -23,12 +23,15 @@ namespace Lucky_Charm_Event_track.Models
         public EventOrganizer Organizer { get; set; }
         public TicketTypes TicketType { get; set; }
         public List<PriceTier> Prices { get; set; }
-        public bool isActive { get; set; }
+        public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set;}
         public List<Ticket> Tickets { get; set; }
         public Metric Metric { get; set; }
-        
+        public List<Reminder> Reminders { get; set; }
+        public List<Review> Reviews { get; set; }
+        public bool IsInterested { get; set; } = false;
+
 
     }
 }

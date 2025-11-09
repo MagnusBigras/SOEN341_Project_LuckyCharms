@@ -1,4 +1,4 @@
-﻿const loginContainer = document.querySelector(".login-container");
+const loginContainer = document.querySelector(".login-container");
 const registerContainer = document.querySelector(".register-container");
 const forgotContainer = document.querySelector(".forgot-container");
 
@@ -67,7 +67,6 @@ document.getElementById('registerForm').addEventListener('submit', async functio
             const result = await response.json();
             console.log("Account created:", result);
             alert("Account created successfully!");
-            // Optionally redirect or reset form
         } else {
             const error = await response.text();
             console.error("Failed to create account:", error);
@@ -80,15 +79,13 @@ document.getElementById('registerForm').addEventListener('submit', async functio
 });
 document.getElementById('loginForm').addEventListener('submit', async function (e) {
     e.preventDefault();
-    console.log("✅ Login form intercepted");
     const form = e.target;
     const payload = {
-        UserName: form.querySelector('#UserNameLogin')?.value || '',
-        Password: form.querySelector('#PasswordLogin')?.value || ''
-    };
-
+        UserName: form.querySelector('#Login_UserName')?.value || '',
+        Password: form.querySelector('#Login_Password')?.value || '',
+        IsAdmin: form.querySelector('#isAdmin')?.checked || false
+    }
     console.log("Sending payload:", payload);
-
     try {
         const response = await fetch('/api/accounts/login', {
             method: 'POST',
@@ -98,18 +95,16 @@ document.getElementById('loginForm').addEventListener('submit', async function (
 
         if (response.ok) {
             const result = await response.json();
-            console.log("✅ Login successful:", result);
+            console.log("Login successful");
             alert("Login successful!");
-            window.location.href = "/Events"; // Redirect to Events.cshtml
+            window.location.href = result.redirectUrl;
         } else {
             const error = await response.text();
-            console.error("❌ Login failed:", error);
-            alert("Error logging in: " + error);
+            console.error("Failed to Login:", error);
+            alert("Error Logging in: " + error);
         }
     } catch (error) {
-        console.error("❌ Network or server error:", error);
+        console.error("Network or server error:", error);
         alert("Something went wrong. Please try again.");
     }
 });
-
-    
