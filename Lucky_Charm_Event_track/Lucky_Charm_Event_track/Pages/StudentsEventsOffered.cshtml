@@ -371,7 +371,7 @@
         
         <div class="modal-header" style="font-size:18px; font-weight:bold; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
             <span>Mock Payment</span>
-            <span id="pointsBalance" style="font-size:0.9rem; color:#555;">Points: 0</span>
+                <span id="pointsBalance" style="font-size:0.9rem; color:#555;">Points: @Model.PointBalance</span>
         </div>
 
         <p id="eventName"></p>
@@ -399,7 +399,7 @@
                 Or you can pay with points! $10 = 1 point.
             </p>
 
-            <button type="button" id="pointsBtn" style="width:100%; background-color:#28a745; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:600; cursor:pointer; margin-bottom:12px;">
+                <button type="submit" formaction="?handler=MockPointPay" id="pointsBtn" style="width:100%; background-color:#28a745; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:600; cursor:pointer; margin-bottom:12px;">
                 Pay with Points
             </button>
             <label>Save My Payment Details for Easy Checkout Next Time </label>
@@ -508,7 +508,6 @@ function openPaymentModal(eventName, amount, eventId, eventPointsCost = 0, userP
     document.getElementById("eventName").textContent = "Paying for: " + eventName;
     document.getElementById("amountInput").value = amount;
     document.getElementById("eventIdInput").value = eventId;
-    document.getElementById("pointsBalance").textContent = "Points: " + userPoints;
     document.getElementById("eventPoints").textContent = "Event Costs: " + eventPointsCost + " points";
     paymentModal.style.display = "block";
 }
@@ -516,9 +515,6 @@ function closePaymentModal() {
     paymentModal.style.display = "none";
 }
 
-document.getElementById("pointsBtn").addEventListener("click", () => {
-    alert("Pay with points clicked! Functionality will be added later.");
-});
 
 window.onclick = function(event) {
     const popup = document.getElementById('eventsOfferedPopup');

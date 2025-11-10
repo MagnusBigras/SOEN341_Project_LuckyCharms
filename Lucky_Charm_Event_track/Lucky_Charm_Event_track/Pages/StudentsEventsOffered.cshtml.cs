@@ -47,6 +47,8 @@ namespace Lucky_Charm_Event_track.Pages
         public List<string> AllLocations { get; set; } = new();
         public List<EventItem> FilteredEvents { get; set; } = new();
 
+        public int PointBalance { get; set; } = 0;
+
         public void OnGet()
         {
             
@@ -141,6 +143,9 @@ namespace Lucky_Charm_Event_track.Pages
 
             // Check if sold-out events now have tickets ---
             CheckNewTickets(events);
+
+            //Get user's point balance
+            PointBalance = Globals.Globals.SessionManager.CurrentLoggedInUser.Points;
         }
 
         // Purchase free ticket
@@ -185,12 +190,42 @@ namespace Lucky_Charm_Event_track.Pages
             ticket.UserAccountId = userId;
             ticket.PurchaseDate = DateTime.Now;
             ticket.QRCodeText = Guid.NewGuid().ToString();
-            _context.SaveChanges();
 
+            var current_user = _context.UserAccounts.Find(userId);
+            current_user.Points += (int)ticket.Price / 10;
+            Globals.Globals.SessionManager.CurrentLoggedInUser.Points = current_user.Points;
+            _context.SaveChanges();
             UpdateMetric(eventId, ticket.Price);
 
             TempData["SuccessMessage"] = "Ticket purchased successfully!";
             return RedirectToPage();
+        }
+        public IActionResult OnPostMockPointPay(int eventId) 
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            int userId = !string.IsNullOrEmpty(userIdClaim) ? int.Parse(userIdClaim) : 0;
+            var ticket = _context.Tickets.FirstOrDefault(t => t.EventId == eventId && t.UserAccountId == null);
+            if (ticket == null || userId == 0)
+            {
+                TempData["ErrorMessage"] = "No tickets available or user not logged in.";
+                return RedirectToPage();
+            }
+            var current_user = _context.UserAccounts.Find(userId);
+            if(current_user.Points < ticket.Price * 10) 
+            {
+                TempData["ErrorMessage"] = "Not Enough Points! Insufficient Funds";
+                return RedirectToPage();
+            }
+            ticket.UserAccountId = userId;
+            ticket.PurchaseDate = DateTime.Now;
+            ticket.QRCodeText = Guid.NewGuid().ToString();
+            current_user.Points -= (int)ticket.Price *  10;
+            Globals.Globals.SessionManager.CurrentLoggedInUser.Points = current_user.Points;
+            _context.SaveChanges();
+            UpdateMetric(eventId, ticket.Price);
+            TempData["SuccessMessage"] = "Ticket purchased successfully!";
+            return RedirectToPage();
+
         }
 
 
