@@ -62,7 +62,7 @@ namespace Lucky_Charm_Event_track.Pages
                 id = t.Id,
                 title = t.Event.EventName,
                 start = t.Event.StartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
-                end = t.Event.StartTime.AddHours(0.1).ToString("yyyy-MM-ddTHH:mm:ss"), // assume 1-hour duration
+                end = t.Event.StartTime.AddHours(0.1).ToString("yyyy-MM-ddTHH:mm:ss"),
                 allDay = false,
                 status = !t.Event.IsActive ? "finished" :
                         t.Event.StartTime.Date > now.Date ? "active" :
