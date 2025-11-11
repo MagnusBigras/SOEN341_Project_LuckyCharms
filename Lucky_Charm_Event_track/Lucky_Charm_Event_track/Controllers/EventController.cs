@@ -79,20 +79,30 @@ namespace Lucky_Charm_Event_track.Controllers
 
 
         // --- Get event by ID ---
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Event>> GetEventById(int id)
-        {
-            var temp_event = await _dbContext.Events
-                .Include(e => e.Tickets)
-                .Include(e => e.Prices)
-                .Include(e => e.Metric)
-                .Include(e => e.Organizer)
-                .ThenInclude(o => o.Account)
-                .FirstOrDefaultAsync(e => e.Id == id);
+       [HttpGet("{id}")]
+public async Task<ActionResult<Event>> GetEventById(int id)
+{
+    var temp_event = await _dbContext.Events
+        .Include(e => e.Tickets)
+        .Include(e => e.Prices)
+        .Include(e => e.Metric)
+        .Include(e => e.Organizer)
+        .ThenInclude(o => o.Account)
+        .FirstOrDefaultAsync(e => e.Id == id);
 
-            if (temp_event == null) return NotFound();
-            return temp_event;
-        }
+    if (temp_event == null) return NotFound();
+
+    // Update metric dynamically
+    if (temp_event.Metric != null)
+    {
+        // Count tickets that are sold or assigned
+        temp_event.Metric.UsedCapacity = temp_event.Tickets.Count(t => t.UserAccountId != null);
+        temp_event.Metric.LastRemaining = temp_event.Capacity - temp_event.Metric.UsedCapacity;
+    }
+
+    return temp_event;
+}
+
 
         // --- Create new event ---
        [HttpPost("create")]

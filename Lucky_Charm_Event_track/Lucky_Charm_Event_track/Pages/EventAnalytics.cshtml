@@ -40,24 +40,13 @@
                 </a>
             </div>
 
-            <div class="sidebar-bar"></div>
+            <div class="sidebar-bar" style = "margin-bottom: 1rem;"></div>
 
             <div class="sidebar-extra">
-                <div class="sidebar-item">
-                    <img src="~/Images/7965593328e6cb27ffb10553f680443da25fad1a.png" class="sidebar-icon" alt="Organization Settings">
-                    <span class="sidebar-text">Organization Settings</span>
-                </div>
             <div class="sidebar-item" id="logoutBtn" style="cursor:pointer;">
                 <img src="~/Images/af7e2a95556abcf8c3cc0c41fedea581cd0f43af.png" class="sidebar-icon" alt="Sign out">
                 <span class="sidebar-text">Sign out</span>
             </div>
-            </div>
-
-            <div class="sidebar-contact">
-                <div class="sidebar-item">
-                    <img src="~/Images/Untitled%20design.png" class="sidebar-icon" alt="Contact">
-                    <span class="sidebar-text">Contact</span>
-                </div>
             </div>
         </div>
     </div>
@@ -68,7 +57,7 @@
             <img src="~/Images/Green%20Classic%20Four%20Leaf%20Clover%20Geometric%20Logo.png" alt="Logo" class="logo">
         </div>
         <div class="navbar-right">
-            <img src="https://icons.veryicon.com/png/o/miscellaneous/250-thick-line-icon-of-website-and-app/6-bell.png" alt="Notifications" class="bell-icon">
+            <a class="create-btn" asp-page="/EventForm"> + Create </a>
             <button class="account-btn">
                 <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User Avatar" class="account-img">
                     <span class="account-name">@Model.FirstName</span>
@@ -95,28 +84,24 @@
                 <p id="attendeesChange"></p>
             </div>
 
-            <div class="analytics-card">
-                <h2>Remaining Capacity</h2>
-                <h3 id="remCapacity">@((Model.EventMetric?.LastRemaining ?? 0).ToString())</h3>
-                <p id="attendance">@((Model.EventMetric != null && Model.EventMetric.TotalCapacity > 0) ? $"{(Model.EventMetric.UsedCapacity * 100.0 / Model.EventMetric.TotalCapacity):F1}% attendance" : "0% attendance")</p>
-            </div>
-        </div>
-        <!--
-        <div class="analytics-container bottom-row">
-            <div class="analytics-card large">
-                <h4>Total Revenue</h4>
-                <canvas id="revenueChart"></canvas>
-            </div>
-
-            <div class="analytics-card large">
-                <h4>Event Attendance</h4>
-                <canvas id="attendanceChart"></canvas>
-            </div>
-        </div> -->
+<div class="analytics-card">
+    <h2>Remaining Capacity</h2>
+    <h3 id="remCapacity">@((Model.EventMetric?.LastRemaining ?? 0).ToString())</h3>
+    <p id="attendance">
+        @{
+            var percent = 0.0;
+            if (Model.EventMetric != null && Model.EventMetric.Event.Capacity > 0)
+            {
+                percent = (double)Model.EventMetric.UsedCapacity * 100 / Model.EventMetric.Event.Capacity;
+            }
+        }
+        @($"{percent:F1}% attendance")
+    </p>
+</div>
+        <
     </div>
 
-    <!-- Scripts -->
-   <!--<script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+
     <script src="~/js/site.js"></script>
 
 </body>

@@ -20,14 +20,14 @@ namespace Lucky_Charm_Event_track.Pages
         // Logged-in user's first name
         public string FirstName { get; set; } = "Guest";
 
-        // Metrics for a single event
+        // Metric for a single event
         public Metric EventMetric { get; set; }
+
         // Metrics for all events by an organizer
         public List<Metric> OrganizerMetrics { get; set; }
 
         public IActionResult OnGet(int? eventId, int? organizerId)
         {
-            // Get logged-in user's first name
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!string.IsNullOrEmpty(userIdClaim))
             {
@@ -43,11 +43,15 @@ namespace Lucky_Charm_Event_track.Pages
             {
                 EventMetric = _dbContext.Metrics
                     .Include(m => m.Event)
+                    .ThenInclude(e => e.Tickets) 
                     .FirstOrDefault(m => m.EventId == eventId.Value);
+
                 if (EventMetric == null)
-                {
                     return NotFound($"No metrics found for event ID {eventId.Value}");
-                }
+
+                // Compute used capacity and remaining capacity
+                EventMetric.UsedCapacity = EventMetric.Event.Tickets.Count(t => t.UserAccountId != null);
+                EventMetric.LastRemaining = EventMetric.Event.Capacity - EventMetric.UsedCapacity;
             }
 
             if (organizerId.HasValue)
@@ -56,13 +60,20 @@ namespace Lucky_Charm_Event_track.Pages
                     .Where(e => e.EventOrganizerId == organizerId.Value)
                     .Select(e => e.Id)
                     .ToList();
+
                 OrganizerMetrics = _dbContext.Metrics
                     .Include(m => m.Event)
+                    .ThenInclude(e => e.Tickets)
                     .Where(m => eventIds.Contains(m.EventId))
                     .ToList();
-                if (OrganizerMetrics == null || OrganizerMetrics.Count == 0)
+
+                if (OrganizerMetrics != null)
                 {
-                    return NotFound($"No metrics found for organizer ID {organizerId.Value}");
+                    foreach (var metric in OrganizerMetrics)
+                    {
+                        metric.UsedCapacity = metric.Event.Tickets.Count(t => t.UserAccountId != null);
+                        metric.LastRemaining = metric.Event.Capacity - metric.UsedCapacity;
+                    }
                 }
             }
 
