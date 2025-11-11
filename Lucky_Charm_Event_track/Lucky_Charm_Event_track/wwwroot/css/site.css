@@ -597,3 +597,146 @@ body {
     color: #912338;
     margin-bottom: 1rem;
 }
+
+
+
+.top-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    z-index: 500;
+}
+
+.logo {
+    height: 42px;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+}
+
+.account-btn {
+    background-color: #f3f4f6;
+    color: #912338;
+    padding: 0.5rem 1.5rem;
+}
+
+.account-name {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.bell-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.bell-icon:hover,
+.bell-icon:active {
+    animation: ring 0.5s ease;
+}
+
+@keyframes ring {
+    0% { transform: rotate(0); }
+    20% { transform: rotate(15deg); }
+    40% { transform: rotate(-10deg); }
+    60% { transform: rotate(5deg); }
+    80% { transform: rotate(-3deg); }
+    100% { transform: rotate(0); }
+}
+
+.account-img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.sidebar {
+    width: 320px;
+    background-color: white;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 100px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 500;
+    box-shadow: 0 1px 0.5px rgba(0,0,0,0.1);
+}
+
+.sidebar-logo img {
+    width: 40px;
+    height: 40px;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 2.4rem;
+    flex-grow: 1;
+    color: #912338;
+    font-weight: 1000;
+    font-size: 1.1rem;
+}
+
+.sidebar-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem 2rem;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.sidebar-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 320px;
+    height: 100%;
+    background-color: #E9D3D7;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+.sidebar-item:hover::before {
+    opacity: 1;
+}
+
+.sidebar-icon {
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.sidebar-bar {
+    display: block;
+    width: 250px;
+    height: 1.5px;
+    background-color: #912338;
+    margin-top: 1rem;
+    margin-bottom:-1rem;
+    margin-right: 30px;
+    transform: translateX(12px);
+}
