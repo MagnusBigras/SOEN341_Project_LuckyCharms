@@ -398,7 +398,7 @@
             <p style="font-size:0.85rem; color:#555; margin-bottom:12px;">
                 Or you can pay with points! $10 = 1 point.
             </p>
-
+                <p id="pointCost" style="font-size:0.85rem; color:#555; margin-bottom: .5rem; font-weight: 400; line-height: 1.5; color: #212529; font-size: 1rem;></p>
             <button type="button" id="pointsBtn" style="width:100%; background-color:#28a745; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:600; cursor:pointer; margin-bottom:12px;">
                 Pay with Points
             </button>
@@ -510,6 +510,7 @@ function openPaymentModal(eventName, amount, eventId, eventPointsCost = 0, userP
     document.getElementById("eventIdInput").value = eventId;
     document.getElementById("pointsBalance").textContent = "Points: " + userPoints;
     document.getElementById("eventPoints").textContent = "Event Costs: " + eventPointsCost + " points";
+    document.getElementById("pointCost").textContent = "Point Amount : " + (amount * 10) + " points";
     paymentModal.style.display = "block";
 }
 function closePaymentModal() {
