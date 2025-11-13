@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/css/site.css">
+
 </head>
 <body>
 
@@ -41,27 +42,17 @@
             </div>
 
             <!-- Divider bar -->
-            <div class="sidebar-bar"></div>
+            <div class="sidebar-bar" style = "margin-bottom: 1rem;"></div>
 
             <!-- Extra sidebar items like settings and sign out -->
             <div class="sidebar-extra">
-                <div class="sidebar-item">
-                    <img src="~/Images/7965593328e6cb27ffb10553f680443da25fad1a.png" class="sidebar-icon" alt="Organization Settings">
-                    <span class="sidebar-text">Organization Settings</span>
-                </div>
-                <div class="sidebar-item">
-                    <img src="~/Images/af7e2a95556abcf8c3cc0c41fedea581cd0f43af.png" class="sidebar-icon" alt="Sign out">
-                    <span class="sidebar-text">Sign out</span>
-                </div>
+            <div class="sidebar-item" id="logoutBtn" style="cursor:pointer;">
+                <img src="~/Images/af7e2a95556abcf8c3cc0c41fedea581cd0f43af.png" class="sidebar-icon" alt="Sign out">
+                <span class="sidebar-text">Sign out</span>
+            </div>
             </div>
 
-            <!-- Contact info in sidebar -->
-            <div class="sidebar-contact">
-                <div class="sidebar-item">
-                    <img src="~/Images/Untitled%20design.png" class="sidebar-icon" alt="Contact">
-                    <span class="sidebar-text">Contact</span>
-                </div>
-            </div>
+
         </div>
     </div>
 
@@ -93,4 +84,22 @@
     </div>
 
 </body>
+
+<script>
+        document.getElementById("logoutBtn")?.addEventListener("click", async () => {
+            try {
+                const response = await fetch("/api/accounts/logout", { method: "POST" });
+                if (response.ok) {
+                    const result = await response.json();
+                    alert(result.message);
+                    window.location.href = result.redirectUrl; 
+                } else {
+                    alert("Failed to sign out. Please try again.");
+                }
+            } catch (err) {
+                console.error("Logout error:", err);
+                alert("An error occurred during sign out.");
+            }
+        });
+</script>
 </html>
