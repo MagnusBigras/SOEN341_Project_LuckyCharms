@@ -113,7 +113,7 @@ namespace Lucky_Charm_Event_track.Controllers
                 QRCodeText = qr_payload,
                 QRCode = QRCodeGeneratorHelper.GenerateQRCode(qr_payload),
                 CheckedIn = false,
-                Price = 0,
+                Price = selectedevent.Prices.FirstOrDefault().Price,
                 PurchaseDate = System.DateTime.Now
 
             };
