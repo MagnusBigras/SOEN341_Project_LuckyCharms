@@ -1,0 +1,26 @@
+name: .NET CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore Lucky_Charm_Event_track.sln
+      working-directory: ./Lucky_Charm_Event_track
+
+    - name: Build project
+      run: dotnet build Lucky_Charm_Event_track.sln --no-restore
+      working-directory: ./Lucky_Charm_Event_track
