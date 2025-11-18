@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -18,15 +19,17 @@ namespace Lucky_Charm_Event_track.Tests
 
         public CustomWebApplicationFactory()
         {
-            // Define the test DB path
+            // Create a unique test database file per test
             var folder = Environment.SpecialFolder.LocalApplicationData;
             var path = Environment.GetFolderPath(folder);
-            _dbPath = Path.Combine(path, "eventtracker_test.db");
+            //used uniqueID to avoid race conditions when running multiple tests in parallel
+            var uniqueId = Guid.NewGuid().ToString("N").Substring(0, 8);
+            _dbPath = Path.Combine(path, $"eventtracker_test_{uniqueId}.db");
 
-            // Ensure the file exists (EF Core will create it on migration if needed)
-            if (!File.Exists(_dbPath))
+            // Delete this specific test DB only (not all test DBs)
+            if (File.Exists(_dbPath))
             {
-                using var fs = File.Create(_dbPath);
+                File.Delete(_dbPath);
             }
         }
 
@@ -45,7 +48,7 @@ namespace Lucky_Charm_Event_track.Tests
                 
                 builder.UseEnvironment("Test");
 
-                // Add DbContext pointing to test DB
+                // Add DbContext pointing to this test's unique DB
                 services.AddDbContext<WebAppDBContext>(options =>
                 {
                     options.UseSqlite($"Data Source={_dbPath}");
@@ -64,13 +67,13 @@ namespace Lucky_Charm_Event_track.Tests
                 {
                     var db = scope.ServiceProvider.GetRequiredService<WebAppDBContext>();
 
-                    // Apply migrations (creates tables if they don't exist)
+                    // Apply migrations
                     db.Database.Migrate();
 
-                    // Seed default data using your Startup logic
+                    // Seed default data we already have in our startup.cs 
                     var startup = new Startup(new ConfigurationBuilder().Build());
                     startup.seedDefaultUser(db);
-                     var seededUser = db.UserAccounts.FirstOrDefault(u => u.UserName == "defaultuser");
+                    var seededUser = db.UserAccounts.FirstOrDefault(u => u.UserName == "defaultuser");
                     if (seededUser != null)
                     {
                         Globals.Globals.SessionManager.CurrentLoggedInUser = seededUser;

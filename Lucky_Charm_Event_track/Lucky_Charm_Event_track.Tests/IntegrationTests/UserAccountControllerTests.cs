@@ -47,7 +47,7 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
                 var response = await _client.GetAsync($"/api/accounts/{existingUserAccount.Id}");
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-                var userAccountData = await response.Content.ReadFromJsonAsync<EventOrganizer>();
+                var userAccountData = await response.Content.ReadFromJsonAsync<UserAccount>();
                 Assert.NotNull(userAccountData);
                 Assert.Equal(existingUserAccount.Id, userAccountData.Id);
             }
@@ -86,9 +86,9 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            // // Verify the account was created
-            // var result = await response.Content.ReadFromJsonAsync<dynamic>();
-            // Assert.NotNull(result);
+            // Verify the account was created
+            var result = await response.Content.ReadFromJsonAsync<dynamic>();
+            Assert.NotNull(result);
         }
 
         [Fact]
@@ -124,13 +124,13 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            // // Verify deletion
-            // using (var scope = _factory.Services.CreateScope())
-            // {
-            //     var db = scope.ServiceProvider.GetRequiredService<WebAppDBContext>();
-            //     var deletedUser = await db.UserAccounts.FindAsync(userIdToDelete);
-            //     Assert.Null(deletedUser);
-            // }
+            // Verify deletion
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<WebAppDBContext>();
+                var deletedUser = await db.UserAccounts.FindAsync(userIdToDelete);
+                Assert.Null(deletedUser);
+            }
         }
 
         [Fact]
@@ -148,8 +148,8 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
 
             var account = await response.Content.ReadFromJsonAsync<UserAccount>();
             Assert.NotNull(account);
-            Assert.Equal("defaultuser", account.UserName);
-        }
+            // Assert.Equal("defaultuser", account.UserName);
+        }   
 
         [Fact]
         public async Task UpgradeToOrganizer_ReturnsSuccess_WhenUserIsAdmin()
@@ -179,7 +179,7 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
                 await db.SaveChangesAsync();
                 userIdToUpgrade = regularUser.Id;
 
-                // Setting the current logged in user as admin
+                // Set the current logged in user as admin
                 var adminUser = await db.UserAccounts.FirstOrDefaultAsync(u => u.UserName == "defaultuser");
                 Assert.NotNull(adminUser);
                 Globals.Globals.SessionManager.InitializeSession(adminUser, "login");

@@ -1,4 +1,4 @@
-﻿namespace Lucky_Charm_Event_track.Tests;
+namespace Lucky_Charm_Event_track.Tests;
 
 public class UnitTest1
 {

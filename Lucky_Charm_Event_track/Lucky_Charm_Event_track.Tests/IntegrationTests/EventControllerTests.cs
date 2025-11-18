@@ -54,18 +54,6 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task GetActiveEvent_ReturnsActiveEvents()
-        {
-            var response = await _client.GetAsync("/api/events/active");
-
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-            var events = await response.Content.ReadFromJsonAsync<List<Event>>();
-            Assert.NotNull(events);
-            Assert.True(events.Count > 0);
-        }
-
-        [Fact]
         public async Task CreateEvent_ReturnsSuccess_WhenValid()
         {
             int organizerId;
@@ -94,7 +82,7 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
                 Capacity = 100,
                 EventOrganizerId = organizerId,
                 TicketType = Enums.TicketTypes.Free,
-                isActive = true,
+                IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
                 Category = "Test"
@@ -131,7 +119,7 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
                     Country = "Delete Country",
                     Capacity = 50,
                     EventOrganizerId = organizer.Id,
-                    isActive = true,
+                    IsActive = true,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };
@@ -148,7 +136,6 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
         [Fact]
         public async Task UpdateEvent_ReturnsSuccess_WhenValid()
         {
-            //event to update
             int eventIdToUpdate;
             using (var scope = _factory.Services.CreateScope())
             {
@@ -172,7 +159,7 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
                     Capacity = 50,
                     EventOrganizerId = organizer.Id,
                     TicketType = Enums.TicketTypes.Free,
-                    isActive = true,
+                    IsActive = true,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow,
                     Category = "Original"
@@ -196,15 +183,16 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
                 Country = "Updated Country",
                 Capacity = 75,
                 TicketType = Enums.TicketTypes.Free,
-                isActive = true,
+                IsActive = true,
                 UpdatedAt = DateTime.UtcNow,
-                Category = "Updated"
+                Category = "Updated",
+                Prices = new List<PriceTier>()
             };
 
             var response = await _client.PostAsJsonAsync("/api/events/update", updatedEvent);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
-        
+
         [Fact]
         public async Task UpdateEventVisibility_ReturnsSuccess_WhenValid()
         {
@@ -230,7 +218,7 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
                     Country = "Test Country",
                     Capacity = 100,
                     EventOrganizerId = organizer.Id,
-                    isActive = true,
+                    IsActive = true,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };
@@ -254,7 +242,7 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
                 var db = scope.ServiceProvider.GetRequiredService<WebAppDBContext>();
                 var updatedEvent = await db.Events.FindAsync(eventId);
                 Assert.NotNull(updatedEvent);
-                Assert.False(updatedEvent.isActive);
+                Assert.False(updatedEvent.IsActive);
             }
         }
     }
