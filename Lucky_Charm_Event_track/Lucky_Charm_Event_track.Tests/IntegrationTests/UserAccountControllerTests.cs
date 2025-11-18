@@ -42,7 +42,7 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
             {
                 var db = scope.ServiceProvider.GetRequiredService<WebAppDBContext>();
                 var existingUserAccount = await db.UserAccounts.FirstOrDefaultAsync();
-                Assert.NotNull(existingUserAccount); // Ensure we have data
+                Assert.NotNull(existingUserAccount); // Ensures we have data
 
                 var response = await _client.GetAsync($"/api/accounts/{existingUserAccount.Id}");
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -132,24 +132,27 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
                 Assert.Null(deletedUser);
             }
         }
-
+  
         [Fact]
         public async Task Login_ReturnsSuccess_WhenCredentialsValid()
         {
             var loginCreds = new
             {
                 Username = "defaultuser",
-                Password = "hashedpassword"
+                Password = "hashedpassword",
+                IsAdmin = false 
             };
 
             var response = await _client.PostAsJsonAsync("/api/accounts/login", loginCreds);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            var account = await response.Content.ReadFromJsonAsync<UserAccount>();
-            Assert.NotNull(account);
-            // Assert.Equal("defaultuser", account.UserName);
-        }   
+            // The controller returns LoginResponse
+            var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponse>();
+            Assert.NotNull(loginResponse);
+            Assert.Equal("Login Successful", loginResponse.Message);
+            Assert.Equal("/Events", loginResponse.RedirectUrl); 
+        } 
 
         [Fact]
         public async Task UpgradeToOrganizer_ReturnsSuccess_WhenUserIsAdmin()

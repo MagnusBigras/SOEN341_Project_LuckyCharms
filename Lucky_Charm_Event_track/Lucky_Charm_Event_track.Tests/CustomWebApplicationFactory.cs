@@ -15,18 +15,19 @@ namespace Lucky_Charm_Event_track.Tests
 {
     public class CustomWebApplicationFactory : WebApplicationFactory<Startup>
     {
-        private readonly string _dbPath;
+        private readonly string _dbPath; //stores the file path of the test database
 
         public CustomWebApplicationFactory()
         {
-            // Create a unique test database file per test
+            // Create a temporary SQLite database file per test
+            // Tests use their own unique database not our real prod DB to avoid modifying real data
             var folder = Environment.SpecialFolder.LocalApplicationData;
             var path = Environment.GetFolderPath(folder);
-            //used uniqueID to avoid race conditions when running multiple tests in parallel
+            // use uniqueID to avoid race conditions when running multiple tests in parallel
             var uniqueId = Guid.NewGuid().ToString("N").Substring(0, 8);
             _dbPath = Path.Combine(path, $"eventtracker_test_{uniqueId}.db");
 
-            // Delete this specific test DB only (not all test DBs)
+            // Delete this specific test DB only
             if (File.Exists(_dbPath))
             {
                 File.Delete(_dbPath);
@@ -37,7 +38,7 @@ namespace Lucky_Charm_Event_track.Tests
         {
             builder.ConfigureServices(services =>
             {
-                // Remove the real DbContext registration
+                // Remove our real prod database to prevent tests from touching real DB.
                 var descriptor = services.SingleOrDefault(
                     d => d.ServiceType == typeof(DbContextOptions<WebAppDBContext>));
 
@@ -45,16 +46,17 @@ namespace Lucky_Charm_Event_track.Tests
                 {
                     services.Remove(descriptor);
                 }
-                
+                // Switch environment to "Test" to use test-specific settings
                 builder.UseEnvironment("Test");
 
-                // Add DbContext pointing to this test's unique DB
+                // Add DbContext pointing to test unique DB
                 services.AddDbContext<WebAppDBContext>(options =>
                 {
                     options.UseSqlite($"Data Source={_dbPath}");
                 });
 
                 // Configure controllers JSON to handle cycles
+                // prevents infinite loops during serializing objects with navigation properties
                 services.AddControllers().AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -67,7 +69,7 @@ namespace Lucky_Charm_Event_track.Tests
                 {
                     var db = scope.ServiceProvider.GetRequiredService<WebAppDBContext>();
 
-                    // Apply migrations
+                    // Apply migrations to create the tables in the test database
                     db.Database.Migrate();
 
                     // Seed default data we already have in our startup.cs 

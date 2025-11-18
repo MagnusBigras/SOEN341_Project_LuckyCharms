@@ -227,13 +227,13 @@ namespace Lucky_Charm_Event_track.Tests.IntegrationTests
             var response = await _client.PostAsJsonAsync($"/api/event_organizer/update?id={organizerIdToUpdate}", updatedOrganizer);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            // using (var scope = _factory.Services.CreateScope())
-            // {
-            //     var db = scope.ServiceProvider.GetRequiredService<WebAppDBContext>();
-            //     var updated = await db.EventOrganizers.FindAsync(organizerIdToUpdate);
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<WebAppDBContext>();
+                var updated = await db.EventOrganizers.FindAsync(organizerIdToUpdate);
 
-            //     Assert.NotNull(updated);
-            // }
+                Assert.NotNull(updated);
+            }
         }
      }
  }
