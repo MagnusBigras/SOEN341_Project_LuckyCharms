@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,12 +15,16 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: '7.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore Lucky_Charm_Event_track.sln
-      working-directory: ./Lucky_Charm_Event_track
+      run: dotnet restore
+      working-directory: ./Lucky_Charm_Event_track/Lucky_Charm_Event_track
 
     - name: Build project
-      run: dotnet build Lucky_Charm_Event_track.sln --no-restore
-      working-directory: ./Lucky_Charm_Event_track
+      run: dotnet build --no-restore
+      working-directory: ./Lucky_Charm_Event_track/Lucky_Charm_Event_track
+
+    - name: Run unit tests
+      run: dotnet test --no-build --verbosity normal
+      working-directory: ./Lucky_Charm_Event_track/Lucky_Charm_Event_track
