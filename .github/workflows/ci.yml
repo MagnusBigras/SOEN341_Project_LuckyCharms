@@ -25,6 +25,6 @@ jobs:
       run: dotnet build --no-restore
       working-directory: ./Lucky_Charm_Event_track/Lucky_Charm_Event_track
 
-    - name: Run unit tests only
-      run: dotnet test --verbosity normal --filter "TestFilePath~UnitTest"
+    - name: Run Unit Tests Only
+      run: dotnet test --filter "FullyQualifiedName~UnitTest"
       working-directory: ./Lucky_Charm_Event_track/Lucky_Charm_Event_track.Tests

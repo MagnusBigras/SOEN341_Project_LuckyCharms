@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Lucky_Charm_Event_track.Tests
 {
-    public class EventTest
+    public class EventUnitTest
     {
         // Test that increasing the event capacity updates the value correctly
         [Fact]
