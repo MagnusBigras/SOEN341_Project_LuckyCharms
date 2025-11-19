@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Lucky_Charm_Event_track.Tests
 {
-    public class TicketTest
+    public class TicketUnitTest
     {
         // Test that a ticket can be assigned to a user after creation
         [Fact]

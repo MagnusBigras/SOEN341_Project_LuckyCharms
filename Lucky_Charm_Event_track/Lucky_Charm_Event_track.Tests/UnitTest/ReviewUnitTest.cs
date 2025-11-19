@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Lucky_Charm_Event_track.Tests
 {
-    public class ReviewTest
+    public class ReviewUnitTest
     {
         // Test that the OverallExperience rating falls within the valid range (1–5)
         [Fact]
