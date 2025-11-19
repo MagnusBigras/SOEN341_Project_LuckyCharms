@@ -1,0 +1,27 @@
+name: Unit Tests Only
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '7.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore Lucky_Charm_Event_track.sln
+
+    - name: Build solution
+      run: dotnet build Lucky_Charm_Event_track.sln --no-restore
+
+    - name: Run unit tests only
+      run: dotnet test Lucky_Charm_Event_track.Tests/Lucky_Charm_Event_track.Tests.csproj --no-build --filter "TestFilePath~UnitTest"
