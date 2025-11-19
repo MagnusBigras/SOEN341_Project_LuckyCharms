@@ -1,0 +1,27 @@
+name: .NET CI - Unit Tests Only
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '7.0.x'
+
+    - name: Restore solution
+      run: dotnet restore Lucky_Charm_Event_track.sln
+
+    - name: Build solution
+      run: dotnet build Lucky_Charm_Event_track.sln --no-restore --configuration Debug
+
+    - name: Run ONLY Unit Tests (EventTest, ReviewTest, TicketTest)
+      run: dotnet test Lucky_Charm_Event_track.Tests --no-build --filter "ClassName~Test"
