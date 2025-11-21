@@ -37,75 +37,75 @@ namespace Lucky_Charm_Event_track.Controllers
         }
 
       [HttpGet("my")]
-    public async Task<ActionResult<IEnumerable<Event>>> GetMyEvents()
-    {
-        try
+        public async Task<ActionResult<IEnumerable<Event>>> GetMyEvents()
         {
-            var currentUser = Globals.Globals.SessionManager.CurrentLoggedInUser;
-
-            if (currentUser == null)
+            try
             {
-                currentUser = await _dbContext.UserAccounts.FirstOrDefaultAsync();
+                var currentUser = Globals.Globals.SessionManager.CurrentLoggedInUser;
+
                 if (currentUser == null)
-                    return Ok(new List<Event>());
+                {
+                    currentUser = await _dbContext.UserAccounts.FirstOrDefaultAsync();
+                    if (currentUser == null)
+                        return Ok(new List<Event>());
+                }
+
+                var organizer = await _dbContext.EventOrganizers
+                    .Include(o => o.Events)
+                        .ThenInclude(e => e.Prices)
+                    .Include(o => o.Events)
+                        .ThenInclude(e => e.Tickets)
+                    .Include(o => o.Account)
+                    .FirstOrDefaultAsync(o => o.UserAccountId == currentUser.Id);
+
+                if (organizer == null)
+                {
+                    var fallbackEvents = await _dbContext.Events
+                        .Include(e => e.Prices)
+                        .Include(e => e.Organizer)
+                        .ThenInclude(o => o.Account)
+                        .ToListAsync();
+                    return Ok(fallbackEvents);
+                }
+
+                return Ok(organizer.Events);
             }
-
-            var organizer = await _dbContext.EventOrganizers
-                .Include(o => o.Events)
-                    .ThenInclude(e => e.Prices)
-                .Include(o => o.Events)
-                    .ThenInclude(e => e.Tickets)
-                .Include(o => o.Account)
-                .FirstOrDefaultAsync(o => o.UserAccountId == currentUser.Id);
-
-            if (organizer == null)
+            catch (Exception ex)
             {
-                var fallbackEvents = await _dbContext.Events
-                    .Include(e => e.Prices)
-                    .Include(e => e.Organizer)
-                    .ThenInclude(o => o.Account)
-                    .ToListAsync();
-                return Ok(fallbackEvents);
+                Console.WriteLine($"Error loading events: {ex.Message}");
+                return Ok(new List<Event>());
             }
-
-            return Ok(organizer.Events);
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error loading events: {ex.Message}");
-            return Ok(new List<Event>());
-        }
-    }
 
 
         // --- Get event by ID ---
        [HttpGet("{id}")]
-public async Task<ActionResult<Event>> GetEventById(int id)
-{
-    var temp_event = await _dbContext.Events
-        .Include(e => e.Tickets)
-        .Include(e => e.Prices)
-        .Include(e => e.Metric)
-        .Include(e => e.Organizer)
-        .ThenInclude(o => o.Account)
-        .FirstOrDefaultAsync(e => e.Id == id);
+        public async Task<ActionResult<Event>> GetEventById(int id)
+        {
+            var temp_event = await _dbContext.Events
+                .Include(e => e.Tickets)
+                .Include(e => e.Prices)
+                .Include(e => e.Metric)
+                .Include(e => e.Organizer)
+                .ThenInclude(o => o.Account)
+                .FirstOrDefaultAsync(e => e.Id == id);
 
-    if (temp_event == null) return NotFound();
+            if (temp_event == null) return NotFound();
 
-    // Update metric dynamically
-    if (temp_event.Metric != null)
-    {
-        // Count tickets that are sold or assigned
-        temp_event.Metric.UsedCapacity = temp_event.Tickets.Count(t => t.UserAccountId != null);
-        temp_event.Metric.LastRemaining = temp_event.Capacity - temp_event.Metric.UsedCapacity;
-    }
+            // Update metric dynamically
+            if (temp_event.Metric != null)
+            {
+                // Count tickets that are sold or assigned
+                temp_event.Metric.UsedCapacity = temp_event.Tickets.Count(t => t.UserAccountId != null);
+                temp_event.Metric.LastRemaining = temp_event.Capacity - temp_event.Metric.UsedCapacity;
+            }
 
-    return temp_event;
-}
+            return temp_event;
+        }
 
 
         // --- Create new event ---
-       [HttpPost("create")]
+        [HttpPost("create")]
         public async Task<ActionResult<Event>> CreateEvent([FromBody] Event newEvent)
         {
             var currentUser = Globals.Globals.SessionManager.CurrentLoggedInUser;
@@ -123,6 +123,22 @@ public async Task<ActionResult<Event>> GetEventById(int id)
 
             if (organizer == null)
                 return BadRequest(new { message = "Current user is not an organizer!" });
+
+            if (newEvent.Capacity > 2000)
+            {
+                return BadRequest(new { message = "The maximum allowed event capacity is 2000 attendees." });
+            }
+
+            if (newEvent.Prices != null)
+            {
+                foreach (var tier in newEvent.Prices)
+                {
+                    if (tier.MaxQuantity > 2000)
+                    {
+                        return BadRequest(new { message = "Ticket quantity cannot exceed the limit of 2000." });
+                    }
+                }
+            }
 
             // Link event to organizer
             newEvent.EventOrganizerId = organizer.Id;
@@ -152,7 +168,7 @@ public async Task<ActionResult<Event>> GetEventById(int id)
             // Generate tickets
             newEvent.Tickets = new List<Ticket>();
             if (newEvent.Prices != null && newEvent.Prices.Count > 0)
-            {                 
+            {
                 // Use PriceTiers to generate tickets
                 foreach (var tier in newEvent.Prices)
                 {
@@ -194,7 +210,6 @@ public async Task<ActionResult<Event>> GetEventById(int id)
             return Ok(new { message = "Event and tickets created successfully", eventId = newEvent.Id });
         }
 
-
         // --- Delete event ---
         [HttpPost("delete")]
         public async Task<ActionResult> DeleteEvent([FromBody] int id)
@@ -217,6 +232,35 @@ public async Task<ActionResult<Event>> GetEventById(int id)
                 .FirstOrDefaultAsync(e => e.Id == updatedEvent.Id);
 
             if (existingEvent == null) return NotFound("Event not found.");
+
+            if (updatedEvent.Capacity > 2000)
+            {
+                return BadRequest("The maximum allowed capacity is 2000 attendees.");
+            }
+
+            if (updatedEvent.Capacity < existingEvent.Capacity)
+            {
+                return BadRequest("You cannot lower the event capacity. You may only increase it.");
+            }
+
+            foreach (var updatedPrice in updatedEvent.Prices)
+            {
+                var existingPrice = existingEvent.Prices
+                    .FirstOrDefault(p => p.TicketType == updatedPrice.TicketType && p.Label == updatedPrice.Label);
+
+                // Cap max quantity
+                if (updatedPrice.MaxQuantity > 2000)
+                {
+                    return BadRequest("Ticket quantity cannot exceed the capacity limit of 2000.");
+                }
+
+                // Prevent lowering ticket limit
+                if (existingPrice != null &&
+                    updatedPrice.MaxQuantity < existingPrice.MaxQuantity)
+                {
+                    return BadRequest("You cannot lower the ticket quantity. You may only increase it.");
+                }
+            }
 
             // Update basic event info
             existingEvent.EventName = updatedEvent.EventName;
@@ -289,7 +333,6 @@ public async Task<ActionResult<Event>> GetEventById(int id)
             await _dbContext.SaveChangesAsync();
             return Ok(new { message = "Event updated and tickets adjusted successfully" });
         }
-
 
         // --- Update visibility ---
         [HttpPost("update-visibility")]

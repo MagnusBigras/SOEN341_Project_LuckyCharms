@@ -230,8 +230,9 @@ document.getElementById('eventForm').addEventListener('submit', async (e) => {
         window.location.href = '/EditConfirmation';
     } catch (err) {
         console.error(err);
-        alert('Error updating event. Check console for details.');
-    }
+        alert(err.message);
+}
+
 });
 
 loadEvent();
