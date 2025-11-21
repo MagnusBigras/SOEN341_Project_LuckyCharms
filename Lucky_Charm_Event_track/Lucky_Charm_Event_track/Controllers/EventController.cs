@@ -243,6 +243,13 @@ namespace Lucky_Charm_Event_track.Controllers
                 return BadRequest("You cannot lower the event capacity. You may only increase it.");
             }
 
+            int availableTickets = existingEvent.Tickets.Count(t => t.UserAccountId == null);
+
+            if (updatedEvent.Capacity > existingEvent.Capacity && availableTickets > 0)
+            {
+                return BadRequest("You can only increase capacity when the event is sold out.");
+            }
+            
             foreach (var updatedPrice in updatedEvent.Prices)
             {
                 var existingPrice = existingEvent.Prices
