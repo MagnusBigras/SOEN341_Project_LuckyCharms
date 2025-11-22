@@ -222,7 +222,7 @@ namespace Lucky_Charm_Event_track.Controllers
             return Ok(new { message = "Event deleted successfully." });
         }
 
-       // --- Update event ---
+            // --- Update event ---
         [HttpPost("update")]
         public async Task<IActionResult> UpdateEvent([FromBody] Event updatedEvent)
         {
@@ -231,45 +231,26 @@ namespace Lucky_Charm_Event_track.Controllers
                 .Include(e => e.Tickets)
                 .FirstOrDefaultAsync(e => e.Id == updatedEvent.Id);
 
-            if (existingEvent == null) return NotFound("Event not found.");
+            if (existingEvent == null)
+                return NotFound("Event not found.");
 
+            // --- Capacity rules ---
             if (updatedEvent.Capacity > 2000)
-            {
                 return BadRequest("The maximum allowed capacity is 2000 attendees.");
-            }
 
             if (updatedEvent.Capacity < existingEvent.Capacity)
-            {
-                return BadRequest("You cannot lower the event capacity. You may only increase it.");
-            }
+                return BadRequest("You cannot lower the event capacity.");
 
             int availableTickets = existingEvent.Tickets.Count(t => t.UserAccountId == null);
 
-            if (updatedEvent.Capacity > existingEvent.Capacity && availableTickets > 0)
+            if (updatedEvent.Capacity != existingEvent.Capacity &&
+                updatedEvent.Capacity > existingEvent.Capacity &&
+                availableTickets > 0)
             {
                 return BadRequest("You can only increase capacity when the event is sold out.");
             }
-            
-            foreach (var updatedPrice in updatedEvent.Prices)
-            {
-                var existingPrice = existingEvent.Prices
-                    .FirstOrDefault(p => p.TicketType == updatedPrice.TicketType && p.Label == updatedPrice.Label);
 
-                // Cap max quantity
-                if (updatedPrice.MaxQuantity > 2000)
-                {
-                    return BadRequest("Ticket quantity cannot exceed the capacity limit of 2000.");
-                }
-
-                // Prevent lowering ticket limit
-                if (existingPrice != null &&
-                    updatedPrice.MaxQuantity < existingPrice.MaxQuantity)
-                {
-                    return BadRequest("You cannot lower the ticket quantity. You may only increase it.");
-                }
-            }
-
-            // Update basic event info
+            // --- Update event base info ---
             existingEvent.EventName = updatedEvent.EventName;
             existingEvent.EventDescription = updatedEvent.EventDescription;
             existingEvent.StartTime = updatedEvent.StartTime;
@@ -280,50 +261,40 @@ namespace Lucky_Charm_Event_track.Controllers
             existingEvent.Country = updatedEvent.Country;
             existingEvent.Capacity = updatedEvent.Capacity;
             existingEvent.TicketType = updatedEvent.TicketType;
+            existingEvent.Category = updatedEvent.Category;
             existingEvent.IsActive = updatedEvent.IsActive;
             existingEvent.UpdatedAt = DateTime.Now;
-            existingEvent.Category = updatedEvent.Category;
 
-            // Update or add price tiers
-            foreach (var updatedPrice in updatedEvent.Prices)
+            var oldFreeTickets = existingEvent.Tickets
+                .Where(t => t.UserAccountId == null) // only unused
+                .ToList();
+
+            _dbContext.Tickets.RemoveRange(oldFreeTickets);
+
+            existingEvent.Prices.Clear();
+
+            foreach (var tier in updatedEvent.Prices)
             {
-                var existingPrice = existingEvent.Prices
-                    .FirstOrDefault(p => p.TicketType == updatedPrice.TicketType && p.Label == updatedPrice.Label);
+                if (tier.MaxQuantity > 2000)
+                    return BadRequest("Ticket quantity cannot exceed 2000.");
 
-                if (existingPrice != null)
+                existingEvent.Prices.Add(new PriceTier
                 {
-                    // Update price tier info
-                    existingPrice.Price = updatedPrice.Price;
-                    existingPrice.MaxQuantity = updatedPrice.MaxQuantity;
-                    existingPrice.isAvailable = updatedPrice.isAvailable;
-                }
-                else
-                {
-                    // New price tier
-                    existingEvent.Prices.Add(new PriceTier
-                    {
-                        Price = updatedPrice.Price,
-                        TicketType = updatedPrice.TicketType,
-                        Label = updatedPrice.Label ?? "Default",
-                        MaxQuantity = updatedPrice.MaxQuantity,
-                        isAvailable = updatedPrice.isAvailable
-                    });
-                }
+                    Label = tier.Label ?? "Default",
+                    Price = tier.Price,
+                    TicketType = tier.TicketType,
+                    MaxQuantity = tier.MaxQuantity,
+                    isAvailable = tier.isAvailable
+                });
             }
 
             await _dbContext.SaveChangesAsync();
 
-            // Handle tickets: only add new ones if needed
             foreach (var tier in existingEvent.Prices)
             {
-                // Count existing tickets for this tier
-                int currentCount = existingEvent.Tickets.Count(t => t.TicketType == tier.TicketType);
-
-                // Add tickets if updated MaxQuantity is greater
-                int ticketsToAdd = tier.MaxQuantity - currentCount;
-                for (int i = 0; i < ticketsToAdd; i++)
+                for (int i = 0; i < tier.MaxQuantity; i++)
                 {
-                    var ticket = new Ticket
+                    _dbContext.Tickets.Add(new Ticket
                     {
                         EventId = existingEvent.Id,
                         UserAccountId = null,
@@ -332,14 +303,15 @@ namespace Lucky_Charm_Event_track.Controllers
                         PurchaseDate = DateTime.MinValue,
                         QRCodeText = Guid.NewGuid().ToString(),
                         CheckedIn = false
-                    };
-                    _dbContext.Tickets.Add(ticket);
+                    });
                 }
             }
 
             await _dbContext.SaveChangesAsync();
-            return Ok(new { message = "Event updated and tickets adjusted successfully" });
+
+            return Ok(new { message = "Event updated successfully with correct prices and tickets" });
         }
+
 
         // --- Update visibility ---
         [HttpPost("update-visibility")]
