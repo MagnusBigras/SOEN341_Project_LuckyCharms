@@ -1,0 +1,30 @@
+name: Unit Tests Only
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '7.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+      working-directory: ./Lucky_Charm_Event_track/Lucky_Charm_Event_track
+
+    - name: Build project
+      run: dotnet build --no-restore
+      working-directory: ./Lucky_Charm_Event_track/Lucky_Charm_Event_track
+
+    - name: Run Unit Tests Only
+      run: dotnet test --filter "FullyQualifiedName~UnitTest"
+      working-directory: ./Lucky_Charm_Event_track/Lucky_Charm_Event_track.Tests
