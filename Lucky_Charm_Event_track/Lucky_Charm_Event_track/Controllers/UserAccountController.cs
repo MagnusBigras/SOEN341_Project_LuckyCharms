@@ -86,6 +86,10 @@ namespace Lucky_Charm_Event_track.Controllers
                 {
                     return BadRequest("Payload was null");
                 }
+                if(newAccount.DateOfBirth > DateTime.Today)
+                {
+                    return BadRequest("Date of birth cannot be in the future.");
+                }
 
                 Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(newAccount));
 

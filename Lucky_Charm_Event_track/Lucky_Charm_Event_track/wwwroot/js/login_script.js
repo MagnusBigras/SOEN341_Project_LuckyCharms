@@ -7,6 +7,7 @@ const showLogin = document.getElementById("showLogin");
 const showForgot = document.getElementById("showForgot");
 const backToLogin = document.getElementById("backToLogin");
 
+
 // Switch to Register
 showRegister.addEventListener("click", (e) => {
   e.preventDefault();
@@ -20,7 +21,8 @@ showLogin.addEventListener("click", (e) => {
   e.preventDefault();
   registerContainer.classList.add("hidden");
   loginContainer.classList.remove("hidden");
-  forgotContainer.classList.add("hidden");
+   forgotContainer.classList.add("hidden");
+
 });
 
 // Switch to Forgot Password
@@ -42,12 +44,11 @@ backToLogin.addEventListener("click", (e) => {
 document.getElementById('registerForm').addEventListener('submit', async function (e) {
     e.preventDefault();
     const form = e.target;
-
     const payload = {
         FirstName: form.querySelector('#FirstName')?.value || '',
         LastName: form.querySelector('#LastName')?.value || '',
         PhoneNumber: form.querySelector('#PhoneNumber')?.value || '',
-        DateOfBirth: form.querySelector('#DateOfBirth')?.value || '',
+        DateOfBirth: dobValue || '',
         Email: form.querySelector('#Email')?.value || '',
         UserName: form.querySelector('#UserName')?.value || '',
         Password: form.querySelector('#Password')?.value || '',
@@ -55,7 +56,9 @@ document.getElementById('registerForm').addEventListener('submit', async functio
         AccountCreationDate: new Date().toISOString(),
         AccountType: 0
     };
+
     console.log("Sending payload:", payload);
+
     try {
         const response = await fetch('/api/accounts/create', {
             method: 'POST',
@@ -76,6 +79,7 @@ document.getElementById('registerForm').addEventListener('submit', async functio
         console.error("Network or server error:", error);
         alert("Something went wrong. Please try again.");
     }
+    
 });
 document.getElementById('loginForm').addEventListener('submit', async function (e) {
     e.preventDefault();
