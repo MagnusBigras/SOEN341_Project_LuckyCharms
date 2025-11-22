@@ -105,7 +105,7 @@ public async Task<ActionResult<Event>> GetEventById(int id)
 
 
         // --- Create new event ---
-       [HttpPost("create")]
+        [HttpPost("create")]
         public async Task<ActionResult<Event>> CreateEvent([FromBody] Event newEvent)
         {
             var currentUser = Globals.Globals.SessionManager.CurrentLoggedInUser;
@@ -123,6 +123,19 @@ public async Task<ActionResult<Event>> GetEventById(int id)
 
             if (organizer == null)
                 return BadRequest(new { message = "Current user is not an organizer!" });
+
+            // Enforce max capacity rule
+            if (newEvent.Capacity > 2000)
+                return BadRequest(new { message = "Maximum event capacity is 2000 attendees." });
+
+            if (newEvent.Prices != null)
+            {
+                foreach (var tier in newEvent.Prices)
+                {
+                    if (tier.MaxQuantity > 2000)
+                        return BadRequest(new { message = "A ticket tier cannot exceed a quantity of 2000." });
+                }
+            }
 
             // Link event to organizer
             newEvent.EventOrganizerId = organizer.Id;
@@ -152,7 +165,7 @@ public async Task<ActionResult<Event>> GetEventById(int id)
             // Generate tickets
             newEvent.Tickets = new List<Ticket>();
             if (newEvent.Prices != null && newEvent.Prices.Count > 0)
-            {                 
+            {
                 // Use PriceTiers to generate tickets
                 foreach (var tier in newEvent.Prices)
                 {
@@ -195,6 +208,7 @@ public async Task<ActionResult<Event>> GetEventById(int id)
         }
 
 
+
         // --- Delete event ---
         [HttpPost("delete")]
         public async Task<ActionResult> DeleteEvent([FromBody] int id)
@@ -206,8 +220,7 @@ public async Task<ActionResult<Event>> GetEventById(int id)
             await _dbContext.SaveChangesAsync();
             return Ok(new { message = "Event deleted successfully." });
         }
-
-       // --- Update event ---
+        
         [HttpPost("update")]
         public async Task<IActionResult> UpdateEvent([FromBody] Event updatedEvent)
         {
@@ -216,9 +229,36 @@ public async Task<ActionResult<Event>> GetEventById(int id)
                 .Include(e => e.Tickets)
                 .FirstOrDefaultAsync(e => e.Id == updatedEvent.Id);
 
-            if (existingEvent == null) return NotFound("Event not found.");
+            if (existingEvent == null)
+                return NotFound("Event not found.");
 
-            // Update basic event info
+            if (updatedEvent.Capacity > 2000)
+                return BadRequest("Maximum allowed event capacity is 2000.");
+
+            int claimedCount = existingEvent.Tickets.Count(t => t.UserAccountId != null);
+            bool hasClaimed = claimedCount > 0;
+
+            bool isSoldOut = existingEvent.Tickets.All(t => t.UserAccountId != null);
+
+            if (updatedEvent.Capacity < existingEvent.Capacity)
+            {
+                // Cannot go below claimed
+                if (updatedEvent.Capacity < claimedCount)
+                    return BadRequest($"Capacity cannot be below claimed tickets ({claimedCount}).");
+
+                return BadRequest("Capacity cannot be decreased.");
+            }
+
+            if (updatedEvent.Capacity > existingEvent.Capacity)
+            {
+                // Increase only allowed when SOLD OUT
+                if (!isSoldOut)
+                    return BadRequest("You can increase capacity only when the event is sold out.");
+
+                existingEvent.Capacity = updatedEvent.Capacity;
+            }
+
+            // --- Basic event info ---
             existingEvent.EventName = updatedEvent.EventName;
             existingEvent.EventDescription = updatedEvent.EventDescription;
             existingEvent.StartTime = updatedEvent.StartTime;
@@ -227,68 +267,75 @@ public async Task<ActionResult<Event>> GetEventById(int id)
             existingEvent.Region = updatedEvent.Region;
             existingEvent.PostalCode = updatedEvent.PostalCode;
             existingEvent.Country = updatedEvent.Country;
-            existingEvent.Capacity = updatedEvent.Capacity;
-            existingEvent.TicketType = updatedEvent.TicketType;
-            existingEvent.IsActive = updatedEvent.IsActive;
-            existingEvent.UpdatedAt = DateTime.Now;
             existingEvent.Category = updatedEvent.Category;
+            existingEvent.UpdatedAt = DateTime.Now;
+            existingEvent.IsActive = updatedEvent.IsActive;
 
-            // Update or add price tiers
-            foreach (var updatedPrice in updatedEvent.Prices)
+            if (hasClaimed)
             {
-                var existingPrice = existingEvent.Prices
-                    .FirstOrDefault(p => p.TicketType == updatedPrice.TicketType && p.Label == updatedPrice.Label);
+                if (existingEvent.TicketType != updatedEvent.TicketType)
+                    return BadRequest("Cannot switch free/paid because tickets have been claimed.");
 
-                if (existingPrice != null)
+                // Update or add price tiers
+                foreach (var up in updatedEvent.Prices)
                 {
-                    // Update price tier info
-                    existingPrice.Price = updatedPrice.Price;
-                    existingPrice.MaxQuantity = updatedPrice.MaxQuantity;
-                    existingPrice.isAvailable = updatedPrice.isAvailable;
+                    var old = existingEvent.Prices.FirstOrDefault(p => p.Label == up.Label);
+                    if (old != null && old.Price != up.Price)
+                        return BadRequest("Cannot change ticket prices because tickets have been claimed.");
                 }
-                else
-                {
-                    // New price tier
-                    existingEvent.Prices.Add(new PriceTier
-                    {
-                        Price = updatedPrice.Price,
-                        TicketType = updatedPrice.TicketType,
-                        Label = updatedPrice.Label ?? "Default",
-                        MaxQuantity = updatedPrice.MaxQuantity,
-                        isAvailable = updatedPrice.isAvailable
-                    });
-                }
+
+                await _dbContext.SaveChangesAsync();
+                return Ok(new { message = "Event updated successfully (limited changes due to claimed tickets)." });
             }
+
+            existingEvent.TicketType = updatedEvent.TicketType;
+            existingEvent.Capacity = updatedEvent.Capacity;
+
+            // Replace price tiers
+            existingEvent.Prices.Clear();
+            existingEvent.Prices.AddRange(updatedEvent.Prices.Select(up => new PriceTier
+            {
+                Price = up.Price,
+                TicketType = up.TicketType,
+                Label = up.Label ?? "Default",
+                MaxQuantity = up.MaxQuantity,
+                isAvailable = up.isAvailable
+            }));
 
             await _dbContext.SaveChangesAsync();
 
-            // Handle tickets: only add new ones if needed
+            // Remove all unclaimed tickets
+            var unclaimed = existingEvent.Tickets.Where(t => t.UserAccountId == null).ToList();
+            _dbContext.Tickets.RemoveRange(unclaimed);
+            await _dbContext.SaveChangesAsync();
+
+            existingEvent.Tickets.Clear();
+
+            // Regenerate tickets
             foreach (var tier in existingEvent.Prices)
             {
-                // Count existing tickets for this tier
-                int currentCount = existingEvent.Tickets.Count(t => t.TicketType == tier.TicketType);
-
-                // Add tickets if updated MaxQuantity is greater
-                int ticketsToAdd = tier.MaxQuantity - currentCount;
-                for (int i = 0; i < ticketsToAdd; i++)
+                for (int i = 0; i < tier.MaxQuantity; i++)
                 {
                     var ticket = new Ticket
                     {
                         EventId = existingEvent.Id,
-                        UserAccountId = null,
                         TicketType = tier.TicketType,
                         Price = tier.Price,
                         PurchaseDate = DateTime.MinValue,
-                        QRCodeText = Guid.NewGuid().ToString(),
-                        CheckedIn = false
+                        CheckedIn = false,
+                        QRCodeText = Guid.NewGuid().ToString()
                     };
+
                     _dbContext.Tickets.Add(ticket);
+                    existingEvent.Tickets.Add(ticket);
                 }
             }
 
             await _dbContext.SaveChangesAsync();
-            return Ok(new { message = "Event updated and tickets adjusted successfully" });
+
+            return Ok(new { message = "Event updated successfully and tickets regenerated." });
         }
+
 
 
         // --- Update visibility ---

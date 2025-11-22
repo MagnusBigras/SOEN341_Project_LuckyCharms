@@ -1,6 +1,8 @@
 ﻿using Lucky_Charm_Event_track.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+
 
 namespace Lucky_Charm_Event_track.Models
 {
@@ -27,6 +29,28 @@ namespace Lucky_Charm_Event_track.Models
         public bool IsBanned { get; set; }
         public List<UserSpecificReminder> UserSpecificReminders {get; set;}
         public List<Review> SubmittedReviews { get; set; }
+
+        // Comma-separated list of favourite event IDs
+        public string FavouriteEventIds { get; set; } = "";
+
+        public List<int> GetFavouriteEvents()
+        {
+            if (string.IsNullOrWhiteSpace(FavouriteEventIds))
+                return new List<int>();
+
+            return FavouriteEventIds
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(int.Parse)
+                .ToList();
+        }
+
+        public void SetFavouriteEvents(List<int> ids)
+        {
+            FavouriteEventIds = string.Join(",", ids);
+        }
+
+
+
 
     }
 }

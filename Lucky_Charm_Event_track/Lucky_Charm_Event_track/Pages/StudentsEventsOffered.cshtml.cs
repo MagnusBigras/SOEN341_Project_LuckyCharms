@@ -51,9 +51,10 @@ namespace Lucky_Charm_Event_track.Pages
 
         public void OnGet()
         {
-            
             // Get logged-in user ID from claims
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            List<int> favouriteIds = new();
+
             if (!string.IsNullOrEmpty(userIdClaim))
             {
                 UserId = int.Parse(userIdClaim);
@@ -61,9 +62,9 @@ namespace Lucky_Charm_Event_track.Pages
                 if (user != null)
                 {
                     FirstName = user.FirstName;
+                    favouriteIds = user.GetFavouriteEvents();
                 }
             }
-
             // Fetch all active events with related data
             var events = _context.Events
                 .Include(e => e.Prices)
@@ -94,7 +95,7 @@ namespace Lucky_Charm_Event_track.Pages
                             : "Unknown",
                         Popularity = e.Tickets?.Count ?? 0,
                         isActive = e.IsActive,
-                        IsInterested = e.IsInterested 
+                        IsInterested = favouriteIds.Contains(e.Id)
                     };
                 }).ToList();
 
@@ -133,11 +134,8 @@ namespace Lucky_Charm_Event_track.Pages
             if (!string.IsNullOrEmpty(SortByPopularity))
                 filtered = SortByPopularity == "asc" ? filtered.OrderBy(e => e.Popularity) : filtered.OrderByDescending(e => e.Popularity);
 
-
             if (ShowInterestedOnly && UserId != 0)
-            {
                 filtered = filtered.Where(e => e.IsInterested);
-            }
 
             FilteredEvents = filtered.ToList();
 
@@ -145,7 +143,8 @@ namespace Lucky_Charm_Event_track.Pages
             CheckNewTickets(events);
 
             //Get user's point balance
-            PointBalance = Globals.Globals.SessionManager.CurrentLoggedInUser.Points;
+            if (Globals.Globals.SessionManager.CurrentLoggedInUser != null)
+                PointBalance = Globals.Globals.SessionManager.CurrentLoggedInUser.Points;
         }
 
         // Purchase free ticket
@@ -200,60 +199,71 @@ namespace Lucky_Charm_Event_track.Pages
             TempData["SuccessMessage"] = "Ticket purchased successfully!";
             return RedirectToPage();
         }
-        public IActionResult OnPostMockPointPay(int eventId) 
+
+        public IActionResult OnPostMockPointPay(int eventId)
         {
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
             int userId = !string.IsNullOrEmpty(userIdClaim) ? int.Parse(userIdClaim) : 0;
             var ticket = _context.Tickets.FirstOrDefault(t => t.EventId == eventId && t.UserAccountId == null);
+
             if (ticket == null || userId == 0)
             {
                 TempData["ErrorMessage"] = "No tickets available or user not logged in.";
                 return RedirectToPage();
             }
+
             var current_user = _context.UserAccounts.Find(userId);
-            if(current_user.Points < ticket.Price * 10) 
+            if (current_user.Points < ticket.Price * 10)
             {
                 TempData["ErrorMessage"] = "Not Enough Points! Insufficient Funds";
                 return RedirectToPage();
             }
+
             ticket.UserAccountId = userId;
             ticket.PurchaseDate = DateTime.Now;
             ticket.QRCodeText = Guid.NewGuid().ToString();
-            current_user.Points -= (int)ticket.Price *  10;
+            current_user.Points -= (int)ticket.Price * 10;
             Globals.Globals.SessionManager.CurrentLoggedInUser.Points = current_user.Points;
             _context.SaveChanges();
             UpdateMetric(eventId, ticket.Price);
+
             TempData["SuccessMessage"] = "Ticket purchased successfully!";
             return RedirectToPage();
-
         }
-
 
         public IActionResult OnPostToggleInterest(int eventId)
         {
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userIdClaim))
             {
-                TempData["ErrorMessage"] = "You must be logged in to mark interest.";
+                TempData["ErrorMessage"] = "You must be logged in to favourite events.";
                 return RedirectToPage();
             }
 
-            var userId = int.Parse(userIdClaim);
-            var evnt = _context.Events.FirstOrDefault(e => e.Id == eventId);
+            int userId = int.Parse(userIdClaim);
+            var user = _context.UserAccounts.FirstOrDefault(u => u.Id == userId);
 
-            if (evnt == null)
+            if (user == null)
             {
-                TempData["ErrorMessage"] = "Event not found.";
+                TempData["ErrorMessage"] = "User not found.";
                 return RedirectToPage();
             }
-
             // Toggle interest 
-            evnt.IsInterested = !evnt.IsInterested;
-            _context.SaveChanges();
+            var favs = user.GetFavouriteEvents();
 
-            TempData["SuccessMessage"] = evnt.IsInterested
-                ? "Event marked as interested!"
-                : "Event removed from interested list.";
+            if (favs.Contains(eventId))
+            {
+                favs.Remove(eventId);
+                TempData["SuccessMessage"] = "Event removed from favourites.";
+            }
+            else
+            {
+                favs.Add(eventId);
+                TempData["SuccessMessage"] = "Event added to favourites.";
+            }
+
+            user.SetFavouriteEvents(favs);
+            _context.SaveChanges();
 
             return RedirectToPage();
         }
@@ -310,7 +320,6 @@ namespace Lucky_Charm_Event_track.Pages
             }
         }
 
-
         public class EventItem
         {
             public int Id { get; set; }
@@ -327,8 +336,7 @@ namespace Lucky_Charm_Event_track.Pages
             public string Organization { get; set; }
             public int Popularity { get; set; }
             public bool isActive { get; set; }
-
-            public bool IsInterested { get; set; } 
+            public bool IsInterested { get; set; }
         }
     }
 }
