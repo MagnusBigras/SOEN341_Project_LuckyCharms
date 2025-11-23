@@ -31,7 +31,7 @@ namespace Lucky_Charm_Event_track.Models
         public List<Reminder> Reminders { get; set; }
         public List<Review> Reviews { get; set; }
         public bool IsInterested { get; set; } = false;
-
+        public int TicketsSold { get; set; }
 
     }
 }
