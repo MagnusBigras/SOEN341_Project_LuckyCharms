@@ -127,9 +127,21 @@ namespace Lucky_Charm_Event_track
                 EventOrganizerId = eventorg.Id,
                 CreatedAt = DateTime.Now,
                 IsActive = true,
-                UpdatedAt = DateTime.Now
+                UpdatedAt = DateTime.Now,
             };
 
+            Metric testmetric = new Metric
+            {
+                TotalRevenue = 0,
+                LastMonthRevenue = 0,
+                LastMonthAttendees = 0,
+                NewAttendees = 0,
+                TotalCapacity = 15,
+                UsedCapacity = 0,
+                LastRemaining = 0,
+                EventId = testevent.Id,
+            };
+            testevent.Metric = testmetric;
             db.Events.Add(testevent);
             db.SaveChanges();
 

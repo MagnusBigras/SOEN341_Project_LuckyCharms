@@ -149,6 +149,8 @@ async function loadEvent() {
     document.getElementById('category').value = event.category || 'other';
     document.getElementById('eventDescription').value = event.eventDescription || '';
 
+
+    document.getElementById('capacity').min = event.capacity
     const isPaid = Number(event.ticketType) === 0; 
     eventTypeSelect.value = isPaid ? 'paid' : 'free';
     priceGroup.style.display = isPaid ? 'block' : 'none';
