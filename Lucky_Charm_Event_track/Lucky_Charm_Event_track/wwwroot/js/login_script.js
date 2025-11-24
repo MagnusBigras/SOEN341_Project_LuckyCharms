@@ -48,7 +48,7 @@ document.getElementById('registerForm').addEventListener('submit', async functio
         FirstName: form.querySelector('#FirstName')?.value || '',
         LastName: form.querySelector('#LastName')?.value || '',
         PhoneNumber: form.querySelector('#PhoneNumber')?.value || '',
-        DateOfBirth: dobValue || '',
+        DateOfBirth: form.querySelector('#DateOfBirth')?.value || '',
         Email: form.querySelector('#Email')?.value || '',
         UserName: form.querySelector('#UserName')?.value || '',
         Password: form.querySelector('#Password')?.value || '',
