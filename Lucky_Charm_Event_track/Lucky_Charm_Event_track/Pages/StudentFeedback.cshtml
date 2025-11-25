@@ -179,12 +179,12 @@
 
         <div>
             <label>What can be improved?</label>
-            <textarea asp-for="Review.WhatCanBeImproved"></textarea>
+                <textarea asp-for="Review.WhatCanBeImproved" maxlength="200"></textarea>
         </div>
 
         <div>
             <label>Additional Comments</label>
-            <textarea asp-for="Review.AdditionalComments"></textarea>
+                <textarea asp-for="Review.AdditionalComments" maxlength="200"></textarea>
         </div>
 
         <button type="submit" @(Model.UserEvents.Count == 0 ? "disabled" : "")>

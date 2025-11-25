@@ -77,13 +77,16 @@ namespace Lucky_Charm_Event_track.Pages
                 .ToListAsync();
 
             // Filter events that have already started and remove duplicates
+      
 
             UserEvents = tickets
                 .Select(t => t.Event)
                 .Where(e => e != null && e.StartTime <= DateTime.Now)
                 .GroupBy(e => e.Id)
                 .Select(g => g.First())
-                .ToList();
+                .Where(e => !_dbContext.Reviews
+                .Any(r => r.UserAccountID == UserId && r.EventID == e.Id)).ToList();
+
 
             Review ??= new Review();
         }
