@@ -10,4 +10,4 @@ The web application is organized into several key components that work together 
 
 Below is a visual representation of how these components interact:
 
-![WebApp Architecture](/Lucky_Charm_Event_track/Lucky_Charm_Event_track/wwwroot/Images/diagram.png)
+![WebApp Architecture](/Images/architecturediagram.png)
